@@ -545,7 +545,7 @@ class Comment extends Model
 
             // external links; defaults to 4chan
             'short_link' => '//boards.4chan.org/'.$data->shortname.'/',
-            'query_link' => '//boards.4chan.org/'.$data->shortname.'/res/'.$data->query,
+            'query_link' => '//boards.4chan.org/'.$data->shortname.'/thread/'.$data->query,
 
             // additional attributes + backlinking attributes
             'attributes' => '',

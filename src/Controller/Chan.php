@@ -642,7 +642,7 @@ class Chan extends Common
         $this->param_manager->setParam('section_title', _i('Reports'));
 
         /** @var Report[] $reports */
-        $reports = $this->getContext()->getService('foolfuuka.report_collection')->getAll();
+        $reports = $this->getContext()->getService('foolfuuka.report_collection')->getGrouped();
 
         $results = [];
         foreach ($reports as $report) {

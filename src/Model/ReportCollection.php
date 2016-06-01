@@ -21,6 +21,13 @@ class ReportCollection extends Model
     protected $preloaded = null;
 
     /**
+     * An array of grouped moderation
+     *
+     * @var  array|null
+     */
+    protected $grouped = null;
+
+    /**
      * @var DoctrineConnection
      */
     protected $dc;
@@ -106,6 +113,10 @@ class ReportCollection extends Model
             return;
         }
 
+        if ($this->grouped !== null) {
+            return;
+        }
+
         try {
             $this->preloaded = Cache::item('foolfuuka.model.report.preload.preloaded')->get();
         } catch (\OutOfBoundsException $e) {
@@ -117,6 +128,19 @@ class ReportCollection extends Model
 
             Cache::item('foolfuuka.model.report.preload.preloaded')->set($this->preloaded, 1800);
         }
+
+        try {
+            $this->grouped = Cache::item('foolfuuka.model.report.preload.grouped')->get();
+        } catch (\OutOfBoundsException $e) {
+            $this->grouped = $this->dc->qb()
+                ->select('*')
+                ->from($this->dc->p('reports'), 'r')
+                ->groupBy('board_id','doc_id')
+                ->execute()
+                ->fetchAll();
+
+            Cache::item('foolfuuka.model.report.preload.grouped')->set($this->grouped, 1800);
+        }
     }
 
     /**
@@ -125,7 +149,9 @@ class ReportCollection extends Model
     public function p_clearCache()
     {
         $this->preloaded = null;
+        $this->grouped = null;
         Cache::item('foolfuuka.model.report.preload.preloaded')->delete();
+        Cache::item('foolfuuka.model.report.preload.grouped')->delete();
     }
 
     /**
@@ -182,6 +208,18 @@ class ReportCollection extends Model
         $this->preload();
 
         return $this->fromArrayDeep($this->preloaded);
+    }
+
+    /**
+     * Fetches and returns grouped Reports
+     *
+     * @return  array  An array of Report
+     */
+    public function getGrouped()
+    {
+        $this->preload();
+
+        return $this->fromArrayDeep($this->grouped);
     }
 
     /**
