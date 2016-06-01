@@ -406,6 +406,13 @@ class Comment extends Model
             $builder = new \JBBCode\CodeDefinitionBuilder('u', '<span class="underline">{param}</span>');
             array_push($definitions, $builder->build());
 
+            $builder = new \JBBCode\CodeDefinitionBuilder('banned', '<span class="banned">{param}</span>');
+            array_push($definitions, $builder->build());
+
+            $builder = new \JBBCode\CodeDefinitionBuilder('fortune', '<strong><span class="fortune" style="color: {color}">{param}</span></strong>');
+            $builder->setUseOption(true);
+            array_push($definitions, $builder->build());
+
             $definitions = Hook::forge('Foolz\FoolFuuka\Model\Comment::processCommentBBCode#var.definitions')
                 ->setObject($this)
                 ->setParam('definitions', $definitions)
