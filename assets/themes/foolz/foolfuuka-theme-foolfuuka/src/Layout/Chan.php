@@ -175,6 +175,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
                                     </li>
                                 </ul>
                             </li>
+                            <?php if ($radix->getValue('is_nsfw')) : ?><li><a class="nsfw_label" data-toggle="tooltip" data-placement="bottom" title="This board is very likely to have adult content"><span class="label label-important">NSFW</span></a></li><?php endif; ?>
                             <?php endif; ?>
                             <?php
                             $top_nav = array();
