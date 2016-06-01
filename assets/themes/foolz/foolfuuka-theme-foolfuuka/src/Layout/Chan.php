@@ -337,8 +337,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
                         </a>
                     </li>
                     <?php endforeach; ?>
-                    <li class="divider"></li>
-                    <li><a href="//archive.foolz.us/_/articles/translate/"><?= _i('Add a Translation') ?></a></li>
                 </ul>
             </div>
         </div>
