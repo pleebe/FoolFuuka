@@ -557,7 +557,7 @@ class Board extends Model
         }
 
         try {
-            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$type_cache)->get();
+            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$this->radix->shortname.'.'.$type_cache)->get();
             return $this;
         } catch (\OutOfBoundsException $e) {
             switch ($order) {
@@ -582,7 +582,7 @@ class Board extends Model
                 ->fetch();
 
             $this->total_count = $result['threads'];
-            Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$type_cache)->set($this->total_count, 300);
+            Cache::item('Foolz_FoolFuuka_Model_Board.getLatestCount.result.'.$this->radix->shortname.'.'.$type_cache)->set($this->total_count, 300);
         }
 
         $this->profiler->logMem('Board $this', $this);
@@ -689,7 +689,7 @@ class Board extends Model
         extract($this->options);
 
         try {
-            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result')->get();
+            $this->total_count = Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result.'.$this->radix->shortname)->get();
         } catch (\OutOfBoundsException $e) {
             $result = $this->dc->qb()
                 ->select('COUNT(thread_num) AS threads')
@@ -698,7 +698,7 @@ class Board extends Model
                 ->fetch();
 
             $this->total_count = $result['threads'];
-            Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result')->set($this->total_count, 300);
+            Cache::item('Foolz_FoolFuuka_Model_Board.getThreadsCount.result.'.$this->radix->shortname)->set($this->total_count, 300);
         }
 
         return $this;
