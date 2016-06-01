@@ -166,6 +166,7 @@ class Board extends \Foolz\FoolFuuka\View\View
                         <div class="ip_reporter">
                             <strong><?= _i('Info:') ?></strong>
                             <?= Inet::dtop($report->ip_reporter) ?>, <?= _i('Type:') ?> <?= $report->media_id !== null ? _i('media') : _i('post')?>, <?= _i('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
+                            <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($report->ip_reporter) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($report->ip_reporter) ?></button>
                             <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-action="delete_report"><?= _i('Delete Report') ?></button>
                         </div>
                     </div>
