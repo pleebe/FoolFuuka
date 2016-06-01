@@ -107,6 +107,25 @@ class Board extends \Foolz\FoolFuuka\View\View
                 </div>
 
                 <blockquote><p><?= $op->getCommentProcessed() ?></p></blockquote>
+                <?php if ($op_media !== null && $op_media->getMediaStatus($this->getRequest()) === 'normal' && $op->radix->getValue('display_exif') && $op_media->exif !== NULL) : ?>
+                    <table class="exiftable"><tbody>
+                        <?php foreach (json_decode($op_media->exif) as $a => $b) : ?>
+                            <?php if(is_object($b)) : ?>
+                                <?php foreach ($b as $c => $d) : ?>
+                                    <tr><td><?= htmlentities($a)," ",htmlentities($c) ?></td><td><?= htmlentities($d) ?></td></tr>
+                                <?php endforeach ?>
+                            <?php elseif(is_array($b)): ?>
+                                <tr><td><?= htmlentities($a) ?></td><td>
+                                        <?php foreach ($b as $e) : ?>
+                                            <?= htmlentities($e) ?>
+                                        <?php endforeach ?></td></tr>
+                            <?php else: ?>
+                                <tr><td><?= htmlentities($a) ?></td><td><?= htmlentities($b) ?></td></tr>
+                            <?php endif; ?>
+                        <?php endforeach ?>
+                        </tbody></table>
+                    <br />
+                <?php endif; ?>
                 <?php if (isset($post['omitted']) && $post['omitted'] > 0) : ?>
                 <span class="omitted">
                     <?php if (isset($post['images_omitted']) && $post['images_omitted'] > 0) : ?>

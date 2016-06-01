@@ -123,6 +123,24 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 <div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->getCommentProcessed())) echo ' shift-jis'; ?>">
                     <?= $p->getCommentProcessed() ?>
                 </div>
+                <?php if ($p_media !== null && $p_media->getMediaStatus($this->getRequest()) === 'normal' && $p->radix->getValue('display_exif') && $p_media->exif !== NULL) : ?>
+                    <table class="exiftable"><tbody>
+                        <?php foreach (json_decode($p_media->exif) as $a => $b) : ?>
+                            <?php if(is_object($b)) : ?>
+                                <?php foreach ($b as $c => $d) : ?>
+                                    <tr><td><?= htmlentities($a)," ",htmlentities($c) ?></td><td><?= htmlentities($d) ?></td></tr>
+                                <?php endforeach ?>
+                            <?php elseif(is_array($b)): ?>
+                                <tr><td><?= htmlentities($a) ?></td><td>
+                                        <?php foreach ($b as $e) : ?>
+                                            <?= htmlentities($e) ?>
+                                        <?php endforeach ?></td></tr>
+                            <?php else: ?>
+                                <tr><td><?= htmlentities($a) ?></td><td><?= htmlentities($b) ?></td></tr>
+                            <?php endif; ?>
+                        <?php endforeach ?>
+                        </tbody></table>
+                <?php endif; ?>
                 <?php if ($this->getAuth()->hasAccess('maccess.mod')) : ?>
                 <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
                     <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($p->poster_ip) echo ' ' .Inet::dtop($p->poster_ip) ?></button>

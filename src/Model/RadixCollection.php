@@ -402,7 +402,6 @@ class RadixCollection extends Model
                 'boards_preferences' => true,
                 'help' => _i('Display EXIF data from images. (EXIF data is always stored in the database)'),
                 'type' => 'checkbox',
-                'disabled' => 'disabled',
             ],
             'enable_poster_hash' => [
                 'database' => true,
