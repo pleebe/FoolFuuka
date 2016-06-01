@@ -616,7 +616,7 @@ class Comment extends Model
             if (!$this->radix->archive) {
                 $this->dc->qb()
                     ->update($this->radix->getTable())
-                    ->set('sticky', $value)
+                    ->set($field, $value)
                     ->where('doc_id = :doc_id')
                     ->setParameter(':doc_id', $this->comment->doc_id)
                     ->execute();

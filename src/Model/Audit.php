@@ -32,7 +32,7 @@ class Audit extends Model
 
     public function getTime()
     {
-        return date('Y/m/d H:m:s', $this->timestamp);
+        return date('Y/m/d H:i:s', $this->timestamp);
     }
 
     public function getAction()
