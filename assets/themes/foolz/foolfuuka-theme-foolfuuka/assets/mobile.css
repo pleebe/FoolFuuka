@@ -1,0 +1,57 @@
+@media only screen and (max-width: 833px) {
+    .letters a {
+        margin:8px !important;
+    }
+    .post_wrapper {
+        width: 100% !important;
+        display: block !important;
+        margin: 0 !important;
+    }
+    .btnr {
+        font-size: 13px !important;
+        margin:3px !important;
+    }
+    .paginate {
+        height: 100px !important;
+    }
+    footer#footer {
+        height: 100px !important;
+    }
+    article.thread > header {
+        margin: 0 !important;
+    }
+    article.thread > .text {
+        padding: 5px 5px 5px 10px !important;
+    }
+    .post_wrapper > .text {
+        padding: 3px 5px 0px 8px !important;
+    }
+    html {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .dropdown-menu > li {
+        width:100% !important;
+    }
+    .navbar .nav {
+        width:100% !important;
+    }
+    .navbar .nav > li {
+        width:100% !important;
+    }
+    .thread_image_box {
+        float: none !important;
+    }
+    .thread_image_box img {
+        max-width: 100px !important;
+        max-height: 100px !important;
+    }
+    .input-prepend {
+        width: 100% !important;
+    }
+    fieldset > .pull-left {
+        float: none !important;
+    }
+}
