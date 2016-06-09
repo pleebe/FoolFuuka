@@ -54,4 +54,17 @@
     fieldset > .pull-left {
         float: none !important;
     }
+    footer#footer > a {
+        width: 100% !important;
+    }
+    footer#footer > .btn-group, .pull-right {
+        float: none !important;
+    }
+    footer#footer > .btn-group > .btn {
+        width: 100% !important;
+    }
+    .pull-right > .dropdown-menu {
+        right: 0 !important;
+        left: 0 !important;
+    }
 }

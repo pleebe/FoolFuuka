@@ -592,6 +592,19 @@ var bindFunctions = function()
 		searchUserGlobal: function(el, post, event)
 		{
 			window.location.href = backend_vars.site_url + '_/search/poster_ip/' + el.data('poster-ip');
+		},
+
+		DisableMobile: function(el, post, event)
+		{
+			$("link[href*='mobile.css']").remove();
+			setCookie('disable_mobile', 'true', 1000, '/', backend_vars.cookie_domain);
+			el.text( "Enable mobile interface" );
+		},
+
+		EnableMobile: function(el, post, event)
+		{
+			setCookie('disable_mobile', 'false', 1000, '/', backend_vars.cookie_domain);
+			location.reload();
 		}
 	}
 

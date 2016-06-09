@@ -29,8 +29,11 @@ class Chan extends \Foolz\FoolFuuka\View\View
         ?>
         <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css">
         <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css">
-        <link href="<?= $this->getAssetManager()->getAssetLink('mobile.css') ?>" rel="stylesheet" type="text/css">
         <?php
+        if($this->getCookie('disable_mobile')!=='true') : ?>
+            <link href="<?= $this->getAssetManager()->getAssetLink('mobile.css') ?>" rel="stylesheet" type="text/css">
+        <?php
+        endif;
     }
 
     public function getHeader()
@@ -364,7 +367,17 @@ class Chan extends \Foolz\FoolFuuka\View\View
         if ($this->getPreferences()->get('foolframe.theme.footer_text')) {
             echo '<section class="footer_text">'.$this->getPreferences()->get('foolframe.theme.footer_text').'</section>';
         }
+        $mobileswitch = '';
+
+        if(!$this->getCookie('disable_mobile')||$this->getCookie('disable_mobile')!=='true') :
+            $mobileswitch = 'Disable';
+        elseif($this->getCookie('disable_mobile')=='true') :
+            $mobileswitch = 'Enable';
+        endif;
         ?>
+        <div style="display:none;" class="mobileswitch">
+            <a data-function="<?= $mobileswitch ?>Mobile" class="btn btn-inverse btn-mini"><?= $mobileswitch ?> mobile interface</a>
+        </div>
     </footer>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

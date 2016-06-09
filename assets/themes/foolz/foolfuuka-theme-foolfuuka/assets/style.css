@@ -1208,3 +1208,8 @@ a.visited {
 code.hljs {
   display: inline;
 }
+@media only screen and (max-width: 833px) {
+  footer > div.mobileswitch {
+    display: block !important;
+  }
+}
