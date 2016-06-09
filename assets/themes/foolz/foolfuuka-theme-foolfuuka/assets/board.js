@@ -605,6 +605,11 @@ var bindFunctions = function()
 		{
 			setCookie('disable_mobile', 'false', 1000, '/', backend_vars.cookie_domain);
 			location.reload();
+		},
+
+		toggleExif: function(el, post, event)
+		{
+			jQuery(".exiftable."+post).toggle();
 		}
 	}
 

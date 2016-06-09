@@ -147,7 +147,8 @@ class Board extends \Foolz\FoolFuuka\View\View
                 </div>
                 <div class="thread_tools_bottom">
                     <?php if ($op_media !== null && $op_media->getMediaStatus($this->getRequest()) === 'normal' && $op->radix->getValue('display_exif') && $op_media->exif !== NULL) : ?>
-                        <table class="exiftable"><tbody>
+                        <span class="exif">[Exif data available. <a data-function="toggleExif" data-post="<?= $op->doc_id ?>">Click here to show/hide</a>.]</span>
+                        <table class="exiftable <?= $op->doc_id ?>" style="display:none;"><tbody>
                             <?php foreach (json_decode($op_media->exif) as $a => $b) : ?>
                                 <?php if(is_object($b)) : ?>
                                     <?php foreach ($b as $c => $d) : ?>
