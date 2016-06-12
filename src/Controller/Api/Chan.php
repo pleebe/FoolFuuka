@@ -352,6 +352,8 @@ class Chan extends Common
 
             $comments = $board->getComments();
 
+            array_push($comments,['total_found' => $board->getTotalResults()]);
+
             $this->response->setData($comments);
         } catch (\Foolz\FoolFuuka\Model\SearchException $e) {
             return $this->response->setData(['error' => $e->getMessage()]);
