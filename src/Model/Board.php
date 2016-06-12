@@ -956,7 +956,9 @@ class Board extends Model
             'dead' => (bool) $this->radix->archive,
             'ghost_exist' => $ghost_post_present,
             'disable_image_upload' => (bool) $this->radix->archive,
-            'last_modified' => $last_modified
+            'last_modified' => $last_modified,
+            'nreplies' => $thread['nreplies'],
+            'nimages' => $thread['nimages']
         ];
 
         if (($this->radix->getValue('thread_lifetime') > 0 && time() - $thread['time_last'] > $this->radix->getValue('thread_lifetime')) || $ghost_post_present) {

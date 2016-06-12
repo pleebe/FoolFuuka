@@ -15,6 +15,8 @@ class Board extends \Foolz\FoolFuuka\View\View
         $board = $this->getParamManager()->getParam('board');
         $controller_method = $this->getBuilderParamManager()->getParam('controller_method', 'thread');
         $thread_id = $this->getBuilderParamManager()->getParam('thread_id', 0);
+        $nreplies = $this->getBuilderParamManager()->getParam('nreplies', 0);
+        $nimages = $this->getBuilderParamManager()->getParam('nimages', 0);
 
         foreach ($board as $key => $post) :
             if (isset($post['op'])) :
@@ -41,6 +43,8 @@ class Board extends \Foolz\FoolFuuka\View\View
                 <div class="stub pull-left">
                     <button class="btn-toggle-post" data-function="hideThread" data-board="<?= $op->radix->shortname ?>" data-doc-id="<?= $op->doc_id ?>"><i class="icon-minus"></i></button>
                 </div>
+                <?php else : ?>
+                <div class="pull-right" title="Post Count / File Count">[<?= $nreplies ?> / <?= $nimages ?>]</div>
                 <?php endif; ?>
                 <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setObject($this)->setParam('board', $op->radix)->execute(); ?>
                 <?php if ($op_media !== null) : ?>
