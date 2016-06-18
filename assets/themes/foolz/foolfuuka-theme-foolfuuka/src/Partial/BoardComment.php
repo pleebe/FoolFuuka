@@ -66,15 +66,8 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
                             <?php if (!$this->getAuth()->hasAccess('maccess.mod') && !$p->radix->getValue('transparent_spoiler') && $p_media->spoiler) :?>
                             <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
-                            <?php elseif (isset($modifiers['lazyload']) && $modifiers['lazyload'] == true) : ?>
-                            <img src="<?= $this->getUri()->base() . $this->getAssetManager()->getAssetLink('images/transparent_pixel.png') ?>" data-original="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="lazyload post_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
-                            <noscript>
-                                <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank" rel="noreferrer" class="thread_image_link">
-                                    <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" style="margin-left: -<?= $p_media->preview_w ?>px" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="lazyload post_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
-                                </a>
-                            </noscript>
                             <?php else : ?>
-                            <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="lazyload post_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
+                            <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="post_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
                             <?php endif; ?>
                         </a>
                     <?php endif; ?>

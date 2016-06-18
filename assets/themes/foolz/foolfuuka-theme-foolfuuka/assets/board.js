@@ -464,22 +464,6 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'report');
 		},
 
-		reportMedia: function(el, post, event)
-		{
-			var modal = jQuery("#post_tools_modal");
-			modal.find(".title").html('Report &raquo; Media No.' + el.data("media-id"));
-			modal.find(".modal-error").html('');
-			modal.find(".modal-loading").hide();
-			modal.find(".modal-information").html('\
-			<span class="modal-label">Media ID</span>\n\
-			<input type="text" disabled="disabled" class="modal-media-id" value="' + el.data("media-id") + '" />\n\
-			<br>\n\
-			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-			<span class="modal-field">Comment</span>\n\
-			<textarea class="modal-comment"></textarea>');
-			modal.find(".submitModal").data("action", 'report_media');
-		},
-
 		ban: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
@@ -837,13 +821,6 @@ var showBacklink = function(backlink, pos, height, width)
 	}
 
 	backlink.find('.stub').remove();
-
-	// for lazyload
-	var swap_image = backlink.find('[data-original]');
-	if (swap_image.length > 0)
-	{
-		swap_image.attr('src', swap_image.attr('data-original'));
-	}
 };
 
 var backlinkify = function(elem, post_id, subnum)
@@ -1092,15 +1069,6 @@ jQuery(document).ready(function() {
 	// settings
 	jQuery.support.cors = true;
 	backend_vars.loaded_posts = [];
-
-	var lazyloaded = jQuery('img.lazyload');
-	if(lazyloaded.length > 149)
-	{
-		lazyloaded.lazyload({
-			threshold: 1000,
-			event: 'scroll'
-		});
-	}
 
 	// check if input[date] is supported, so we can use by default input[text] with placeholder without breaking w3
 	var i = document.createElement("input");

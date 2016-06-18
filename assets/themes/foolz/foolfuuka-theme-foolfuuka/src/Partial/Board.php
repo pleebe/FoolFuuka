@@ -233,10 +233,6 @@ class Board extends \Foolz\FoolFuuka\View\View
                         if ($p->media !== null)
                             $image_counter++;
 
-                        if ($image_counter == 150) {
-                            $modifiers['lazyload'] = true;
-                        }
-
                         $comment->setBulk($p);
                         // set the $media to null and leave the Media object in existence
                         if ($p->media !== null) {
