@@ -135,8 +135,8 @@ var bindFunctions = function()
 			var originalText = el.attr('value');
 			var el_parent = el.parent();
 			el.attr({'value': backend_vars.gettext['submit_state']});
-			el_parent.find('[name=reply_gattai]').attr({disabled:'disabled'})
-			el_parent.find('[name=reply_gattai_spoilered]').attr({disabled:'disabled'})
+			el_parent.find('[name=reply_gattai]').attr({disabled:'disabled'});
+			el_parent.find('[name=reply_gattai_spoilered]').attr({disabled:'disabled'});
 			//el.parent().find('[name=reply_gattai], [name=reply_gattai_spoilered]')
 
 			// to make sure nobody gets pissed off with a blocked button
@@ -207,7 +207,7 @@ var bindFunctions = function()
 					if (typeof data.captcha !== "undefined")
 					{
 						jQuery('.recaptcha_widget').show();
-						jQuery('.rules_box').hide()
+						jQuery('.rules_box').hide();
 						return false;
 					}
 
@@ -253,7 +253,7 @@ var bindFunctions = function()
 					progress_el.css('width', '0%');
 					progress_el.parent().animate({'opacity': '0.0'}, 300);
 				}
-			}
+			};
 
 			// if we have FormData support, we can upload files!
 			if (window.FormData !== undefined)
@@ -263,7 +263,7 @@ var bindFunctions = function()
 				var data_formdata = new FormData();
 				jQuery.each(data_obj, function(id, val){
 					data_formdata.append(id, val);
-				})
+				});
 
 				if (typeof file_el[0] !== 'undefined' && typeof file_el[0].files !== 'undefined')
 				{
@@ -310,7 +310,7 @@ var bindFunctions = function()
 							{
 								media_count++;
 							}
-						})
+						});
 						var thread = jQuery('article.thread[data-thread-num=' + thread_num + '] ');
 						var displayed_string = post_count + ' posts ' +
 							(media_count > 0 ? 'and ' + media_count + ' ' + (media_count == 1 ? 'image' : 'images') : '') + ' displayed';
@@ -338,7 +338,7 @@ var bindFunctions = function()
 
 		clearSearch: function(el, post, event)
 		{
-			var form = jQuery('.advanced_search').find('form')
+			var form = jQuery('.advanced_search').find('form');
 			form.find(':input').not(':input[type=submit]').not(':input[type=reset]').val('');
 
 			// keep the first radio set
@@ -611,7 +611,7 @@ var bindFunctions = function()
 		{
 			jQuery(".exiftable."+post).toggle();
 		}
-	}
+	};
 
 
 	// unite all the onclick functions in here
@@ -627,7 +627,7 @@ var bindFunctions = function()
 
 	jQuery(document.body).click(function(event) {
 		var search_input = jQuery('#search_form_comment');
-		jQuery('.search-query').val(search_input.val())
+		jQuery('.search-query').val(search_input.val());
 		jQuery('.search_box').hide();
 	});
 
@@ -638,7 +638,16 @@ var bindFunctions = function()
 		var search_box = jQuery('.search_box');
 		var comment_wrap = search_box.find('.comment_wrap');
 		var comment_wrap_pos = comment_wrap.position();
-		search_box.css({top: (offset.top - 11) + 'px', right: (jQuery(window).width() - (offset.left + width) - 16) + 'px' }).show();
+		if(jQuery(window).width()<=600) {
+			search_box.css({
+				top: (offset.top - 11) + 'px'
+			}).show();
+		} else {
+			search_box.css({
+				top: (offset.top - 11) + 'px',
+				right: (jQuery(window).width() - (offset.left + width) - 16) + 'px'
+			}).show();
+		}
 		el.parents('.open').removeClass('open');
 		search_box.find('input[name=text]').focus();
 		return false;
@@ -765,7 +774,7 @@ var bindFunctions = function()
 			jQuery("#backlink").css('display', 'none').html('');
 		}
 	});
-}
+};
 
 var hideThreads = function()
 {
@@ -779,7 +788,7 @@ var hideThreads = function()
 			jQuery(".stub_doc_id_" + num).show();
 		}
 	}
-}
+};
 
 var hidePosts = function()
 {
@@ -793,7 +802,7 @@ var hidePosts = function()
 			jQuery(".stub_doc_id_" + num).show();
 		}
 	}
-}
+};
 
 var shakeBacklink = function(el)
 {
@@ -806,7 +815,7 @@ var shakeBacklink = function(el)
 			el.css({position:'static'});
 		});
 
-}
+};
 
 var showBacklink = function(backlink, pos, height, width)
 {
@@ -835,7 +844,7 @@ var showBacklink = function(backlink, pos, height, width)
 	{
 		swap_image.attr('src', swap_image.attr('data-original'));
 	}
-}
+};
 
 var backlinkify = function(elem, post_id, subnum)
 {
@@ -921,7 +930,7 @@ var backlinkify = function(elem, post_id, subnum)
 			post_backlink.parent().show();
 		}
 	});
-}
+};
 
 var timelapse = 10;
 var currentlapse = 0;
@@ -948,7 +957,7 @@ var realtimethread = function(){
 	});
 
 	return false;
-}
+};
 
 var ghost = false;
 var insertPost = function(data, textStatus, jqXHR)
@@ -1028,7 +1037,7 @@ var insertPost = function(data, textStatus, jqXHR)
 			timelapse += 5;
 		}
 	}
-}
+};
 
 var findSameImageFromFile = function(obj)
 {
@@ -1043,14 +1052,14 @@ var findSameImageFromFile = function(obj)
 			var digestBase64URL = digestBase64.replace('==', '').replace(/\//g, '_').replace(/\+/g, '-');
 			jQuery('#search_form_image').val(digestBase64URL);
 		}
-	}
+	};
 
 	reader.readAsBinaryString(obj.files[0]);
-}
+};
 
 var toggleHighlight = function(id)
 {
-	var classn = 'highlight'
+	var classn = 'highlight';
 	jQuery("article").each(function() {
 		var post = jQuery(this);
 
@@ -1064,7 +1073,7 @@ var toggleHighlight = function(id)
 			post.addClass(classn);
 		}
 	})
-}
+};
 
 var realtime = false;
 var enableRealtimeThread = function()
@@ -1076,7 +1085,7 @@ var enableRealtimeThread = function()
 		jQuery('.js_hook_realtimethread').html(backend_vars.gettext['thread_is_real_time'] + ' <a class="btnr" href="#" data-function="realtimeThread">' + backend_vars.gettext['update_now'] + '</a>');
 		setTimeout(realtimethread, 10000);
 	}
-}
+};
 
 jQuery(document).ready(function() {
 

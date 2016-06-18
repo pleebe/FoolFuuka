@@ -67,4 +67,17 @@
         right: 0 !important;
         left: 0 !important;
     }
+    .navbar-search .search-query {
+        width: 100% !important;
+    }
+    .search_box .advanced_search input[name=text] {
+        width: 90% !important;
+    }
+    .search_box .advanced_search {
+        width: 100% !important;
+    }
+    article.thread {
+        padding: 10px 0 !important;
+        margin: 0 5px !important;
+    }
 }

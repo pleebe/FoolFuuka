@@ -51,8 +51,9 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>">
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php if($this->getCookie('disable_mobile')!=='true') : ?>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php endif; ?>
 
     <!--[if lt IE 8]>
         <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>">
