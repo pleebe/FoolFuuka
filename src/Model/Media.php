@@ -589,16 +589,15 @@ class Media extends Model
 
         $result = $this->dc->qb()
             ->select('COUNT(*) as count')
-            ->from($this->radix->getTable('_images'), 'ri')
-            ->where('media_hash = :md5')
+            ->from($this->dc->p('banned_md5'), 'm')
+            ->where('md5 = :md5')
             ->setParameter(':md5', $this->media->media_hash)
             ->execute()
             ->fetch();
 
         if (!$result['count']) {
             $this->dc->getConnection()
-                ->insert('banned_md5', ['md5' => $this->media->media_hash])
-                ->execute();
+                ->insert($this->dc->p('banned_md5'), ['md5' => $this->media->media_hash]);
         }
 
         foreach ($this->radix_coll->getAll() as $radix) {
