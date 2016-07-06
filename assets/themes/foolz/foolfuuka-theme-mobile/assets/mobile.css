@@ -8,7 +8,7 @@
     display: none !important;
 }
 .post_controls {
-    display: block !important;
+    display: inline !important;
 }
 .post_file_controls {
     display: block !important;
@@ -50,6 +50,12 @@
     html {
         max-width: 100% !important;
         overflow-x: hidden !important;
+    }
+    .modal.fade.in {
+        top: 10px !important;
+    }
+    #backlink {
+        box-shadow: 0 0 0 #333 !important;
     }
 }
 @media only screen and (max-width: 600px) {
@@ -131,5 +137,13 @@
     }
     .btnr {
         padding: 4px 14px !important;
+    }
+    .modal.fade.in {
+        top: 10px !important;
+    }
+    .modal-body {
+        overflow-y: hidden !important;
+        padding: 0 !important;
+        max-width: 100% !important;
     }
 }
