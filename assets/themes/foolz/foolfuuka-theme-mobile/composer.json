@@ -1,8 +1,8 @@
 {
-  "name": "foolz/foolfuuka-theme-foolfuuka",
+  "name": "foolz/foolfuuka-theme-mobile",
   "type": "foolz-foolfuuka-theme",
-  "description": "The default FoolFuuka theme.",
-  "version": "1.2.5",
+  "description": "Mobile FoolFuuka theme.",
+  "version": "0.0.1",
   "keywords": [
     "theme",
     "default",
@@ -26,11 +26,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Foolz\\FoolFuuka\\Theme\\FoolFuuka\\": "src/"
+      "Foolz\\FoolFuuka\\Theme\\Mobile\\": "src/"
     }
   },
   "extra": {
-    "name": "FoolFuuka",
+    "name": "FoolFuuka Mobile",
+    "extends": "foolz/foolfuuka-theme-foolfuuka",
     "styles": {
       "default": "Default",
       "midnight": "Midnight"

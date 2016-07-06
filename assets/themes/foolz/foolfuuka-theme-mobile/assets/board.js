@@ -609,7 +609,16 @@ var bindFunctions = function()
 		var search_box = jQuery('.search_box');
 		var comment_wrap = search_box.find('.comment_wrap');
 		var comment_wrap_pos = comment_wrap.position();
-		search_box.css({top: (offset.top - 11) + 'px', right: (jQuery(window).width() - (offset.left + width) - 16) + 'px'}).show();
+		if(jQuery(window).width()<=600) {
+			search_box.css({
+				top: (offset.top - 11) + 'px'
+			}).show();
+		} else {
+			search_box.css({
+				top: (offset.top - 11) + 'px',
+				right: (jQuery(window).width() - (offset.left + width) - 16) + 'px'
+			}).show();
+		}
 		el.parents('.open').removeClass('open');
 		search_box.find('input[name=text]').focus();
 		return false;

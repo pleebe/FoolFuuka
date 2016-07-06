@@ -1,6 +1,6 @@
 <?php
 
-namespace Foolz\FoolFuuka\Theme\FoolFuuka\Layout;
+namespace Foolz\FoolFuuka\Theme\Mobile\Layout;
 
 class Chan extends \Foolz\FoolFuuka\View\View
 {
@@ -29,6 +29,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
         ?>
         <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css">
         <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css">
+        <link href="<?= $this->getAssetManager()->getAssetLink('mobile.css') ?>" rel="stylesheet" type="text/css">
         <?php
     }
 
@@ -47,6 +48,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <link rel="stylesheet" href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css">
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>">
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--[if lt IE 8]>
         <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>">
