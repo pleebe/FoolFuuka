@@ -76,6 +76,37 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 <?php endif; ?>
                 <header>
                     <div class="post_data">
+                        <span class="post_mobile_controls_collapse dropdown">
+                            <a data-toggle="dropdown" href="#" class="btnr parent"><i class="icon-th-list"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="dropdown-submenu mobile-post">
+                                <a data-toggle="dropdown" href="#">Post</a>
+                                <ul class="dropdown-menu mobile-post">
+                                    <li>
+                                        <a href="#" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a>
+                                    </li>
+                                    <?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><li><a href="#" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a></li><?php endif; ?>
+                                </ul>
+                            </li>
+                            <?php if ($p_media !== null) : ?>
+                            <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
+                            <?php if ( !$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
+                            <li class="dropdown-submenu mobile-media">
+                                <a data-toggle="dropdown" href="#">Media</a>
+                                <ul class="dropdown-menu mobile-media">
+                                    <li><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p_media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a></li>
+                                    <li><a href="http://www.google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank">Google</a></li>
+                                    <li><a href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank">ImgOps</a></li>
+                                    <li><a href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank">iqdb</a></li>
+                                    <li><a href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank">SauceNAO</a></li>
+                                    <?php if (!$p->radix->archive || $p->radix->getValue('archive_full_images')) : ?><li><a href="<?= $p_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>"><i class="icon-download-alt"></i> Download</a></li><?php endif; ?>
+                                </ul>
+                            </li>
+                                <?php endif; ?>
+                            <?php endif ?>
+                            <?php endif; ?>
+                        </ul>
+                        </span>
                         <?php if (isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) : ?>
                         <span class="post_show_board">/<?= $p->radix->shortname ?>/</span>
                         <?php endif; ?>
