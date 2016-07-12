@@ -90,37 +90,28 @@ class Board extends \Foolz\FoolFuuka\View\View
                 <?php endif; ?>
                 <header>
                     <div class="post_data">
-                        <span class="post_mobile_controls_collapse dropdown">
-                            <a data-toggle="dropdown" href="#" class="btnr parent"><i class="icon-th-list"></i></a>
+                        <div class="post_mobile_controls_collapse dropdown">
+                            <button data-toggle="dropdown" class="btnr parent"><i class="icon-th-list"></i></button>
                         <ul class="dropdown-menu" role="menu">
-                            <li class="dropdown-submenu mobile-post">
-                                <a data-toggle="dropdown" href="#">Post</a>
-                                <ul class="dropdown-menu mobile-post">
-                                    <li>
-                                        <a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a>
-                                    </li>
-                                    <?php if ($op->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$op->radix->archive) : ?><li><a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a></li><?php endif; ?>
-                                </ul>
-                            </li>
+                            <li class="nav-header">Post</li>
+                            <li><a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a></li>
+                            <?php if ($op->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$op->radix->archive) : ?><li><a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a></li><?php endif; ?>
                             <?php if ($op_media !== null) : ?>
                                 <?php if ($op_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
                                     <?php if ( !$op->radix->hide_thumbnails || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
-                                        <li class="dropdown-submenu mobile-media">
-                                            <a data-toggle="dropdown" href="#">Media</a>
-                                            <ul class="dropdown-menu mobile-media">
-                                                <li><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $op->radix->shortname) . '/search/image/' . $op_media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a></li>
-                                                <li><a href="http://www.google.com/searchbyimage?image_url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">Google</a></li>
-                                                <li><a href="http://imgops.com/<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">ImgOps</a></li>
-                                                <li><a href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">iqdb</a></li>
-                                                <li><a href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">SauceNAO</a></li>
-                                                <?php if (!$op->radix->archive || $op->radix->getValue('archive_full_images')) : ?><li><a href="<?= $op_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"><i class="icon-download-alt"></i> Download</a></li><?php endif; ?>
-                                            </ul>
-                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="nav-header">Media</li>
+                                        <li><a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $op->radix->shortname) . '/search/image/' . $op_media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a></li>
+                                        <li><a href="http://www.google.com/searchbyimage?image_url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">Google</a></li>
+                                        <li><a href="http://imgops.com/<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">ImgOps</a></li>
+                                        <li><a href="http://iqdb.org/?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">iqdb</a></li>
+                                        <li><a href="http://saucenao.com/search.php?url=<?= $op_media->getThumbLink($this->getRequest()) ?>" target="_blank">SauceNAO</a></li>
+                                        <?php if (!$op->radix->archive || $op->radix->getValue('archive_full_images')) : ?><li><a href="<?= $op_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $op_media->getMediaFilenameProcessed() ?>"><i class="icon-download-alt"></i> Download</a></li><?php endif; ?>
                                     <?php endif; ?>
                                 <?php endif ?>
                             <?php endif; ?>
                         </ul>
-                        </span>
+                        </div>
                         <div class="post_mobile_controls"></div>
                         <?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
                         <span class="post_poster_data">
