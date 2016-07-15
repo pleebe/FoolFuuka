@@ -11,7 +11,7 @@
     display: inline !important;
 }
 .post_file_controls {
-    display: block !important;
+    display: inline !important;
 }
 @media only screen and (max-width: 833px) {
     .letters a {
@@ -145,5 +145,9 @@
         overflow-y: hidden !important;
         padding: 0 !important;
         max-width: 100% !important;
+    }
+    #thread_o_matic > article.thread {
+        width: 100% !important;
+        clear: both !important;
     }
 }

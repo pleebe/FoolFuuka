@@ -93,7 +93,10 @@ class Board extends \Foolz\FoolFuuka\View\View
                         <div class="post_mobile_controls_collapse dropdown">
                             <button data-toggle="dropdown" class="btnr parent"><i class="icon-th-list"></i></button>
                         <ul class="dropdown-menu" role="menu">
-                            <li class="nav-header">Post</li>
+                            <li class="nav-header">Thread</li>
+                            <li><a href="<?= $this->getUri()->create(array($op->radix->shortname, $controller_method, $num)) . '#reply' ?>"><?= _i('Reply') ?></a></li>
+                            <?= (isset($post['omitted']) && $post['omitted'] > 50) ? '<li><a href="' . $this->getUri()->create($op->radix->shortname . '/last/50/' . $num) . '">' . _i('Last 50') . '</a></li>' : '' ?>
+                            <?= ($op->radix->archive) ? '<li><a href="//boards.4chan.org/' . $op->radix->shortname . '/thread/' . $num . '">' . _i('Original') . '</a></li>' : '' ?>
                             <li><a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a></li>
                             <?php if ($op->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$op->radix->archive) : ?><li><a href="#" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a></li><?php endif; ?>
                             <?php if ($op_media !== null) : ?>
@@ -112,7 +115,6 @@ class Board extends \Foolz\FoolFuuka\View\View
                             <?php endif; ?>
                         </ul>
                         </div>
-                        <div class="post_mobile_controls"></div>
                         <?php if ($op->getTitleProcessed() !== '') : ?><h2 class="post_title"><?= $op->getTitleProcessed() ?></h2><?php endif; ?>
                         <span class="post_poster_data">
                             <?php if ($op->email && $op->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($op->email) ?>"><?php endif; ?><span class="post_author"><?= $op->getNameProcessed() ?></span><?= ($op->getNameProcessed() && $op->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $op->getTripProcessed() ?></span><?php if ($op->email && $op->email !== 'noko') : ?></a><?php endif ?>
