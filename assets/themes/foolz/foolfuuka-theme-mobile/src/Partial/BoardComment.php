@@ -127,7 +127,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <?php if ($p->sticky) : ?><i class="icon-pushpin" title="<?= _i('This thread has been stickied.') ?>"></i><?php endif; ?>
                             <?php if ($p->locked) : ?><i class="icon-lock" title="<?= _i('This thread has been locked.') ?>"></i><?php endif; ?>
                         </span>
-
+                        <span class="mobile_view"><?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?></span>
                         <span class="post_controls">
                             <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
                         </span>
