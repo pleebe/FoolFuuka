@@ -783,11 +783,11 @@ class Chan extends Common
 
         // Check all allowed search modifiers and apply only these
         $modifiers = [
-            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
+            'boards', 'tnum', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
             'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page'
         ];
 
-        if ($this->getAuth()->hasAccess('comment.see_ip')) {;
+        if ($this->getAuth()->hasAccess('comment.see_ip')) {
             $modifiers[] = 'poster_ip';
             $modifiers[] = 'deletion_mode';
         }
@@ -851,7 +851,7 @@ class Chan extends Common
         }
 
         // sanitize
-        foreach($cookie_array as $item) {
+        foreach ($cookie_array as $item) {
             // all subitems must be array, all must have 'board'
             if (!is_array($item) || !isset($item['board'])) {
                 $cookie_array = [];
@@ -865,7 +865,7 @@ class Chan extends Common
         unset($search_opts['page']);
 
         // if it's already in the latest searches, remove the previous entry
-        foreach($cookie_array as $key => $item) {
+        foreach ($cookie_array as $key => $item) {
             if ($item === $search_opts) {
                 unset($cookie_array[$key]);
                 break;
@@ -908,6 +908,10 @@ class Chan extends Common
             $search['poster_ip'] = Inet::ptod($search['poster_ip']);
         }
 
+        if ($search['tnum'] !== null && !is_numeric($search['tnum'])) {
+            return $this->error(_i('Thread number you inserted is not a valid number.'));
+        }
+
         try {
             $board = Search::forge($this->getContext())
                 ->getSearch($search)
@@ -927,6 +931,10 @@ class Chan extends Common
             array_push($title,
                 sprintf(_i('that contain &lsquo;%s&rsquo;'),
                     e($search['text'])));
+        if ($search['tnum'])
+            array_push($title,
+                sprintf(_i('in thread #%s'),
+                    e($search['tnum'])));
         if ($search['subject'])
             array_push($title,
                 sprintf(_i('with the subject &lsquo;%s&rsquo;'),
@@ -978,6 +986,10 @@ class Chan extends Common
             array_push($title, _i('that do not contain images'));
         if ($search['filter'] == 'text')
             array_push($title, _i('that only contain images'));
+        if ($search['filter'] == 'spoiler')
+            array_push($title, _i('that only contain spoiler images'));
+        if ($search['filter'] == 'not-spoiler')
+            array_push($title, _i('that do not contain spoiler images'));
         if ($search['capcode'] == 'user')
             array_push($title, _i('that were made by users'));
         if ($search['capcode'] == 'mod')
@@ -1001,7 +1013,7 @@ class Chan extends Common
         if ($this->radix) {
             $this->builder->getProps()->addTitle($title);
         } else {
-            $this->builder->getProps()->addTitle('Global Search &raquo; '.$title);
+            $this->builder->getProps()->addTitle('Global Search &raquo; ' . $title);
         }
 
         if ($board->getTotalResults() > 5000) {
@@ -1018,7 +1030,7 @@ class Chan extends Common
         $pagination = $search;
         unset($pagination['page']);
         $pagination_arr = [];
-        $pagination_arr[] = $this->radix !== null ?$this->radix->shortname : '_';
+        $pagination_arr[] = $this->radix !== null ? $this->radix->shortname : '_';
         $pagination_arr[] = 'search';
         foreach ($pagination as $key => $item) {
             if ($item || $item === 0) {
@@ -1038,8 +1050,8 @@ class Chan extends Common
         $pagination_arr[] = 'page';
         $this->param_manager->setParam('pagination', [
             'base_url' => $this->uri->create($pagination_arr),
-            'current_page' => $search['page'] ? : 1,
-            'total' => ceil($board->getCount()/25),
+            'current_page' => $search['page'] ?: 1,
+            'total' => ceil($board->getCount() / 25),
         ]);
 
         $this->param_manager->setParam('modifiers', [
@@ -1050,7 +1062,7 @@ class Chan extends Common
         $this->profiler->logMem('Controller Chan $this', $this);
         $this->profiler->log('Controller Chan::search End');
 
-        $this->response->setCallback(function() {
+        $this->response->setCallback(function () {
             $this->builder->stream();
         });
 

@@ -69,6 +69,11 @@ class Search extends Board
             ],
             [
                 'type' => 'input',
+                'label' => _i('Thread No.'),
+                'name' => 'tnum'
+            ],
+            [
+                'type' => 'input',
                 'label' => _i('Subject'),
                 'name' => 'subject'
             ],
@@ -145,7 +150,9 @@ class Search extends Board
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
                     ['value' => 'text', 'text' => _i('Only With Images')],
-                    ['value' => 'image', 'text' => _i('Only Without Images')]
+                    ['value' => 'image', 'text' => _i('Only Without Images')],
+                    ['value' => 'spoiler', 'text' => _i('Only Spoiler Images')],
+                    ['value' => 'not-spoiler', 'text' => _i('Only Non-Spoiler Images')]
                 ]
             ],
             [
@@ -227,7 +234,7 @@ class Search extends Board
         extract($this->options);
 
         $search_inputs = [
-            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip', 'country',
+            'boards', 'subject', 'text', 'tnum', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip', 'country',
             'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'
         ];
 
@@ -327,6 +334,10 @@ class Search extends Board
             $query->match('comment', $input['text'], true);
         }
 
+        if ($input['tnum'] !== null) {
+            $query->where('tnum', (int) $input['tnum']);
+        }
+
         if ($input['username'] !== null) {
             $query->match('name', $input['username']);
         }
@@ -404,6 +415,13 @@ class Search extends Board
                     $query->where('has_image', 0);
                     break;
                 case 'text':
+                    $query->where('has_image', 1);
+                    break;
+                case 'spoiler':
+                    $query->where('is_spoiler', 1);
+                    break;
+                case 'not-spoiler':
+                    $query->where('is_spoiler', 0);
                     $query->where('has_image', 1);
                     break;
             }
