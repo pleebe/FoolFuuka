@@ -419,6 +419,7 @@ class Search extends Board
                     break;
                 case 'spoiler':
                     $query->where('is_spoiler', 1);
+                    $query->where('has_image', 1);
                     break;
                 case 'not-spoiler':
                     $query->where('is_spoiler', 0);
