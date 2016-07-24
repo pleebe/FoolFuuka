@@ -300,7 +300,7 @@ class Chan extends Common
     {
         // check all allowed search modifiers and apply only these
         $modifiers = [
-            'boards', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
+            'boards', 'tnum', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
             'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page'
         ];
 
@@ -338,6 +338,10 @@ class Chan extends Common
             }
 
             $search['poster_ip'] = Inet::ptod($search['poster_ip']);
+        }
+
+        if ($search['tnum'] !== null && !is_numeric($search['tnum'])) {
+            return $this->response->setData(['error' => _i('Thread number you inserted is not a valid number.')]);
         }
 
         try {
