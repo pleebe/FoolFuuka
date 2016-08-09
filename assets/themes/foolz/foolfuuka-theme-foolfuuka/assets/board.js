@@ -358,6 +358,7 @@ var bindFunctions = function()
 			_data = {
 				board: el.data('board'),
 				id: el.data('id'),
+				ip: el.data('ip'),
 				action: el.data('action'),
 				theme: backend_vars.selected_theme
 			};
@@ -405,6 +406,14 @@ var bindFunctions = function()
 									height: backend_vars.images['banned_image_height']
 								});
 							break;
+						case 'delete_all_report':
+							$(".report_reason").each(function(){
+								$(this).remove();
+							});
+							break;
+						default:
+							el.closest('.report_reason').append(data.success);
+							break;
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
@@ -424,6 +433,16 @@ var bindFunctions = function()
 			}, 700);
 			jQuery('.post_mod_controls').show();
 			jQuery('button[data-function=activateModeration]').parent().hide();
+		},
+
+		activateExtraMod: function(el, post, event)
+		{
+			jQuery('.post_extra_mod button[data-function]').attr({'disabled': 'disabled'});
+			setTimeout(function(){
+				jQuery('.post_extra_mod button[data-function]').removeAttr('disabled');
+			}, 700);
+			jQuery('.post_extra_mod').show();
+			jQuery('button[data-function=activateExtraMod]').parent().hide();
 		},
 
 		closeModal: function(el, post)

@@ -165,9 +165,31 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <br/>
                             <div class="ip_reporter">
                                 <strong><?= _i('Info:') ?></strong>
-                                <?= Inet::dtop($report->ip_reporter) ?>, <?= _i('Type:') ?> <?= $report->media_id !== null ? _i('media') : _i('post')?>, <?= _i('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
-                                <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= Inet::dtop($report->ip_reporter) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($report->ip_reporter) ?></button>
-                                <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-action="delete_report"><?= _i('Delete Report') ?></button>
+                                <?php $reportip = Inet::dtop($report->ip_reporter); /* only dtop once */ ?>
+                                <?= $reportip ?>, <?= _i('Type:') ?> <?= $report->media_id !== null ? _i('media') : _i('post')?>, <?= _i('Time:')?> <?= gmdate('D M d H:i:s Y', $report->created) ?>
+                                <div class="btn-group">
+                                    <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . $reportip ?></button>
+                                    <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="delete_report"><?= _i('Delete Report') ?></button>
+                                    <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="delete_all_report"><?= _i('Delete All Reports') ?></button>
+                                </div>
+                                <div class="btn-group" style="clear:both;">
+                                    <button class="btn btn-mini" data-function="activateExtraMod"><?= _i('Extra') ?></button>
+                                </div>
+                                <div class="post_extra_mod" style="clear:both;">
+                                    <div class="btn-group">
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="delete_all_report_posts"><?= _i('Delete All Reported Posts') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="delete_all_report_image"><?= _i('Delete All Reported Images') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="ban_all_report_image"><?= _i('Ban All Reported Images') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-action="ban_global_all_report_image"><?= _i('Globally Ban All Reported Images') ?></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="delete_all_ip_report"><?= _i('Delete All Reports From This IP') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="delete_all_report_posts_ip"><?= _i('Delete All Posts Reported By This IP') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="delete_all_report_image_ip"><?= _i('Delete All Images Reported By This IP') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="ban_all_report_image_ip"><?= _i('Ban All Images Reported By This IP') ?></button>
+                                        <button class="btn btn-mini" data-function="mod" data-id="<?= $report->id ?>" data-board="<?= $p->radix->shortname ?>" data-ip="<?= $reportip ?>" data-action="ban_global_all_report_image_ip"><?= _i('Globally Ban All Images Reported By This IP') ?></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>

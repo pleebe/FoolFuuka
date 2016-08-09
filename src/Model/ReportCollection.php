@@ -199,6 +199,25 @@ class ReportCollection extends Model
     }
 
     /**
+     * Returns an array of Reports by reporter IP
+     * @param $ip_reporter
+     *
+     * @return array  An array of \Foolz\FoolFuuka\Model\Report
+     */
+    public function getByReporterIp($ip_reporter) {
+        $this->preload();
+        $result = [];
+
+        foreach ($this->preloaded as $item) {
+            if ($item['ip_reporter'] === $ip_reporter) {
+                $result[] = $item;
+            }
+        }
+
+        return $this->fromArrayDeep($result);
+    }
+
+    /**
      * Fetches and returns all the Reports
      *
      * @return  array  An array of Report
