@@ -38,12 +38,13 @@ class CommentInsert extends Comment
     protected function insertTriggerDaily()
     {
         $item = [
+            'posts' => 1,
             'day' => (int) (floor($this->comment->timestamp/86400)*86400),
-            'images' => (int) ($this->bulk->media !== null),
+            'images' => (int) ($this->bulk->media->media_id != 0),
             'sage' => (int) ($this->comment->email === 'sage'),
             'anons' => (int) ($this->comment->name === $this->radix->getValue('anonymous_default_name') && $this->comment->trip === null),
             'trips' => (int) ($this->comment->trip !== null),
-            'names' => (int) ($this->comment->name !== $this->radix->getValue('anonymous_default_name') || $this->comment->trip !== null)
+            'names' => (int) ($this->comment->name !== $this->radix->getValue('anonymous_default_name') && $this->comment->trip === null)
         ];
 
         $result = $this->dc->qb()
@@ -56,7 +57,6 @@ class CommentInsert extends Comment
 
         if ($result === false) {
             try {
-                $item['posts'] = 0;
                 $this->dc->getConnection()->insert($this->radix->getTable('_daily'), $item);
             } catch(\Doctrine\DBAL\DBALException $e) {
                 throw new \Doctrine\DBAL\DBALException;
@@ -64,6 +64,7 @@ class CommentInsert extends Comment
         } else {
             $this->dc->qb()
                 ->update($this->radix->getTable('_daily'))
+                ->set('posts', 'posts + :posts')
                 ->set('images', 'images + :images')
                 ->set('sage', 'sage + :sage')
                 ->set('anons', 'anons + :anons')
@@ -71,6 +72,7 @@ class CommentInsert extends Comment
                 ->set('names', 'names + :names')
                 ->where('day = :day')
                 ->setParameter(':day', $item['day'])
+                ->setParameter(':posts', $item['posts'])
                 ->setParameter(':images', $item['images'])
                 ->setParameter(':sage', $item['sage'])
                 ->setParameter(':anons', $item['anons'])
