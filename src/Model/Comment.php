@@ -409,6 +409,9 @@ class Comment extends Model
             $builder = new \JBBCode\CodeDefinitionBuilder('banned', '<span class="banned">{param}</span>');
             array_push($definitions, $builder->build());
 
+            $builder = new \JBBCode\CodeDefinitionBuilder('info', '<span class="alert alert-info">{param}</span>');
+            array_push($definitions, $builder->build());
+
             $builder = new \JBBCode\CodeDefinitionBuilder('fortune', '<strong><span class="fortune" style="color: {color}">{param}</span></strong>');
             $builder->setUseOption(true);
             array_push($definitions, $builder->build());
@@ -857,6 +860,40 @@ class Comment extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * @param $arr  Array of comment data like field => value
+     *
+     * @throws CommentSendingDatabaseException
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    protected function p_commentUpdate($arr)
+    {
+        try {
+            $q = $this->dc->qb()
+                ->update($this->radix->getTable());
+            foreach ($arr as $key => $value) {
+                if($value === '') {
+                    // null it if blank
+                    $value = null;
+                }
+
+                $q->set($key, ":$key")
+                    ->setParameter(":$key", $value);
+            }
+            $q->where('doc_id = :doc_id')
+                ->setParameter(':doc_id', $this->comment->doc_id)
+                ->execute();
+
+            $this->clearCache();
+
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->logger->error('\Foolz\FoolFuuka\Model\Comment: '.$e->getMessage());
+            $this->dc->getConnection()->rollBack();
+
+            throw new CommentSendingDatabaseException(_i('Something went wrong when updating the post in the database. Try again.'));
+        }
     }
 
     /**

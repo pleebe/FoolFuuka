@@ -1213,3 +1213,9 @@ code.hljs {
 .theme_default article .post_extra_mod {
   display: none;
 }
+.theme_default .modal-information label {
+  min-width: 95px;
+}
+.theme_default article .alert-info {
+  color: #364041;
+}

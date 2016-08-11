@@ -804,4 +804,63 @@ class Chan extends Common
             return $this->response->setData(['success' => _i('Successfully banned all reported images')]);
         }
     }
+
+    public function post_edit_post()
+    {
+        if (!$this->checkCsrfToken()) {
+            return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
+        }
+
+        if (!$this->getAuth()->hasAccess('comment.mod_capcode')) {
+            return $this->response->setData(['error' => _i('Access Denied.')])->setStatusCode(403);
+        }
+
+        if (!$this->check_board()) {
+            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
+        }
+
+        if ($this->getPost('action') === 'edit_post') {
+            try {
+                $comment = Board::forge($this->getContext())
+                    ->getPost()
+                    ->setOptions('doc_id', $this->getPost('doc_id'))
+                    ->setRadix($this->radix)
+                    ->getComment();
+
+                $new_comment = [
+                    'title' => $this->getPost('subject'),
+                    'name' => $this->getPost('name'),
+                    'trip' => $this->getPost('trip'),
+                    'email' => $this->getPost('email'),
+                    'poster_country' => $this->getPost('poster_country'),
+                    'poster_hash' => $this->getPost('poster_hash'),
+                    'capcode' => $this->getPost('capcode'),
+                    'comment' => $this->getPost('comment')
+                ];
+
+                if($this->getPost('media_edit') == 'true') {
+                    $new_comment['media_filename'] = $this->getPost('filename');
+                    $new_comment['media_w'] = $this->getPost('media_w');
+                    $new_comment['media_h'] = $this->getPost('media_h');
+                    $new_comment['preview_w'] = $this->getPost('preview_w');
+                    $new_comment['preview_h'] = $this->getPost('preview_h');
+                    $new_comment['spoiler'] = $this->getPost('spoiler');
+                }
+
+                if($this->getPost('transparency') == 'true') {
+                    $new_comment['comment'] .= "\n\n[info](This post was modified by '".$this->preferences->get('foolframe.gen.website_title')."' staff on ".date("Y-m-d").".)[/info]";
+                }
+
+                // might want to do some validation here or in model
+
+                $comment = new Comment($this->getContext(), $comment);
+                $comment->commentUpdate($new_comment);
+            } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                return $this->response->setData(['error' => _i('Post not found.')]);
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+            }
+            return $this->response->setData(['success' => _i('Successfully edited comment')]);
+        }
+    }
 }

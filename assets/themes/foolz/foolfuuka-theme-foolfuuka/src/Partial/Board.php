@@ -128,6 +128,7 @@ class Board extends \Foolz\FoolFuuka\View\View
                             <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($op->poster_ip) echo ' ' .Inet::dtop($op->poster_ip) ?></button>
                         </div>
                         <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 0;">
+                            <button class="btn btn-mini" data-post="<?= $op->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($op->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="editPost"><?= _i('Edit Post') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="toggle_sticky"><?= _i('Toggle Sticky') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="toggle_locked"><?= _i('Toggle Locked') ?></button>
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op->doc_id ?>" data-action="delete_post"><?= _i('Delete Thread') ?></button>

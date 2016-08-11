@@ -504,6 +504,89 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'ban');
 		},
 
+		editPost: function(el, post, event)
+		{
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Edit Post No. ' + el.data("post-id"));
+			modal.find(".modal-error").html('');
+			modal.find(".modal-loading").show();
+			modal.find(".modal-information").html('<fieldset>\
+				<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
+				<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
+				<div class="input-prepend">\
+				<label class="add-on" for="subject">Subject</label><input name="edit-subject" id="subject" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="name">Name</label><input name="edit-name" id="name" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="trip">Tripcode (final)</label><input name="edit-trip" id="trip" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="email">E-Mail</label><input name="edit-email" id="email" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="country">Country</label><input name="edit-country" id="country" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="poster_hash">Hash</label><input name="edit-poster_hash" id="poster_hash" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="capcode">Capcode</label><select name="edit-capcode" id="capcode">\
+				<option value="N">Normal</option>\
+				<option value="M">Moderator</option>\
+				<option value="A">Administrator</option>\
+				<option value="D">Developer</option></select></div>\
+				<textarea name="edit-comment" placeholder="" rows="3" style="height:132px; width:320px;"></textarea>\
+				<label><input type="checkbox" name="transparency"> Include transparency message</label>');
+			modal.find(".submitModal").data("action", 'edit-post');
+			jQuery.ajax({
+				url: backend_vars.api_url + '_/api/chan/post/' ,
+				dataType: 'json',
+				type: 'GET',
+				cache: false,
+				data: {
+					board: el.data('board'),
+					num: el.data('post-id')
+				},
+				success: function(data){
+					jQuery("input[name='edit-subject']").val(data.title);
+					jQuery("input[name='edit-name']").val(data.name);
+					jQuery("input[name='edit-trip']").val(data.trip);
+					jQuery("input[name='edit-email']").val(data.email);
+					jQuery("input[name='edit-country']").val(data.poster_country);
+					jQuery("input[name='edit-poster_hash']").val(data.poster_hash);
+					jQuery("select[name='edit-capcode']").val(data.capcode);
+					jQuery("textarea[name='edit-comment']").val(data.comment);
+					if(data.media != null) {
+						modal.find(".modal-information").append('<hr><p>Media</p><input type="hidden" name="media_id" value="" />\
+						<div class="input-prepend">\
+						<label class="add-on" for="filename">Filename</label><input name="edit-filename" id="filename" type="text"></div>\
+						<div class="input-prepend">\
+						<label class="add-on" for="media_w">Media Width</label><input name="edit-media_w" id="media_w" type="text"></div>\
+						<div class="input-prepend">\
+						<label class="add-on" for="media_h">Media Height</label><input name="edit-media_h" id="media_h" type="text"></div>\
+						<div class="input-prepend">\
+						<label class="add-on" for="preview_w">Preview Width</label><input name="edit-preview_w" id="preview_w" type="text"></div>\
+						<div class="input-prepend">\
+						<label class="add-on" for="preview_h">Preview Height</label><input name="edit-preview_h" id="preview_h" type="text"></div>\
+						<label for="spoiler"><input type="checkbox" id="spoiler" value="true" name="edit-spoiler"> Spoiler Image</label>');
+						jQuery("input[name='media_id']").val(data.media.media_id);
+						jQuery("input[name='edit-filename']").val(data.media.media_filename);
+						if(data.media.spoiler == 1) {
+							jQuery("input[name='edit-spoiler']").click();
+						}
+						jQuery("input[name='edit-media_w']").val(data.media.media_w);
+						jQuery("input[name='edit-media_h']").val(data.media.media_h);
+						jQuery("input[name='edit-preview_w']").val(data.media.preview_w);
+						jQuery("input[name='edit-preview_h']").val(data.media.preview_h);
+					}
+				},
+				error: function() {
+					console.log('post not found');
+					modal.closeModal();
+				},
+				complete: function() {
+					modal.find(".modal-information").append('</fieldset>');
+					modal.find(".modal-loading").hide();
+				}
+			});
+		},
+
 		submitModal: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
@@ -552,6 +635,40 @@ var bindFunctions = function()
 					ip: modal.find('.modal-ip').val(),
 					reason: modal.find('.modal-comment').val()
 				};
+			}
+			else if (action == 'edit-post')
+			{
+				_href = backend_vars.api_url+'_/api/chan/edit_post/';
+				_data = {
+					action: 'edit_post',
+					board: modal.find('.modal-board').val(),
+					doc_id: modal.find('.modal-post-id').val(),
+					subject: modal.find("input[name='edit-subject']").val(),
+					name: modal.find("input[name='edit-name']").val(),
+					trip: modal.find("input[name='edit-trip']").val(),
+					email: modal.find("input[name='edit-email']").val(),
+					poster_country: modal.find("input[name='edit-country']").val(),
+					poster_hash: modal.find("input[name='edit-poster_hash']").val(),
+					capcode: modal.find("select[name='edit-capcode']").val(),
+					comment: modal.find("textarea[name='edit-comment']").val(),
+					csrf_fool: backend_vars.csrf_hash
+				};
+				if ($('input[name=transparency]').is(':checked')) {
+					_data.transparency = true;
+				}
+				if(modal.find("input[name='media_id']").val() != null) {
+					_data.media_edit = true;
+					_data.filename = modal.find("input[name='edit-filename']").val();
+					_data.media_w = modal.find("input[name='edit-media_w']").val();
+					_data.media_h = modal.find("input[name='edit-media_h']").val();
+					_data.preview_w = modal.find("input[name='edit-preview_w']").val();
+					_data.preview_h = modal.find("input[name='edit-preview_h']").val();
+					if ($('input[name=edit-spoiler]').is(':checked')) {
+						_data.spoiler = 1;
+					} else {
+						_data.spoiler = 0;
+					}
+				}
 			}
 			else {
 				// Stop It! Unable to determine which action to use.
