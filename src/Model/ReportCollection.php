@@ -52,6 +52,11 @@ class ReportCollection extends Model
      */
     protected $ban_factory;
 
+    /**
+     * @var Audit
+     */
+    protected $audit;
+
     public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
@@ -61,6 +66,7 @@ class ReportCollection extends Model
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
         $this->media_factory = $context->getService('foolfuuka.media_factory');
         $this->ban_factory = $context->getService('foolfuuka.ban_factory');
+        $this->audit = $context->getService('foolfuuka.audit_factory');
 
         $this->preload();
     }
@@ -378,6 +384,16 @@ class ReportCollection extends Model
      */
     public function p_delete($id)
     {
+        $report = $this->dc->qb()
+            ->select('*')
+            ->from($this->dc->p('reports'))
+            ->where('id = :id')
+            ->setParameter(':id', $id)
+            ->execute()
+            ->fetch();
+
+        $this->audit->log(Audit::AUDIT_DEL_REPORT, ['radix' => $report['board_id'], 'ip_reporter' => $report['ip_reporter'], 'doc_id' => $report['doc_id'], 'reason' => $report['reason'], 'created' => $report['created']]);
+
         $this->dc->qb()
             ->delete($this->dc->p('reports'))
             ->where('id = :id')

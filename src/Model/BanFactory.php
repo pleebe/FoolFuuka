@@ -17,11 +17,17 @@ class BanFactory extends Model
      */
     protected $radix_coll;
 
+    /**
+     * @var Audit
+     */
+    protected $audit;
+
     public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
         $this->dc = $context->getService('doctrine');
+        $this->audit = $context->getService('foolfuuka.audit_factory');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
     }
 
@@ -289,6 +295,12 @@ class BanFactory extends Model
             }
 
             $objects[] = $new;
+
+            $global = false;
+            if($new->board_id == 0) {
+                $global = true;
+            }
+            $this->audit->log(Audit::AUDIT_BAN_USER, ['global' => $global, 'radix' => $new->board_id, 'ip' => $new->ip, 'reason' => $new->reason, 'length' => $new->length]);
         }
 
         return $objects;

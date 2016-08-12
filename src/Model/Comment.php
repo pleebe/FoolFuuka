@@ -894,6 +894,14 @@ class Comment extends Model
 
             throw new CommentSendingDatabaseException(_i('Something went wrong when updating the post in the database. Try again.'));
         }
+
+        $this->audit->log(Audit::AUDIT_EDIT_POST, [
+            'radix' => $this->radix->id,
+            'doc_id' => $this->comment->doc_id,
+            'thread_num' => $this->comment->thread_num,
+            'num' => $this->comment->num,
+            'subnum' => $this->comment->subnum
+        ]);
     }
 
     /**

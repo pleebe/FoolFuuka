@@ -21,6 +21,9 @@ class Audit extends Model
     const AUDIT_BAN_FILE = 1;
     const AUDIT_DEL_FILE = 2;
     const AUDIT_DEL_POST = 3;
+    const AUDIT_BAN_USER = 4;
+    const AUDIT_DEL_REPORT = 5;
+    const AUDIT_EDIT_POST = 6;
 
     public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
@@ -41,6 +44,9 @@ class Audit extends Model
             case 1: return 'FILE_BAN';
             case 2: return 'FILE_DEL';
             case 3: return 'POST_DEL';
+            case 4: return 'USER_BAN';
+            case 5: return 'REPORT_DEL';
+            case 6: return 'POST_EDIT';
         }
     }
 
