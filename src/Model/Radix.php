@@ -357,7 +357,7 @@ class Radix extends Model
 
         // in a transaction multiple inserts are almost like a single one
         foreach ($md5_array as $item) {
-            $conn->getConnection()->insert($this->getTable('_images'), ['md5' => $item['md5'], 'banned' => 1]);
+            $conn->getConnection()->insert($this->getTable('_images'), ['media_hash' => $item['md5'], 'banned' => 1]);
         }
 
         $conn->getConnection()->commit();
