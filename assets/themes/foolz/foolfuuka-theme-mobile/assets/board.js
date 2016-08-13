@@ -500,7 +500,8 @@ var bindFunctions = function()
 			<input type="radio" name="board" value="global" /><br/>\n\
 			<span class="modal-field">Comment</span>\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
-			<textarea class="modal-comment"></textarea>');
+			<textarea class="modal-comment"></textarea>\
+			<label><input type="checkbox" name="delete_user"> Delete all posts by this IP</label>');
 			modal.find(".submitModal").data("action", 'ban');
 		},
 
@@ -635,6 +636,9 @@ var bindFunctions = function()
 					ip: modal.find('.modal-ip').val(),
 					reason: modal.find('.modal-comment').val()
 				};
+				if ($('input[name=delete_user]').is(':checked')) {
+					_data.delete_user = true;
+				}
 			}
 			else if (action == 'edit-post')
 			{

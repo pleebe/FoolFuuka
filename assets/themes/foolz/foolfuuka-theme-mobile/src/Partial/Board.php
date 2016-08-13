@@ -163,6 +163,7 @@ class Board extends \Foolz\FoolFuuka\View\View
                             <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-id="<?= $op_media->media_id ?>" data-doc-id="<?= $op->doc_id ?>" data-action="ban_image_global"><?= _i('Ban Image Globally') ?></button>
                             <?php endif; ?>
                             <?php if ($op->poster_ip) : ?>
+                            <button class="btn btn-mini" data-function="mod" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="delete_user"><?= _i('Delete All Post By IP') ?></button>
                             <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $op->radix->shortname ?>" data-ip="<?= Inet::dtop($op->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($op->poster_ip) ?></button>
                             <button class="btn btn-mini" data-function="searchUser" data-board="<?= $op->radix->shortname ?>" data-board-url="<?= $this->getUri()->create(array($op->radix->shortname)) ?>" data-id="<?= $op->doc_id ?>" data-poster-ip="<?= Inet::dtop($op->poster_ip) ?>"><?= _i('Search IP') ?></button>
                             <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>
