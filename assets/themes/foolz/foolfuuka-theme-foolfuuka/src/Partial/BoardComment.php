@@ -153,6 +153,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p_media->media_id ?>" data-doc-id="<?= $p->doc_id ?>" data-action="ban_image_global"><?= _i('Ban Image Globally') ?></button>
                     <?php endif; ?>
                     <?php if ($p->poster_ip) : ?>
+                        <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-ip="<?= Inet::dtop($p->poster_ip) ?>" data-action="delete_user"><?= _i('Delete All Post By IP') ?></button>
                         <button class="btn btn-mini" data-function="ban" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-board="<?= $p->radix->shortname ?>" data-ip="<?= Inet::dtop($p->poster_ip) ?>" data-action="ban_user"><?= _i('Ban IP:') . ' ' . Inet::dtop($p->poster_ip) ?></button>
                         <button class="btn btn-mini" data-function="searchUser" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-poster-ip="<?= Inet::dtop($p->poster_ip) ?>"><?= _i('Search IP') ?></button>
                         <?php if ($this->getPreferences()->get('foolfuuka.sphinx.global')) : ?>

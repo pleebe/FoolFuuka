@@ -1001,6 +1001,21 @@ class Board extends Model
     }
 
     /**
+     * @param string $poster_ip for matching all post by that ip
+     * @return \Foolz\FoolFuuka\Model\Board
+     */
+    protected function p_getPostsByIP($poster_ip = null)
+    {
+        $this->setMethodFetching('getPostComment');
+
+        if ($poster_ip !== null) {
+            $this->setOptions('poster_ip', $poster_ip);
+        }
+
+        return $this;
+    }
+
+    /**
      * Gets a post by num or doc_d
      *
      * @return  \Foolz\FoolFuuka\Model\Board  The current object
@@ -1028,6 +1043,9 @@ class Board extends Model
         } elseif (isset($doc_id)) {
             $query->where('doc_id = :doc_id')
                 ->setParameter(':doc_id', $doc_id);
+        } elseif (isset($poster_ip)) {
+            $query->where('poster_ip = :poster_ip')
+                ->setParameter(':poster_ip', $poster_ip);
         } else {
             throw new BoardMissingOptionsException(_i('No posts found with the submitted options.'));
         }

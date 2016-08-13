@@ -614,8 +614,42 @@ class Chan extends Common
                     $this->getPost('length'),
                     $this->getPost('board_ban') === 'global' ? array() : array($this->radix->id)
                 );
+
+                if($this->getPost('delete_user') === 'true') {
+                    if($this->getPost('board_ban') === 'global') {
+                        foreach ($this->radix_coll->getAll() as $new_radix) {
+                            $board = Board::forge($this->getContext())
+                                ->getPostsByIP()
+                                ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
+                                ->setRadix($new_radix);
+
+                            foreach ($board->getCommentsUnsorted() as $comment) {
+                                try {
+                                    $comment = new Comment($this->getContext(), $comment);
+                                    $comment->delete();
+                                } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                                } // we don't want any errors here, just continue
+                            }
+                        }
+                    } else {
+                        $board = Board::forge($this->getContext())
+                            ->getPostsByIP()
+                            ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
+                            ->setRadix($this->radix);
+
+                        foreach ($board->getCommentsUnsorted() as $comment) {
+                            try {
+                                $comment = new Comment($this->getContext(), $comment);
+                                $comment->delete();
+                            } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                            } // we don't want any errors here, just continue
+                        }
+                    }
+                }
             } catch (\Foolz\FoolFuuka\Model\BanException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
             }
 
             return $this->response->setData(['success' => _i('This user was banned.')]);
@@ -802,6 +836,26 @@ class Chan extends Common
                 }
             }
             return $this->response->setData(['success' => _i('Successfully banned all reported images')]);
+        }
+
+        if ($this->getPost('action') === 'delete_user') {
+            try {
+                $board = Board::forge($this->getContext())
+                    ->getPostsByIP()
+                    ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
+                    ->setRadix($this->radix);
+
+                foreach ($board->getCommentsUnsorted() as $comment) {
+                    try {
+                        $comment = new Comment($this->getContext(), $comment);
+                        $comment->delete();
+                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                    } // we don't want any errors here, just continue
+                }
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+            } // on first real error we need to discontinue
+            return $this->response->setData(['success' => _i('Successfully removed all posts by IP.')]);
         }
     }
 
