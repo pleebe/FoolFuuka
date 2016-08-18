@@ -251,6 +251,76 @@ class Chan extends Common
         return $this->response->setData(['error' => _i('Requested resource does not exist.')])->setStatusCode(404);
     }
 
+    public function get_site()
+    {
+        return $this->get_boards();
+    }
+
+    public function get_archives()
+    {
+        return $this->get_boards();
+    }
+
+    public function get_boards()
+    {
+        $res['site'] = [
+            'url' => $this->uri->base(),
+            'name' => $this->preferences->get('foolframe.gen.website_title'),
+            'title' => $this->preferences->get('foolframe.gen.index_title'),
+            'notices' => $this->preferences->get('foolframe.theme.header_text'),
+            'media_http' => preg_split("/\\r\\n|\\r|\\n/",$this->preferences->get('foolfuuka.boards.media_balancers')),
+            'media_https' => preg_split("/\\r\\n|\\r|\\n/",$this->preferences->get('foolfuuka.boards.media_balancers_https')),
+            'global_search_enabled' => (bool)$this->preferences->get('foolfuuka.sphinx.global')
+        ];
+
+        foreach($this->radix_coll->getAll() as $board) {
+            $res[($board->archive ? 'archives' : 'boards')][$board->id] = [
+                'name' => $board->name,
+                'shortname' => $board->shortname,
+                'board_url' => $this->uri->create($board->shortname . '/'),
+                'threads_per_page' => $board->getValue('threads_per_page'),
+                'original_board_url' => ($board->archive ? $board->getValue('board_url') : $this->uri->create($board->shortname . '/')),
+                'thumbs_url' => $board->getValue('thumbs_url'),
+                'images_url' => $board->getValue('images_url'),
+                'anonymous_default_name' => $board->getValue('anonymous_default_name'),
+                'max_comment_characters_allowed' => $board->getValue('max_comment_characters_allowed'),
+                'max_comment_lines_allowed' => $board->getValue('max_comment_lines_allowed'),
+                'cooldown_new_comment' => $board->getValue('cooldown_new_comment'),
+                'transparent_spoiler' => (bool)$board->getValue('transparent_spoiler'),
+                'enable_flags' => (bool)$board->getValue('enable_flags'),
+                'display_exif' => (bool)$board->getValue('display_exif'),
+                'enable_poster_hash' => (bool)$board->getValue('enable_poster_hash'),
+                'disable_ghost' => (bool)$board->getValue('disable_ghost'),
+                'is_nsfw' => (bool)$board->getValue('is_nsfw'),
+                'hide_thumbnails' => (bool)$board->getValue('hide_thumbnails'),
+                'search_enabled' => (bool)$board->getValue('sphinx'),
+                'board_hidden' => (bool)$board->getValue('hidden')
+            ];
+            if (!$board->archive) {
+                $res[($board->archive ? 'archives' : 'boards')][$board->id]['internal_board_settings'] = [
+                    'op_image_upload_necessity' => $board->getValue('op_image_upload_necessity'),
+                    'thumbnail_op_width' => $board->getValue('thumbnail_op_width'),
+                    'thumbnail_op_height' => $board->getValue('thumbnail_op_height'),
+                    'thumbnail_reply_width' => $board->getValue('thumbnail_reply_width'),
+                    'thumbnail_reply_height' => $board->getValue('thumbnail_reply_height'),
+                    'max_image_size_kilobytes' => $board->getValue('max_image_size_kilobytes'),
+                    'max_image_size_width' => $board->getValue('max_image_size_width'),
+                    'max_image_size_height' => $board->getValue('max_image_size_height'),
+                    'max_posts_count' => $board->getValue('max_posts_count'),
+                    'max_images_count' => $board->getValue('max_images_count'),
+                    'cooldown_new_thread' => $board->getValue('cooldown_new_thread'),
+                    'thread_lifetime' => $board->getValue('thread_lifetime'),
+                    'min_image_repost_time' => $board->getValue('min_image_repost_time')
+                ];
+            } else {
+                $res[($board->archive ? 'archives' : 'boards')][$board->id]['archive_full_images'] =
+                    (bool)$board->getValue('archive_full_images');
+            }
+        }
+
+        return $this->response->setData($res);
+    }
+
     public function get_index()
     {
         if (!$this->check_board()) {
