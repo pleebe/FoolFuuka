@@ -426,7 +426,11 @@ class Chan extends Common
 
             $comments = $board->getComments();
 
-            array_push($comments,['total_found' => $board->getTotalResults()]);
+            $comments['meta'] = [
+                'total_found' => (int) $board->getTotalResults(),
+                'max_results' => $this->preferences->get('foolfuuka.sphinx.max_matches', 5000),
+                'search_title' => $board->title
+            ];
 
             $this->response->setData($comments);
         } catch (\Foolz\FoolFuuka\Model\SearchException $e) {
