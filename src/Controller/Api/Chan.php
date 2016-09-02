@@ -818,6 +818,8 @@ class Chan extends Common
 
                     $comment = new Comment($this->getContext(), $comment);
                     $comment->delete();
+                } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                    // in this case we can safely continue
                 } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
                     return $this->response->setData(['error' => $e->getMessage()]);
                 } catch (\Exception $e) {
