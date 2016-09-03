@@ -961,7 +961,7 @@ class Board extends Model
             'nimages' => $thread['nimages']
         ];
 
-        if (($this->radix->getValue('thread_lifetime') > 0 && time() - $thread['time_last'] > $this->radix->getValue('thread_lifetime')) || $ghost_post_present) {
+        if (($this->radix->getValue('thread_lifetime') > 0 && time() - $thread['time_last'] > $this->radix->getValue('thread_lifetime') && !$result['sticky']) || $ghost_post_present) {
             $result['dead'] = true;
             $result['disable_image_upload'] = true;
         }
