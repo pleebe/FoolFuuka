@@ -47,8 +47,7 @@
 
         "components/font-awesome": "4.2.0",
         "components/highlightjs": "8.4.0",
-        "mathjax/mathjax": "dev-v2.5-latest",
-        "doctrine/migrations": "v1.2.2"
+        "mathjax/mathjax": "dev-v2.5-latest"
     },
     "scripts": {
         "post-install-cmd": [
