@@ -226,6 +226,26 @@ class Context implements ContextInterface
 
     public function handleConsole()
     {
-        // no actions
+        $config = $this->context->getService('config');
+        Event::forge('Foolz\FoolFrame\Model\Context::handleConsole#obj.app')
+            ->setCall(function($result) use ($config) {
+                $db_config = $config->get('foolz/foolframe', 'db', 'default');
+                $db = \Doctrine\DBAL\DriverManager::getConnection($db_config);
+                $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
+                    'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($db),
+                    'dialog' => new \Symfony\Component\Console\Helper\DialogHelper(),
+                ));
+                $application = $result->getParam('application');
+                $application->setHelperSet($helperSet);
+                $application->addCommands(array(
+                    // Migrations Commands
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
+                    new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand()
+                ));
+            });
     }
 }
