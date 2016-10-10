@@ -251,29 +251,42 @@ class Chan extends Common
         return $this->response->setData(['error' => _i('Requested resource does not exist.')])->setStatusCode(404);
     }
 
-    public function get_site()
+    public function get_boards()
     {
-        return $this->get_boards();
+        return $this->get_site('boards');
     }
 
     public function get_archives()
     {
-        return $this->get_boards();
+        return $this->get_site('archives');
     }
 
-    public function get_boards()
+    public function get_site($mode = '')
     {
         $res['site'] = [
             'url' => $this->uri->base(),
             'name' => $this->preferences->get('foolframe.gen.website_title'),
             'title' => $this->preferences->get('foolframe.gen.index_title'),
             'notices' => $this->preferences->get('foolframe.theme.header_text'),
-            'media_http' => preg_split("/\\r\\n|\\r|\\n/",$this->preferences->get('foolfuuka.boards.media_balancers')),
-            'media_https' => preg_split("/\\r\\n|\\r|\\n/",$this->preferences->get('foolfuuka.boards.media_balancers_https')),
+            'media_http' => preg_split("/\\r\\n|\\r|\\n/", $this->preferences->get('foolfuuka.boards.media_balancers')),
+            'media_https' => preg_split("/\\r\\n|\\r|\\n/", $this->preferences->get('foolfuuka.boards.media_balancers_https')),
             'global_search_enabled' => (bool)$this->preferences->get('foolfuuka.sphinx.global')
         ];
 
-        foreach($this->radix_coll->getAll() as $board) {
+        $radices = [];
+        switch ($mode) {
+            case 'boards':
+                $radices = $this->radix_coll->getBoards();
+                break;
+            case 'archives':
+                $radices = $this->radix_coll->getArchives();
+                break;
+            default:
+                $radices = $this->radix_coll->getAll();
+                break;
+        }
+
+        foreach ($radices as $board) {
             $res[($board->archive ? 'archives' : 'boards')][$board->id] = [
                 'name' => $board->name,
                 'shortname' => $board->shortname,
