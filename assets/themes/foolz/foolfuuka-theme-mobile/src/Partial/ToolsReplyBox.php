@@ -156,11 +156,13 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         </div>
 
                         <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
-                            <div class="recaptcha_widget" style="display:none">
-                                <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
-                                <div class="g-recaptcha" data-sitekey="<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>"></div>
-                            </div>
-                            <script type="text/javascript" src="//www.google.com/recaptcha/api.js" async defer></script>
+                            <script>
+                                var recaptcha2 = {
+                                    'enabled': true,
+                                    'pubkey': '<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>'
+                                };
+                            </script>
+                            <div class="recaptcha_widget" style="display:none"></div>
                             <noscript>
                                 <div>
                                     <div style="width: 302px; height: 422px; position: relative;">
@@ -175,12 +177,15 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                                 </div>
                             </noscript>
                         <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
-                        <script>
-                            var RecaptchaOptions = {
-                                theme : 'custom',
-                                custom_theme_widget: 'recaptcha_widget'
-                            };
-                        </script>
+                            <script>
+                                var recaptcha2 = {
+                                    'enabled': false
+                                };
+                                var RecaptchaOptions = {
+                                    theme : 'custom',
+                                    custom_theme_widget: 'recaptcha_widget'
+                                };
+                            </script>
 
                         <div class="recaptcha_widget" style="display:none">
                             <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>

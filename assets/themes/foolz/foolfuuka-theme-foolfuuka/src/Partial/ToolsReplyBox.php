@@ -161,11 +161,13 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         </div>
 
                         <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
-                            <div class="recaptcha_widget" style="display:none">
-                                <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
-                                <div class="g-recaptcha" data-sitekey="<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>"></div>
-                            </div>
-                            <script type="text/javascript" src="//www.google.com/recaptcha/api.js" async defer></script>
+                            <script>
+                                var recaptcha2 = {
+                                    'enabled': true,
+                                    'pubkey': '<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>'
+                                };
+                            </script>
+                            <div class="recaptcha_widget" style="display:none"></div>
                             <noscript>
                                 <div>
                                     <div style="width: 302px; height: 422px; position: relative;">
@@ -181,6 +183,9 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             </noscript>
                         <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                             <script>
+                                var recaptcha2 = {
+                                    'enabled': false
+                                };
                                 var RecaptchaOptions = {
                                     theme: 'custom',
                                     custom_theme_widget: 'recaptcha_widget'
@@ -200,13 +205,13 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                                 </div>
                             </div>
                             <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
+                        </div>
                             <noscript>
                                 <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
                                 <textarea name="recaptcha_challenge_field" rows="3" cols="40">
                             </textarea>
                                 <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
                             </noscript>
-                        </div>
                         <?php endif; ?>
                     </div>
 

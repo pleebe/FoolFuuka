@@ -100,11 +100,13 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
             </tr>
 
             <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
-                <div class="recaptcha_widget" style="display:none">
-                    <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
-                    <div class="g-recaptcha" data-sitekey="<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>"></div>
-                </div>
-                <script type="text/javascript" src="//www.google.com/recaptcha/api.js" async defer></script>
+                <script>
+                    var recaptcha2 = {
+                        'enabled': true,
+                        'pubkey': '<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>'
+                    };
+                </script>
+                <div class="recaptcha_widget" style="display:none"></div>
                 <noscript>
                     <div>
                         <div style="width: 302px; height: 422px; position: relative;">
@@ -113,18 +115,20 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             </div>
                         </div>
                         <div style="width: 300px; height: 60px; border-style: none;bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
-                                        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
-                                            margin: 10px 25px; padding: 0px; resize: none;"></textarea>
+                            <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;margin: 10px 25px; padding: 0px; resize: none;"></textarea>
                         </div>
                     </div>
                 </noscript>
             <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
-            <script>
-                var RecaptchaOptions = {
-                    theme : 'custom',
-                    custom_theme_widget: 'recaptcha_widget'
-                };
-            </script>
+                <script>
+                    var recaptcha2 = {
+                        'enabled': false
+                    };
+                    var RecaptchaOptions = {
+                        theme : 'custom',
+                        custom_theme_widget: 'recaptcha_widget'
+                    };
+                </script>
             <tr class="recaptcha_widget" style="display:none">
                 <td><?= _i('Verification') ?></td>
                 <td><div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>

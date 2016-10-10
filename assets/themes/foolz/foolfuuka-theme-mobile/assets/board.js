@@ -214,6 +214,11 @@ var bindFunctions = function()
 					jQuery("#recaptcha_response_field").val('');
 					if (typeof data.captcha !== "undefined")
 					{
+						if(recaptcha2.enabled && typeof window.grecaptcha === "undefined") {
+							jQuery('.recaptcha_widget').html('<div><p>You might be a bot! Enter a reCAPTCHA to continue.</p></div> \
+							<div class="g-recaptcha" data-sitekey="'+ recaptcha2.pubkey +'"></div> \
+							<script type="text/javascript" src="//www.google.com/recaptcha/api.js" async defer></script>')
+						}
 						jQuery('.recaptcha_widget').show();
 						jQuery('.rules_box').hide();
 						return false;
