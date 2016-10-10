@@ -379,6 +379,45 @@ class Chan extends Common
         return $this->response;
     }
 
+    public function get_gallery()
+    {
+        if (!$this->check_board()) {
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(422);
+        }
+
+        $page = $this->getQuery('page');
+
+        if (!$page) {
+            return $this->response->setData(['error' => _i('The "page" parameter is missing.')])->setStatusCode(422);
+        }
+
+        if (!ctype_digit((string)$page)) {
+            return $this->response->setData(['error' => _i('The value for "page" is invalid.')])->setStatusCode(422);
+        }
+
+        $page = intval($page);
+
+        try {
+            $board = Board::forge($this->getContext())
+                ->getThreads()
+                ->setRadix($this->radix)
+                ->setPage($page)
+                ->setOptions('per_page', 100);
+
+            foreach ($board->getCommentsUnsorted() as $comment) {
+                $this->apify($comment);
+            }
+
+            $this->response->setData($board->getComments());
+        } catch (\Foolz\FoolFuuka\Model\BoardThreadNotFoundException $e) {
+            return $this->response->setData(['error' => _i('Thread not found.')]);
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+            return $this->response->setData(['error' => _i('Encountered an unknown error.')])->setStatusCode(500);
+        }
+
+        return $this->response;
+    }
+
     public function get_search()
     {
         // check all allowed search modifiers and apply only these
