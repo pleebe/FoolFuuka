@@ -5,6 +5,7 @@ namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 use Foolz\FoolFuuka\Model\Comment;
 use Foolz\FoolFuuka\Model\Media;
 use Foolz\Inet\Inet;
+use Rych\ByteSize\ByteSize;
 
 class BoardComment extends \Foolz\FoolFuuka\View\View
 {
@@ -18,20 +19,39 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
         if ($this->getParamManager()->getParam('modifiers', false)) {
             $modifiers = $this->getParamManager()->getParam('modifiers');
         }
-
+        $is_full_op = $this->getParamManager()->getParam('is_full_op', false);
+        if ($is_full_op) {
+            $thread_id = $this->getParamManager()->getParam('thread_id', 0);
+            $omitted = $this->getParamManager()->getParam('omitted', 0);
+            $images_omitted = $this->getParamManager()->getParam('images_omitted', 0);
+            $nreplies = $this->getParamManager()->getParam('nreplies', 0);
+            $nimages = $this->getParamManager()->getParam('nimages', 0);
+        }
         $num = $p->num . ( $p->subnum ? '_' . $p->subnum : '' );
 
         ?>
-        <div class="post stub stub_doc_id_<?= $p->doc_id ?>">
+        <div class="<?php if ($is_full_op) : ?>thread<?php else : ?>post<?php endif; ?> stub stub_doc_id_<?= $p->doc_id ?>">
                 <button class="btn-toggle-post" data-function="showPost" data-board="<?= $p->radix->shortname ?>"  data-doc-id="<?= $p->doc_id ?>" data-thread-num="<?= $p->thread_num ?>"><i class="icon-plus"></i></button>
                 <?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><span class="post_author"><?= $p->getNameProcessed() ?></span><?= ($p->getNameProcessed() && $p->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $p->getTripProcessed() ?></span><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
         </div>
-        <article class="post doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p_media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>">
+        <article class="<?php if ($is_full_op) : ?>clearfix thread<?php else: ?>post<?php endif; ?> doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p_media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>" <?php if ($is_full_op) : ?>data-doc-id="<?= $p->doc_id ?>" data-thread-num="<?= $p->thread_num ?>"<?php endif; ?>>
+            <?php if ($is_full_op) : ?>
+                <?php if ($thread_id === 0) : ?>
+                    <div class="stub pull-left">
+                        <button class="btn-toggle-post" data-function="hideThread" data-board="<?= $p->radix->shortname ?>" data-doc-id="<?= $p->doc_id ?>"><i class="icon-minus"></i></button>
+                    </div>
+                <?php else : ?>
+                    <div class="pull-right" title="Post Count / File Count">[<?= $nreplies ?> / <?= $nimages ?>]</div>
+                <?php endif; ?>
+                <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setObject($this)->setParam('board', $p->radix)->execute(); ?>
+            <?php else: ?>
             <div class="stub pull-left">
                 <button class="btn-toggle-post" data-function="hidePost" data-board="<?= $p->radix->shortname ?>" data-doc-id="<?= $p->doc_id ?>"><i class="icon-minus"></i></button>
             </div>
-            <div class="post_wrapper">
+            <?php endif; ?>
+            <?php if (!$is_full_op) : ?><div class="post_wrapper"><?php endif; ?>
                 <?php if ($p_media !== null) : ?>
+                    <?php if (!$is_full_op) : ?>
                 <div class="post_file">
                     <span class="post_file_controls">
                     <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
@@ -52,10 +72,11 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" class="post_file_filename" rel="tooltip" title="<?= htmlspecialchars($p_media->media_filename) ?>"><?= $p_media->getMediaFilenameProcessed() ?></a>,
                     <?php endif; ?>
                     <span class="post_file_metadata">
-                        <?= \Rych\ByteSize\ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h ?>
+                        <?= ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h ?>
                     </span>
                     <?php endif; ?>
                 </div>
+                    <?php endif; ?>
                 <div class="thread_image_box">
                     <?php if ($p_media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                         <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
@@ -68,10 +89,34 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <?php if (!$this->getAuth()->hasAccess('maccess.mod') && !$p->radix->getValue('transparent_spoiler') && $p_media->spoiler) :?>
                             <div class="spoiler_box"><span class="spoiler_box_text"><?= _i('Spoiler') ?><span class="spoiler_box_text_help"><?= _i('Click to view') ?></span></div>
                             <?php else : ?>
-                            <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="post_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
+                            <img src="<?= $p_media->getThumbLink($this->getRequest()) ?>" width="<?= $p_media->preview_w ?>" height="<?= $p_media->preview_h ?>" class="<?php if ($is_full_op): ?>thread<?php else: ?>post<?php endif; ?>_image<?= ($p_media->spoiler) ? ' is_spoiler_image' : '' ?>" data-md5="<?= $p_media->media_hash ?>" />
                             <?php endif; ?>
                         </a>
                     <?php endif; ?>
+                        <?php if ($is_full_op) : ?>
+                            <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned') : ?>
+                                <div class="post_file" style="padding-left: 2px;<?php if ($p_media->preview_w > 149) echo 'max-width:'.$p_media->preview_w .'px;'; ?>">
+                                    <?= ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h . ', '; ?><a class="post_file_filename" href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" target="_blank"><?= $p_media->getMediaFilenameProcessed(); ?></a>
+                                </div>
+                            <?php endif; ?>
+                    <div class="post_file_controls">
+                        <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
+                            <?php if ( !$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
+                                <a href="<?= $this->getUri()->create($p->radix->shortname . '/search/image/' . $p_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
+                                    href="http://www.google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                    class="btnr parent">Google</a><a
+                                    href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                    class="btnr parent">ImgOps</a><a
+                                    href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                    class="btnr parent">iqdb</a><a
+                                href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                class="btnr parent">SauceNAO</a><?php if (!$p->radix->archive || $p->radix->getValue('archive_full_images')) : ?><a
+                                    href="<?= $p_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>"
+                                    class="btnr parent"><i class="icon-download-alt"></i></a><?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                        <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <header>
@@ -107,7 +152,11 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         </span>
 
                         <span class="post_controls">
-                            <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                            <?php if ($is_full_op): ?>
+                                <a href="<?= $this->getUri()->create(array($p->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($omitted) && $omitted > 50) ? '<a href="' . $this->getUri()->create($p->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($p->radix->archive) ? '<a href="//boards.4chan.org/' . $p->radix->shortname . '/thread/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($this->getAuth()->hasAccess('maccess.mod') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                            <?php else: ?>
+                                <?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>
+                            <?php endif; ?>
                         </span>
                     </div>
                 </header>
@@ -117,6 +166,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 <div class="text<?php if (preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $p->getCommentProcessed())) echo ' shift-jis'; ?>">
                     <?= $p->getCommentProcessed() ?>
                 </div>
+                <?php if ($is_full_op) : ?><div class="thread_tools_bottom"><?php endif; ?>
                 <?php if ($p_media !== null && $p_media->getMediaStatus($this->getRequest()) === 'normal' && $p->radix->getValue('display_exif') && $p_media->exif !== NULL) : ?>
                     <span class="exif">[Exif data available. <a data-function="toggleExif" data-post="<?= $p->doc_id ?>">Click here to show/hide</a>.]</span>
                     <table class="exiftable <?= $p->doc_id ?>" style="display:none;"><tbody>
@@ -135,6 +185,17 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <?php endif; ?>
                         <?php endforeach ?>
                         </tbody></table>
+                <?php endif; ?>
+                <?php if ($is_full_op && isset($omitted) && $omitted > 0) : ?>
+                    <span class="omitted">
+                    <a style="display:inline-block" href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $p->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $p->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+                    <span class="omitted_text">
+                    <span class="omitted_posts"><?= $omitted ?></span> <?= _n('post', 'posts', $omitted) ?>
+                    <?php if (isset($images_omitted) && $images_omitted > 0) : ?>
+                        <?= _i('and') ?> <span class="omitted_images"><?= $images_omitted ?></span> <?= _n('image', 'images', $images_omitted) ?>
+                    <?php endif; ?>
+                    <?= _n('omitted', 'omitted', $omitted + $images_omitted) ?>
+                    </span>
                 <?php endif; ?>
                 <?php if ($this->getAuth()->hasAccess('maccess.mod')) : ?>
                 <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
@@ -197,8 +258,8 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                     <?php endforeach; ?>
                 <?php endif; ?>
                 <?php endif; ?>
-            </div>
-        </article>
+        </div>
+        <?php if (!$is_full_op) : ?></article><?php endif; ?>
         <?php
     }
 }
