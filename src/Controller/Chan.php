@@ -1123,6 +1123,13 @@ class Chan extends Common
             $data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
             $data['recaptcha_response'] = $post['recaptcha_response_field'];
         }
+        // recaptcha2 & noscript recaptcha2
+        if (isset($post['recaptcha2_response_field'])) {
+            $data['recaptcha2_response'] = $post['recaptcha2_response_field'];
+        }
+        if (isset($post['g-recaptcha-response'])) {
+            $data['recaptcha2_response'] = $post['g-recaptcha-response'];
+        }
 
         $media = null;
 

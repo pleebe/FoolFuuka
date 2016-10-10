@@ -23,10 +23,13 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                 <?= $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $this->getUri()->create([$radix->shortname, 'submit'])]) ?>
                 <?= $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken()); ?>
                 <?= $form->hidden('reply_numero', $thread_id, ['id' => 'reply_numero']) ?>
-                <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '' ?>
+                <?= isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit']) : '' ?>
                 <fieldset>
 
-                    <div class="progress progress-info progress-striped active" style="height:8px; margin-top:0px; margin-bottom: 3px; background: #fff; width: 660px; opacity: 0;"><div class="bar" style="width: 0%"></div></div>
+                    <div class="progress progress-info progress-striped active"
+                         style="height:8px; margin-top:0px; margin-bottom: 3px; background: #fff; width: 660px; opacity: 0;">
+                        <div class="bar" style="width: 0%"></div>
+                    </div>
 
                     <?php /*<label class="comment_label" for="reply_chennodiscursus"><?= _i('Comment') ?></label>*/ ?>
                     <div class="pull-left">
@@ -84,9 +87,11 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         </div>
 
                         <?php if (!$this->getBuilderParamManager()->getParam('disable_image_upload', false)) : ?>
-                        <div class="input-prepend">
-                            <label class="add-on" for="file_image"><?= _i('File') ?></label><input type="file" name="file_image" id="file_image" />
-                        </div>
+                            <div class="input-prepend">
+                                <label class="add-on" for="file_image"><?= _i('File') ?></label><input type="file"
+                                                                                                       name="file_image"
+                                                                                                       id="file_image"/>
+                            </div>
                         <?php endif; ?>
                         <?php
                         $postas = ['N' => _i('User')];
@@ -100,7 +105,7 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                                 <label class="add-on" for="reply_postas"><?= _i('Post As') ?></label>
                                 <?= $form->select('reply_postas', 'User', $postas, ['id' => 'reply_postas']); ?>
                             </div>
-                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
 
                     <div class="input-append pull-left">
@@ -155,44 +160,70 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             ?>
                         </div>
 
-                        <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
+                        <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
+                            <div class="recaptcha_widget" style="display:none">
+                                <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
+                                <div class="g-recaptcha" data-sitekey="<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>"></div>
+                            </div>
 
-                        <script>
-                            var RecaptchaOptions = {
-                                theme : 'custom',
-                                custom_theme_widget: 'recaptcha_widget'
-                            };
-                        </script>
+                            <script type="text/javascript" src="//www.google.com/recaptcha/api.js" async defer></script>
+                            <noscript>
+                                <div>
+                                    <div style="width: 302px; height: 422px; position: relative;">
+                                        <div style="width: 302px; height: 422px; position: absolute;">
+                                            <iframe src="https://www.google.com/recaptcha/api/fallback?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>"
+                                                    frameborder="0" scrolling="no"
+                                                    style="width: 302px; height:422px; border-style: none;">
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                    <div style="width: 300px; height: 60px; border-style: none;
+                                        bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                                        background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                                        <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                                        class="g-recaptcha-response"
+                                        style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                                            margin: 10px 25px; padding: 0px; resize: none;">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </noscript>
 
+                        <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
+                            <script>
+                                var RecaptchaOptions = {
+                                    theme: 'custom',
+                                    custom_theme_widget: 'recaptcha_widget'
+                                };
+                            </script>
                         <div class="recaptcha_widget" style="display:none">
                             <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
                             <div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
                             <div class="input-prepend">
                                 <label class="add-on" for="recaptcha_response_field"><?= e(_i('Solution')) ?></label>
                                 <input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
+                                <div class="btn-group">
+                                    <a class="btn btn-mini" href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
+                                    <a class="recaptcha_only_if_image btn btn-mini" href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a>
+                                    <a class="recaptcha_only_if_audio btn btn-mini" href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a>
+                                    <a class="btn btn-mini" href="javascript:Recaptcha.showhelp()">Help</a>
+                                </div>
                             </div>
-                            <div class="btn-group">
-                                <a class="btn btn-mini" href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
-                                <a class="recaptcha_only_if_image btn btn-mini" href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a>
-                                <a class="recaptcha_only_if_audio btn btn-mini" href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a>
-                                <a class="btn btn-mini" href="javascript:Recaptcha.showhelp()">Help</a>
-                            </div>
-                        </div>
-
-                        <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
-                        <noscript>
-                            <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
-                            <textarea name="recaptcha_challenge_field" rows="3" cols="40">
+                            <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
+                            <noscript>
+                                <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
+                                <textarea name="recaptcha_challenge_field" rows="3" cols="40">
                             </textarea>
-                            <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
-                        </noscript>
+                                <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
+                            </noscript>
+                        </div>
                         <?php endif; ?>
 
                     </div>
 
                     <div id="reply_ajax_notices"></div>
                     <?php if ($reply_errors) : ?>
-                    <span style="color:red"><?= $reply_errors ?></span>
+                        <span style="color:red"><?= $reply_errors ?></span>
                     <?php endif; ?>
                 </fieldset>
                 <?= $form->close() ?>

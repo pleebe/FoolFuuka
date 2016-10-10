@@ -156,13 +156,18 @@ var bindFunctions = function()
 				reply_chennodiscursus: jQuery("#reply_chennodiscursus").val(),
 				reply_nymphassword: jQuery("#reply_nymphassword").val(),
 				reply_postas: jQuery("#reply_postas").val() === undefined ? 'N' : jQuery("#reply_postas").val(),
-				recaptcha_challenge_field: jQuery("#recaptcha_challenge_field").val(),
-				recaptcha_response_field: jQuery("#recaptcha_response_field").val(),
 				reply_gattai: 'Submit',
 				reply_last_limit: typeof backend_vars.last_limit === "undefined" ? null : backend_vars.last_limit,
 				latest_doc_id: backend_vars.latest_doc_id,
 				theme: backend_vars.selected_theme
 			};
+
+			if(typeof jQuery("#recaptcha_challenge_field").val() !== 'undefined' && typeof jQuery("#recaptcha_response_field").val() !== 'undefined') {
+				data_obj['recaptcha_challenge_field'] = jQuery("#recaptcha_challenge_field").val();
+				data_obj['recaptcha_response_field'] = jQuery("#recaptcha_response_field").val();
+			} else if(typeof jQuery("#g-recaptcha-response").val() !== 'undefined') {
+				data_obj['recaptcha2_response_field'] = jQuery("#g-recaptcha-response").val();
+			}
 
 			// sets the type of submit (reply_gattai, reply_gattai_spoilered)
 			data_obj[el.attr('name')] = true;
@@ -201,6 +206,9 @@ var bindFunctions = function()
 					if (typeof window.Recaptcha !== "undefined")
 					{
 						window.Recaptcha.reload();
+					}
+					if (typeof window.grecaptcha !== "undefined") {
+						grecaptcha.reset();
 					}
 
 					jQuery("#recaptcha_response_field").val('');
