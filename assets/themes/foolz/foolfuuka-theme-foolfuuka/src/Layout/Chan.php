@@ -366,7 +366,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>
-        window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('assets/js/jquery.js') ?>"><\/script>');
+        window.jQuery || document.write('<script src="<?= $this->getAssetManager()->getAssetLink('jquery.js') ?>"><\/script>');
         hljs.configure({
             tableReplace: '  '
         });
