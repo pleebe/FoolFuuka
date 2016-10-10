@@ -352,11 +352,17 @@ class Chan extends Common
 
         $page = intval($page);
 
+        $order = 'by_thread';
+
+        if($this->getQuery('order') !== null && in_array($this->getQuery('order'), ['by_post', 'by_thread', 'ghost'])) {
+            $order = $this->getQuery('order');
+        }
+
         try {
             $options = [
                 'per_page' => $this->radix->getValue('threads_per_page'),
                 'per_thread' => 5,
-                'order' => 'by_thread'
+                'order' => $order
             ];
 
             $board = Board::forge($this->getContext())
