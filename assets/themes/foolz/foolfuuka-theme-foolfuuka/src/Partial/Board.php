@@ -5,8 +5,6 @@ namespace Foolz\FoolFuuka\Theme\FoolFuuka\Partial;
 use Foolz\FoolFuuka\Model\Comment;
 use Foolz\FoolFuuka\Model\CommentBulk;
 use Foolz\FoolFuuka\Model\Media;
-use Foolz\Inet\Inet;
-use Rych\ByteSize\ByteSize;
 
 class Board extends \Foolz\FoolFuuka\View\View
 {
