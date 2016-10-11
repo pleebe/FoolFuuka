@@ -39,19 +39,19 @@ class Board extends \Foolz\FoolFuuka\View\View
 
         foreach ($board as $key => $post) :
             if (isset($post['op'])) :
-                $op_bulk = $post['op'];
-                $op = new Comment($this->getContext(), $op_bulk);
-                $op->setControllerMethod($controller_method);
-                if ($op_bulk->media !== null) {
-                    $op_media = new Media($this->getContext(), $op_bulk);
+                $op = $post['op'];
+                $comment->setBulk($op);
+                if ($op->media !== null) {
+                    $media_obj->setBulk($op);
+                    $media = $media_obj;
                 } else {
-                    $op_media = null;
+                    $media = null;
                 }
                 $board_op_view = $this->getBuilder()->createPartial('post', 'board_comment');
 
                 $board_op_view->getParamManager()->setParams([
-                    'p' => $op,
-                    'p_media' => $op_media,
+                    'p' => $comment,
+                    'p_media' => $media,
                     'modifiers' => $this->getBuilderParamManager()->getParam('modifiers', false),
                     'thread_id' => $thread_id,
                     'nreplies' => $nreplies,
@@ -61,16 +61,16 @@ class Board extends \Foolz\FoolFuuka\View\View
                     'is_full_op' => true,
                 ]);
 
+                $board_op_view->doBuild();
+
                 echo preg_replace($search, $replace, $board_op_view->build());
 
-                // remove extra strings from the objects
                 $board_op_view->clearBuilt();
                 $op->comment->clean();
                 if ($op->media !== null) {
                     $op->media->clean();
                 }
 
-                $board_op_view->doBuild();
                 $this->flush();
                 ?>
                 <?php elseif (isset($post['posts'])) : ?>
