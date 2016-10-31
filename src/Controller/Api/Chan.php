@@ -272,6 +272,12 @@ class Chan extends Common
             'media_https' => preg_split("/\\r\\n|\\r|\\n/", $this->preferences->get('foolfuuka.boards.media_balancers_https')),
             'global_search_enabled' => (bool)$this->preferences->get('foolfuuka.sphinx.global')
         ];
+        if ($this->getQuery('theme')) {
+            foreach (['bootstrap.legacy.css', 'font-awesome/css/font-awesome.css', 'style.css', 'flags.css',
+                         'jquery.js', 'bootstrap.min.js', 'board.js', 'plugins.js'] as $asset) {
+                $res['site']['assets'][] = $this->theme->getAssetManager()->getAssetLink($asset);
+            }
+        }
 
         $radices = [];
         switch ($mode) {
