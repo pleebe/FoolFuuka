@@ -21,6 +21,7 @@ use Foolz\Inet\Inet;
 use Foolz\Profiler\Profiler;
 use Foolz\Theme\Builder;
 use Foolz\Theme\Theme;
+use Foolz\Plugin\Hook;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -334,6 +335,18 @@ class Chan extends Common
             } else {
                 $res[($board->archive ? 'archives' : 'boards')][$board->id]['archive_full_images'] =
                     (bool)$board->getValue('archive_full_images');
+            }
+        }
+        $extra = [];
+        $extra = Hook::forge('foolframe.themes.generic.index_nav_elements')->setObject($this)->setParam('nav', $extra)->execute()->get($extra);
+        $extra = Hook::forge('foolfuuka.themes.default.index_nav_elements')->setObject($this)->setParam('nav', $extra)->execute()->get($extra);
+
+        foreach ($extra as $item) {
+            foreach($item['elements'] as $i) {
+                $res[$item['title']][] = [
+                    'url' => $i['href'],
+                    'text' => $i['text']
+                ];
             }
         }
 
