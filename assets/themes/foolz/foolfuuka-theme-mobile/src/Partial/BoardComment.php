@@ -209,24 +209,12 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <?php endforeach ?>
                         </tbody></table>
                 <?php endif; ?>
-                    <?php if ($is_full_op && isset($omitted) && $omitted > 0) : ?>
-                    <span class="omitted">
-                    <a style="display:inline-block" href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $p->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $p->thread_num ?>"><i class="icon icon-resize-full"></i></a>
-                    <span class="omitted_text">
-                    <span class="omitted_posts"><?= $omitted ?></span> <?= _n('post', 'posts', $omitted) ?>
-                        <?php if (isset($images_omitted) && $images_omitted > 0) : ?>
-                            <?= _i('and') ?> <span class="omitted_images"><?= $images_omitted ?></span> <?= _n('image', 'images', $images_omitted) ?>
-                        <?php endif; ?>
-                        <?= _n('omitted', 'omitted', $omitted + $images_omitted) ?>
-                    </span>
-                    </span>
-                        <?php endif; ?>
                 <?php if ($this->getAuth()->hasAccess('maccess.mod')) :
                 $poster_ip = Inet::dtop($p->poster_ip); /* only dtop once */?>
-                <div class="btn-group" style="clear:both; padding:5px 0 0 0;">
+                <div class="btn-group post_mod">
                     <button class="btn btn-mini" data-function="activateModeration"><?= _i('Mod') ?><?php if ($p->poster_ip) echo ' ' . $poster_ip ?></button>
                 </div>
-                <div class="btn-group post_mod_controls" style="clear:both; padding:5px 0 0 5px;">
+                <div class="btn-group post_mod_controls">
                     <button class="btn btn-mini" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="editPost"><?= _i('Edit Post') ?></button>
                     <?php if ($p->op) : ?>
                     <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-action="toggle_sticky"><?= _i('Toggle Sticky') ?></button>
@@ -283,6 +271,18 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                     <?php endforeach; ?>
                 <?php endif; ?>
                 <?php endif; ?>
+        <?php if ($is_full_op && isset($omitted) && $omitted > 0) : ?>
+        <span class="omitted">
+            <a style="display:inline-block" href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $p->thread_num)) ?>" data-function="expandThread" data-thread-num="<?= $p->thread_num ?>"><i class="icon icon-resize-full"></i></a>
+            <span class="omitted_text">
+                <span class="omitted_posts"><?= $omitted ?></span> <?= _n('post', 'posts', $omitted) ?>
+                <?php if (isset($images_omitted) && $images_omitted > 0) : ?>
+                    <?= _i('and') ?> <span class="omitted_images"><?= $images_omitted ?></span> <?= _n('image', 'images', $images_omitted) ?>
+                <?php endif; ?>
+                <?= _n('omitted', 'omitted', $omitted + $images_omitted) ?>
+            </span>
+        </span>
+    <?php endif; ?>
         </div>
         <?php if (!$is_full_op) : ?></article><?php endif; ?>
         <?php

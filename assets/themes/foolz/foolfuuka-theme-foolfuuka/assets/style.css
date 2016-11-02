@@ -584,9 +584,6 @@
 .theme_default article.thread:nth-of-type(1) {
   border-top: none;
 }
-.theme_default article .post_mod_controls {
-  display: none;
-}
 .theme_default .post_wrapper {
   display: table-cell;
   margin: 2px 10px 2px 20px;
@@ -1218,4 +1215,19 @@ code.hljs {
 }
 .theme_default article .alert-info {
   color: #364041;
+}
+.theme_default .thread_tools_bottom > .post_mod,
+.theme_default .thread_tools_bottom > .post_mod_controls {
+  clear:none;
+}
+.theme_default .post_mod,
+.theme_default .post_mod_controls {
+  clear:both;
+}
+.theme_default article .post_mod {
+  padding:5px 0 0 0;
+}
+.theme_default article .post_mod_controls {
+  padding:5px 0 0 5px;
+  display:none;
 }
