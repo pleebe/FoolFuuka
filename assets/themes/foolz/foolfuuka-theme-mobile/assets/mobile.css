@@ -57,6 +57,9 @@
     #backlink {
         box-shadow: 0 0 0 #333 !important;
     }
+    .btn-group {
+        white-space: normal !important;
+    }
 }
 @media only screen and (max-width: 600px) {
     .dropdown-menu > li {
