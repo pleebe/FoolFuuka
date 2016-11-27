@@ -25,12 +25,12 @@ class AuditFactory extends Model
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
     }
 
-        /**
-     * Converts an array into a Ban object
+    /**
+     * Converts an array into a Audit object
      *
      * @param   array  $array  The array from database
      *
-     * @return  \Foolz\FoolFuuka\Model\Ban
+     * @return  \Foolz\FoolFuuka\Model\Audit
      */
     public function fromArray($array)
     {
@@ -43,12 +43,11 @@ class AuditFactory extends Model
     }
 
     /**
-     * Takes an array of arrays to create Ban objects
+     * Takes an array of arrays to create Audit objects
      *
      * @param   array  $array  The array from database
-     * @param   boolean  $merge  Use the board_id as keys or not
      *
-     * @return  array  An array of \Foolz\FoolFuuka\Model\Ban with as key the board_id
+     * @return  array  An array of \Foolz\FoolFuuka\Model\Audit
      */
     public function fromArrayDeep($array)
     {

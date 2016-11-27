@@ -2,7 +2,9 @@
 
 namespace Foolz\FoolFuuka\Model;
 
+use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Uri;
 
 /**
  * Thrown when there's no results from database or the value domain hasn't been respected
