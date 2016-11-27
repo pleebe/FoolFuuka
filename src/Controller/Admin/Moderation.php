@@ -5,6 +5,7 @@ namespace Foolz\FoolFuuka\Controller\Admin;
 use Foolz\FoolFuuka\Model\BanFactory;
 use Foolz\FoolFuuka\Model\RadixCollection;
 use Foolz\FoolFuuka\Model\ReportCollection;
+use Foolz\FoolFuuka\Model\Audit;
 use Foolz\Inet\Inet;
 use Foolz\Theme\Loader;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class Moderation extends \Foolz\FoolFrame\Controller\Admin
     /**
      * @var RadixCollection
      */
-    protected $radic_coll;
+    protected $radix_coll;
 
     /**
      * @var ReportCollection

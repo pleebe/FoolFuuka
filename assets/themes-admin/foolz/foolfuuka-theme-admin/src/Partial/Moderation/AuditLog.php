@@ -29,7 +29,7 @@ class AuditLog extends \Foolz\FoolFrame\View\View
                 <td><?= $log->getTime() ?></td>
                 <td><?= $log->getAction() ?></td>
                 <td><?= $log->getUser() ?></td>
-                <td><?= $log->getMessage() ?></td>
+                <td><?= htmlentities($log->getMessage()) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
