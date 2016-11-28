@@ -126,6 +126,11 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <button data-toggle="dropdown" class="btnr parent"><i class="icon-th-list"></i></button>
                         <ul class="dropdown-menu" role="menu">
                             <li class="nav-header"><?php if ($is_full_op) : ?>Thread<?php else: ?>Post<?php endif; ?></li>
+                            <?php if ($is_full_op) : ?>
+                            <li><a href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $num)) . '#reply' ?>"><?= _i('Reply') ?></a></li>
+                            <?= (isset($omitted) && $omitted > 50) ? '<li><a href="' . $this->getUri()->create($p->radix->shortname . '/last/50/' . $num) . '">' . _i('Last 50') . '</a></li>' : '' ?>
+                            <?= ($p->radix->archive) ? '<li><a href="//boards.4chan.org/' . $p->radix->shortname . '/thread/' . $num . '">' . _i('Original') . '</a></li>' : '' ?>
+                            <?php endif; ?>
                             <li><a href="#" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a></li>
                             <?php if ($p->subnum > 0 || $this->getAuth()->hasAccess('comment.passwordless_deletion') || !$p->radix->archive) : ?><li><a href="#" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a></li><?php endif; ?>
                             <?php if ($p_media !== null) : ?>
@@ -173,7 +178,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                             <?php if ($p->sticky) : ?><i class="icon-pushpin" title="<?= _i('This thread has been stickied.') ?>"></i><?php endif; ?>
                             <?php if ($p->locked) : ?><i class="icon-lock" title="<?= _i('This thread has been locked.') ?>"></i><?php endif; ?>
                         </span>
-                        <span class="mobile_view"><?php if (isset($modifiers['post_show_view_button'])) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?></span>
+                        <span class="mobile_view"><?php if (isset($modifiers['post_show_view_button']) || $is_full_op) : ?><a href="<?= $this->getUri()->create($p->radix->shortname . '/thread/' . $p->thread_num) . '#' . $num ?>" class="btnr parent"><?= _i('View') ?></a><?php endif; ?></span>
                         <span class="post_controls">
                             <?php if ($is_full_op): ?>
                                 <a href="<?= $this->getUri()->create(array($p->radix->shortname, 'thread', $num)) ?>" class="btnr parent"><?= _i('View') ?></a><a href="<?= $this->getUri()->create(array($p->radix->shortname, $controller_method, $num)) . '#reply' ?>" class="btnr parent"><?= _i('Reply') ?></a><?= (isset($omitted) && $omitted > 50) ? '<a href="' . $this->getUri()->create($p->radix->shortname . '/last/50/' . $num) . '" class="btnr parent">' . _i('Last 50') . '</a>' : '' ?><?= ($p->radix->archive) ? '<a href="//boards.4chan.org/' . $p->radix->shortname . '/thread/' . $num . '" class="btnr parent">' . _i('Original') . '</a>' : '' ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="report"><?= _i('Report') ?></a><?php if ($this->getAuth()->hasAccess('maccess.mod') || !$p->radix->archive) : ?><a href="#" class="btnr parent" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="delete"><?= _i('Delete') ?></a><?php endif; ?>

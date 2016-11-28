@@ -18,7 +18,7 @@
         margin:8px !important;
     }
     .post_wrapper {
-        width: 100% !important;
+        width: 97% !important;
         clear: both;
         display: inline-block !important;
         margin: 0 !important;
@@ -28,7 +28,7 @@
         margin:3px !important;
     }
     .paginate {
-        height: 100px !important;
+        height: 105px !important;
     }
     footer#footer {
         height: 100px !important;
@@ -68,9 +68,9 @@
     .navbar .nav {
         width:100% !important;
     }
-    .navbar .nav > li {
+    /*.navbar .nav > li {
         width:100% !important;
-    }
+    }*/
     .thread_image_box {
         float: none !important;
     }
@@ -152,5 +152,28 @@
     #thread_o_matic > article.thread {
         width: 100% !important;
         clear: both !important;
+    }
+    .table th, .table td {
+        padding: 1px !important;
+    }
+    .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+        margin-right: 0 !important;
+    }
+    .thread_form input[type="file"] {
+        width: 53% !important;
+    }
+    .thread_form select {
+        width: 53% !important;
+    }
+    .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input {
+        width: 50% !important;
+    }
+    .thread_form label {
+        min-width: 20% !important;
+    }
+    #thread_o_matic > article.thread > header .post_controls {
+        display: block !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
     }
 }
