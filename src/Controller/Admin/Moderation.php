@@ -90,6 +90,87 @@ class Moderation extends \Foolz\FoolFrame\Controller\Admin
         return new Response($this->builder->build());
     }
 
+    public function action_manage_logs()
+    {
+        if (!$this->getAuth()->hasAccess('maccess.admin')) {
+            return $this->redirectToAdmin();
+        }
+
+        $form = [
+            'open' => [
+                'type' => 'open'
+            ],
+            'paragraph' => [
+                'type' => 'paragraph',
+                'help' => _i('Select logged activities. Everything is logged by default.')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_BAN_FILE.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log File Bans')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_DEL_FILE.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log File Deletions')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_DEL_POST.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log Post Deletions')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_BAN_USER.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log User Bans')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_DEL_REPORT.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log Report Deletions (This includes the full report)')
+            ],
+            'foolfuuka.audit.'.Audit::AUDIT_EDIT_POST.'_enabled' => [
+                'type' => 'checkbox',
+                'label' => '',
+                'placeholder' => '',
+                'preferences' => true,
+                'help' => _i('Log Post Edits')
+            ],
+            'separator' => [
+                'type' => 'separator'
+            ],
+            'submit' => [
+                'type' => 'submit',
+                'value' => _i('Save'),
+                'class' => 'btn btn-primary'
+            ],
+            'close' => [
+                'type' => 'close'
+            ]
+        ];
+
+        $this->preferences->submit_auto($this->getRequest(), $form, $this->getPost());
+
+        // create the form
+        $data['form'] = $form;
+
+        $this->param_manager->setParam('method_title', [_i('Audit'), _i('Log'),_i('Preferences')]);
+        $partial = $this->builder->createPartial('body', 'form_creator');
+        $partial->getParamManager()->setParams($data);
+
+        return new Response($this->builder->build());
+    }
+
     public function action_bans($page = 1)
     {
         $this->param_manager->setParam('method_title', [_i('Manage'), _i('Bans')]);

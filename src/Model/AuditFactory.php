@@ -4,6 +4,7 @@ namespace Foolz\FoolFuuka\Model;
 
 use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
 
 class AuditFactory extends Model
 {
@@ -17,12 +18,18 @@ class AuditFactory extends Model
      */
     protected $radix_coll;
 
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
     public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
 
         $this->dc = $context->getService('doctrine');
         $this->radix_coll = $context->getService('foolfuuka.radix_collection');
+        $this->preferences = $context->getService('preferences');
     }
 
     /**
@@ -75,12 +82,14 @@ class AuditFactory extends Model
 
     public function log($type, $data)
     {
-        $this->dc->getConnection()
-            ->insert($this->dc->p('audit_log'), [
-                'timestamp' => time(),
-                'user' => $this->getAuth()->getUser()->getId(),
-                'type' => $type,
-                'data' => json_encode($data),
-            ]);
+        if ($this->preferences->get('foolfuuka.audit.'.$type.'_enabled', true)) {
+            $this->dc->getConnection()
+                ->insert($this->dc->p('audit_log'), [
+                    'timestamp' => time(),
+                    'user' => $this->getAuth()->getUser()->getId(),
+                    'type' => $type,
+                    'data' => json_encode($data),
+                ]);
+        }
     }
 }

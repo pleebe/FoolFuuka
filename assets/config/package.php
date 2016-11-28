@@ -96,6 +96,15 @@ return [
         'boards' => [
             'directory' => DOCROOT.'foolfuuka/boards/',
             'url' => '/foolfuuka/boards'
+        ],
+
+        'audit' => [
+            '1_enabled' => true,
+            '2_enabled' => true,
+            '3_enabled' => true,
+            '4_enabled' => true,
+            '5_enabled' => true,
+            '6_enabled' => true
         ]
     ]
 ];

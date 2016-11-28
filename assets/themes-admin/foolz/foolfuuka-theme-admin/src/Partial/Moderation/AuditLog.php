@@ -3,6 +3,7 @@
 namespace Foolz\FoolFuuka\Theme\Admin\Partial\Moderation;
 
 use Foolz\FoolFuuka\Model\Audit;
+use Foolz\FoolFrame\Model\Uri;
 
 class AuditLog extends \Foolz\FoolFrame\View\View
 {
@@ -12,6 +13,7 @@ class AuditLog extends \Foolz\FoolFrame\View\View
 <div class="admin-container">
     <div class="admin-container-header">
         <?= _i('Audit Log') ?>
+        <a href="<?= $this->getUri()->create(['admin','moderation','manage_logs'])?>" class="btn btn-mini pull-right">Configure Logging</a>
     </div>
 
     <table class="table table-hover table-condensed">
