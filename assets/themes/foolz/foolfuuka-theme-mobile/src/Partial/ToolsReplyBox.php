@@ -115,7 +115,7 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             'id' => 'reply_chennodiscursus',
                             'placeholder' => (!$radix->archive && isset($thread_dead) && $thread_dead) ? _i('This thread has entered ghost mode. Your reply will be marked as a ghost post and will only affect the ghost index.') : '',
                             'rows' => 3,
-                            'style' => 'height:132px; width:320px;'
+                            'style' => 'height:132px;'
                         ]);
                         ?>
 

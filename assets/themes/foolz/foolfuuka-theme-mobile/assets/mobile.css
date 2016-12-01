@@ -13,6 +13,9 @@
 .post_file_controls {
     display: inline !important;
 }
+textarea#reply_chennodiscursus {
+    width:320px;
+}
 @media only screen and (max-width: 833px) {
     .letters a {
         margin:8px !important;
@@ -59,6 +62,12 @@
     }
     .btn-group {
         white-space: normal !important;
+    }
+    .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input {
+        width: 50% !important;
+    }
+    .thread_form input[type="file"], .thread_form select {
+        width: 53% !important;
     }
 }
 @media only screen and (max-width: 600px) {
@@ -159,10 +168,7 @@
     .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
         margin-right: 0 !important;
     }
-    .thread_form input[type="file"] {
-        width: 53% !important;
-    }
-    .thread_form select {
+    .thread_form input[type="file"], .thread_form select {
         width: 53% !important;
     }
     .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input {
@@ -175,5 +181,13 @@
         display: block !important;
         margin-top: 10px !important;
         margin-bottom: 10px !important;
+    }
+    textarea#reply_chennodiscursus {
+        width:95% !important;
+    }
+    article.thread .thread_form_wrap {
+        margin: 0 !important;
+        padding: 5% !important;
+        width: 90% !important;
     }
 }
