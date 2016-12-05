@@ -503,6 +503,7 @@ var bindFunctions = function()
 			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
 			modal.find(".modal-information").html('\
+			<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
 			<span class="modal-label">IP</span>\n\
 			<input type="text" class="modal-ip" value="' + el.data("ip") + '" /><br/>\n\
 			<span class="modal-label">Days</span>\n\
@@ -514,7 +515,8 @@ var bindFunctions = function()
 			<span class="modal-field">Comment</span>\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 			<textarea class="modal-comment"></textarea>\
-			<label><input type="checkbox" name="delete_user"> Delete all posts by this IP</label>');
+			<label><input type="checkbox" name="delete_user"> Delete all posts by this IP</label>\n\
+			<label><input type="checkbox" name="ban_public"> Public ban message / (USER WAS BANNED FOR THIS POST)</label>');
 			modal.find(".submitModal").data("action", 'ban');
 		},
 
@@ -647,10 +649,14 @@ var bindFunctions = function()
 					board_ban: modal.find('input:radio[name=board]:checked').val(),
 					length: modal.find('.modal-days').val() * 24 * 60 * 60,
 					ip: modal.find('.modal-ip').val(),
-					reason: modal.find('.modal-comment').val()
+					reason: modal.find('.modal-comment').val(),
+					doc_id: _doc_id
 				};
 				if ($('input[name=delete_user]').is(':checked')) {
 					_data.delete_user = true;
+				}
+				if ($('input[name=ban_public]').is(':checked')) {
+					_data.ban_public = true;
 				}
 			}
 			else if (action == 'edit-post')

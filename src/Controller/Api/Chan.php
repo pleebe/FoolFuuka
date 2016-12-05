@@ -797,6 +797,24 @@ class Chan extends Common
                         }
                     }
                 }
+                if($this->getPost('ban_public') === 'true' && $this->getPost('doc_id') !== 'undefined') {
+                    try {
+                        $comment = Board::forge($this->getContext())
+                            ->getPost()
+                            ->setOptions('doc_id', $this->getPost('doc_id'))
+                            ->setRadix($this->radix)
+                            ->getComment();
+
+                        $comment = new Comment($this->getContext(), $comment);
+
+                        $new_comment = [
+                            'comment' => $comment->comment->comment . "\n\n" . '[banned](USER WAS BANNED FOR THIS POST)[/banned]'
+                        ];
+
+                        $comment->commentUpdate($new_comment);
+                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                    } // fine if no post to update
+                }
             } catch (\Foolz\FoolFuuka\Model\BanException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             } catch (\Exception $e) {
