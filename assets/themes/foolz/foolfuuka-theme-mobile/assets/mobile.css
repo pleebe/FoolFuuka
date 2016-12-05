@@ -55,7 +55,7 @@ textarea#reply_chennodiscursus {
         overflow-x: hidden !important;
     }
     .modal.fade.in {
-        top: 10px !important;
+        top: 30% !important;
     }
     #backlink {
         box-shadow: 0 0 0 #333 !important;
@@ -77,15 +77,8 @@ textarea#reply_chennodiscursus {
     .navbar .nav {
         width:100% !important;
     }
-    /*.navbar .nav > li {
-        width:100% !important;
-    }*/
     .thread_image_box {
         float: none !important;
-    }
-    .thread_image_box img {
-        /*max-width: 100px !important;
-        max-height: 100px !important;*/
     }
     .input-prepend {
         width: 100% !important;
@@ -98,9 +91,7 @@ textarea#reply_chennodiscursus {
     }
     footer#footer > .btn-group, .pull-right {
         float: none !important;
-    }
-    footer#footer > .btn-group > .btn {
-        width: 100% !important;
+        margin: 1% !important
     }
     .pull-right > .dropdown-menu {
         right: 0 !important;
@@ -109,11 +100,25 @@ textarea#reply_chennodiscursus {
     .navbar-search .search-query {
         width: 100% !important;
     }
-    .search_box .advanced_search input[name=text] {
+    .search_box .advanced_search #search_form_comment {
         width: 90% !important;
     }
     .search_box .advanced_search {
         width: 100% !important;
+    }
+    .advanced_search .column {
+        width: 50% !important;
+        float: left !important;
+    }
+    .search_box .advanced_search .add-on {
+        font-size: 9px !important;
+        width: 30% !important;
+    }
+    .search_box .advanced_search input[type="text"] {
+        width: 50% !important;
+    }
+    .advanced_search .latest_searches ul {
+        width: 90% !important;
     }
     article.thread {
         padding: 10px 0 !important;
@@ -142,11 +147,6 @@ textarea#reply_chennodiscursus {
     .post_mobile_controls {
         display: block !important;
     }
-    .dropdown-menu {
-        /*float: none !important;
-        position: static !important;
-        z-index: 1000000000 !important;*/
-    }
     .btnr {
         padding: 4px 14px !important;
     }
@@ -154,7 +154,6 @@ textarea#reply_chennodiscursus {
         top: 10px !important;
     }
     .modal-body {
-        overflow-y: hidden !important;
         padding: 0 !important;
         max-width: 100% !important;
     }
@@ -189,5 +188,11 @@ textarea#reply_chennodiscursus {
         margin: 0 !important;
         padding: 5% !important;
         width: 90% !important;
+    }
+    .modal-comment {
+        min-width: 90% !important;
+    }
+    .modal-password {
+        min-width: 60% !important;
     }
 }
