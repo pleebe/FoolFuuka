@@ -1063,7 +1063,7 @@ class Chan extends Common
                     'comment' => $this->getPost('comment')
                 ];
 
-                if($this->getPost('media_edit') == 'true') {
+                if ($this->getPost('media_edit') == 'true') {
                     $new_comment['media_filename'] = $this->getPost('filename');
                     $new_comment['media_w'] = $this->getPost('media_w');
                     $new_comment['media_h'] = $this->getPost('media_h');
@@ -1072,8 +1072,11 @@ class Chan extends Common
                     $new_comment['spoiler'] = $this->getPost('spoiler');
                 }
 
-                if($this->getPost('transparency') == 'true') {
-                    $new_comment['comment'] .= "\n\n[info](This post was modified by '".$this->preferences->get('foolframe.gen.website_title')."' staff on ".date("Y-m-d").".)[/info]";
+                if ($this->getPost('transparency') == 'true') {
+                    $new_comment['comment'] .= "\n\n" . '[info]This post was modified by ' .
+                        $this->preferences->get('foolframe.gen.website_title') . " " .
+                        $this->config->get('foolz/foolframe', 'foolauth', 'groups')[$this->getAuth()->getUser()->getGroupId()]['name'] .
+                        ' on ' . date("Y-m-d") . '[/info]';
                 }
 
                 // might want to do some validation here or in model
