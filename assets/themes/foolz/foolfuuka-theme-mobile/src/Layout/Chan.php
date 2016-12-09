@@ -49,6 +49,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>">
     <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome.css') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="<?= ($this->getBuilder()->getStyle() == 'midnight' ? '#000000' : '#6A836F') ?>">
 
     <!--[if lt IE 8]>
         <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>">

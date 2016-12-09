@@ -10,9 +10,13 @@ class Chan extends \Foolz\FoolFuuka\View\View
         header('imagetoolbar: false');
 
         $this->getHeader();
+        $this->flush();
         $this->getNav();
+        $this->flush();
         $this->getContent();
+        $this->flush();
         $this->getFooter();
+        $this->flush();
     }
 
     public function getSelectedThemeClass()
@@ -23,9 +27,9 @@ class Chan extends \Foolz\FoolFuuka\View\View
     public function getStyles()
     {
         ?>
-    <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
-    <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css"/>
-    <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+        <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
+        <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css"/>
+        <link href="<?= $this->getAssetManager()->getAssetLink('style.css') ?>" rel="stylesheet" type="text/css"/>
         <?php
     }
 
@@ -41,10 +45,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
 
         <title><?= $this->getBuilder()->getProps()->getTitle(); ?></title>
         <link href="<?= $this->getUri()->base() ?>" rel="index" title="<?= $this->getPreferences()->get('foolframe.gen.website_title') ?>"/>
-        <?php if ($radix) : ?>
-        <link href="<?= $this->getUri()->create($radix->shortname) ?>rss_gallery_50.xml" rel="alternate" type="application/rss+xml" title="RSS"/>
-        <link href="<?= $this->getUri()->create($radix->shortname) ?>atom_gallery_50.xml" rel="alternate" type="application/atom+xml" title="Atom"/>
-        <?php endif; ?>
 
         <link href="<?= $this->getUri()->create('foolfuuka/components/highlightjs/styles') ?>default.css" rel="stylesheet" type="text/css"/>
         <link href="<?= $this->getTheme()->getExtended()->getAssetManager()->getAssetLink('bootstrap.legacy.css') ?>" rel="stylesheet" type="text/css"/>

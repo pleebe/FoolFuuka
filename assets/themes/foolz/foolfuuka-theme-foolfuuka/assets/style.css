@@ -963,7 +963,9 @@ input[type="checkbox"] {
   margin-top: 0;
 }
 .theme_default.midnight a,
-.theme_default.midnight a:visited {
+.theme_default.midnight a:visited,
+.theme_default.midnight .btnr,
+.theme_default.midnight .btnr:visited {
   color: #81a2be;
 }
 .theme_default.midnight .thread_form textarea,
@@ -974,7 +976,8 @@ input[type="checkbox"] {
   border: 1px solid #494949;
   color: #e6e6e6;
 }
-.theme_default.midnight a:hover {
+.theme_default.midnight a:hover,
+.theme_default.midnight .btnr:hover {
   color: #5f89ac;
 }
 .theme_default.midnight ::-moz-selection {
@@ -1023,6 +1026,9 @@ input[type="checkbox"] {
 .theme_default.midnight .navbar-search .search-query {
   border-bottom-color: rgba(126, 126, 126, 0.3);
   border-right-color: rgba(255, 255, 255, 0.15);
+}
+.theme_default.midnight .navbar .navbar-inner {
+  background: #000000;
 }
 .theme_default.midnight .search_box {
   color: #000000;
@@ -1149,6 +1155,9 @@ input[type="checkbox"] {
   background: #3e3e3e;
 }
 .theme_default.midnight .paginate a {
+  color: #000000;
+}
+.theme_default.midnight .modal {
   color: #000000;
 }
 html {
