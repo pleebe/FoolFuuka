@@ -156,11 +156,11 @@ class Chan extends Common
         // enforce CORS on application level
         $this->response->headers->set('Access-Control-Allow-Origin', '*');
         $this->response->headers->set('Access-Control-Allow-Credentials', 'true');
-        $this->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        $this->response->headers->set('Access-Control-Allow-Methods', 'GET, HEAD, POST, PUT, DELETE, OPTIONS');
         $this->response->headers->set('Access-Control-Max-Age', '604800');
 
         $request = $this->getRequest();
-        if ($request->getMethod() == 'GET' && method_exists($this, 'get_'.$method)) {
+        if (($request->getMethod() == 'GET' || $request->getMethod() == 'HEAD') && method_exists($this, 'get_'.$method)) {
             return [$this, 'get_'.$method, []];
         }
 
