@@ -120,6 +120,12 @@ textarea#reply_chennodiscursus {
     .advanced_search .latest_searches ul {
         width: 90% !important;
     }
+    .search_box .advanced_search .radixes {
+        width: 100% !important;
+    }
+    .advanced_search .radixes label {
+        width: 50% !important;
+    }
     article.thread {
         padding: 10px 0 !important;
         margin: 0 5px !important;

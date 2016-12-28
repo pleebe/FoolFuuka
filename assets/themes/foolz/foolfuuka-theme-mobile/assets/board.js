@@ -373,6 +373,7 @@ var bindFunctions = function()
 				id: el.data('id'),
 				ip: el.data('ip'),
 				action: el.data('action'),
+				global: el.data('global'),
 				theme: backend_vars.selected_theme
 			};
 			_data[backend_vars.csrf_token_key] = getCookie(backend_vars.csrf_token_key);
@@ -410,8 +411,7 @@ var bindFunctions = function()
 						case 'ban_user':
 							jQuery('.doc_id_' + el.data('id')).find('[data-action=ban_user]').text('Banned');
 							break;
-						case 'ban_image_global':
-						case 'ban_image_local':
+						case 'ban_image':
 							jQuery('.doc_id_' + el.data('doc-id')).find('.thread_image_box:eq(0) img')
 								.attr('src', backend_vars.images['banned_image'])
 								.css({
@@ -419,7 +419,7 @@ var bindFunctions = function()
 									height: backend_vars.images['banned_image_height']
 								});
 							break;
-						case 'delete_all_report':
+						case 'delete_all_reports':
 							$(".report_reason").each(function(){
 								$(this).remove();
 							});

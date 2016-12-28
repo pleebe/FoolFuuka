@@ -702,91 +702,90 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
         }
 
-        if ($this->getPost('action') === 'delete_report') {
-            try {
-                $this->report_coll->delete($this->getPost('id'));
-            } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
+        $function = 'mod_action_' . $this->getPost('action');
 
-            return $this->response->setData(['success' => _i('The report was deleted.')]);
+        if ($this->getPost('action') !== '' && method_exists($this, $function)) {
+            return $this->$function();
+        }
+        return $this->get_404();
+    }
+
+    private function mod_action_delete_report()
+    {
+        try {
+            $this->report_coll->delete($this->getPost('id'));
+        } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
         }
 
-        if ($this->getPost('action') === 'delete_post') {
-            try {
-                $comment = Board::forge($this->getContext())
-                    ->getPost()
-                    ->setOptions('doc_id', $this->getPost('id'))
-                    ->setRadix($this->radix)
-                    ->getComment();
+        return $this->response->setData(['success' => _i('The report was deleted.')]);
+    }
 
-                $comment = new Comment($this->getContext(), $comment);
-                $comment->delete();
-            } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
+    private function mod_action_delete_post()
+    {
+        try {
+            $comment = Board::forge($this->getContext())
+                ->getPost()
+                ->setOptions('doc_id', $this->getPost('id'))
+                ->setRadix($this->radix)
+                ->getComment();
 
-            return $this->response->setData(['success' => _i('This post was deleted.')]);
+            $comment = new Comment($this->getContext(), $comment);
+            $comment->delete();
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
         }
 
-        if ($this->getPost('action') === 'delete_image') {
-            try {
-                $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
-                $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
-                $media->delete(true, true, true);
-            } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
+        return $this->response->setData(['success' => _i('This post was deleted.')]);
+    }
 
-            return $this->response->setData(['success' => _i('This image was deleted.')]);
+    private function mod_action_delete_image()
+    {
+        try {
+            $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
+            $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
+            $media->delete(true, true, true);
+        } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
         }
 
-        if ($this->getPost('action') === 'ban_image_local' || $this->getPost('action') === 'ban_image_global') {
-            $global = false;
-            if ($this->getPost('action') === 'ban_image_global') {
-                $global = true;
-            }
+        return $this->response->setData(['success' => _i('This image was deleted.')]);
+    }
 
-            try {
-                $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
-                $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
-                $media->ban($global);
-            } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
-
-            return $this->response->setData(['success' => _i('This image was banned.')]);
+    private function mod_action_ban_image()
+    {
+        $global = false;
+        if ((bool)$this->getPost('global') === true) {
+            $global = true;
         }
 
-        if ($this->getPost('action') === 'ban_user') {
-            try {
-                $this->ban_factory->add(Inet::ptod($this->getPost('ip')),
-                    $this->getPost('reason'),
-                    $this->getPost('length'),
-                    $this->getPost('board_ban') === 'global' ? array() : array($this->radix->id)
-                );
+        try {
+            $media = $this->media_factory->getByMediaId($this->radix, $this->getPost('id'));
+            $media = new Media($this->getContext(), CommentBulk::forge($this->radix, null, $media));
+            $media->ban($global);
+        } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+        }
 
-                if($this->getPost('delete_user') === 'true') {
-                    if($this->getPost('board_ban') === 'global') {
-                        foreach ($this->radix_coll->getAll() as $new_radix) {
-                            $board = Board::forge($this->getContext())
-                                ->getPostsByIP()
-                                ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
-                                ->setRadix($new_radix);
+        return $this->response->setData(['success' => _i('This image was banned.')]);
+    }
 
-                            foreach ($board->getCommentsUnsorted() as $comment) {
-                                try {
-                                    $comment = new Comment($this->getContext(), $comment);
-                                    $comment->delete();
-                                } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
-                                } // we don't want any errors here, just continue
-                            }
-                        }
-                    } else {
+    private function mod_action_ban_user()
+    {
+        try {
+            $this->ban_factory->add(Inet::ptod($this->getPost('ip')),
+                $this->getPost('reason'),
+                $this->getPost('length'),
+                $this->getPost('board_ban') === 'global' ? array() : array($this->radix->id)
+            );
+
+            if ((bool)$this->getPost('delete_user') === true) {
+                if ($this->getPost('board_ban') === 'global') {
+                    foreach ($this->radix_coll->getAll() as $new_radix) {
                         $board = Board::forge($this->getContext())
                             ->getPostsByIP()
                             ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
-                            ->setRadix($this->radix);
+                            ->setRadix($new_radix);
 
                         foreach ($board->getCommentsUnsorted() as $comment) {
                             try {
@@ -796,239 +795,265 @@ class Chan extends Common
                             } // we don't want any errors here, just continue
                         }
                     }
+                } else {
+                    $board = Board::forge($this->getContext())
+                        ->getPostsByIP()
+                        ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
+                        ->setRadix($this->radix);
+
+                    foreach ($board->getCommentsUnsorted() as $comment) {
+                        try {
+                            $comment = new Comment($this->getContext(), $comment);
+                            $comment->delete();
+                        } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                        } // we don't want any errors here, just continue
+                    }
                 }
-                if($this->getPost('ban_public') === 'true' && $this->getPost('doc_id') !== 'undefined') {
-                    try {
-                        $comment = Board::forge($this->getContext())
-                            ->getPost()
-                            ->setOptions('doc_id', $this->getPost('doc_id'))
-                            ->setRadix($this->radix)
-                            ->getComment();
+            }
+            if ((bool)$this->getPost('ban_public') === true && $this->getPost('doc_id') !== 'undefined') {
+                try {
+                    $comment = Board::forge($this->getContext())
+                        ->getPost()
+                        ->setOptions('doc_id', $this->getPost('doc_id'))
+                        ->setRadix($this->radix)
+                        ->getComment();
 
-                        $comment = new Comment($this->getContext(), $comment);
+                    $comment = new Comment($this->getContext(), $comment);
 
-                        $new_comment = [
-                            'comment' => $comment->comment->comment . "\n\n" . '[banned](USER WAS BANNED FOR THIS POST)[/banned]'
-                        ];
+                    $new_comment = [
+                        'comment' => $comment->comment->comment . "\n\n" . '[banned](USER WAS BANNED FOR THIS POST)[/banned]'
+                    ];
 
-                        $comment->commentUpdate($new_comment);
-                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
-                    } // fine if no post to update
+                    $comment->commentUpdate($new_comment);
+                } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                } // fine if no post to update
+            }
+        } catch (\Foolz\FoolFuuka\Model\BanException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+        } catch (\Exception $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+        }
+
+        return $this->response->setData(['success' => _i('This user was banned.')]);
+    }
+
+    private function mod_action_toggle_sticky()
+    {
+        try {
+            $comment = Board::forge($this->getContext())
+                ->getPost()
+                ->setOptions('doc_id', $this->getPost('id'))
+                ->setRadix($this->radix)
+                ->getComment();
+
+            $thread = Board::forge($this->getContext())
+                ->getThread($comment->comment->thread_num)
+                ->setRadix($this->radix)
+                ->setOptions(['type' => 'thread'])
+                ->getThreadStatus();
+
+            $comment = new Comment($this->getContext(), $comment);
+            $comment->setSticky((int)!$thread['sticky']);
+        } catch (\Foolz\FoolFuuka\Model\CommentUpdateException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+        }
+
+        return $this->response->setData(['success' => _i('The sticky status of this post has been updated.')]);
+    }
+
+    private function mod_action_toggle_locked()
+    {
+        try {
+            $comment = Board::forge($this->getContext())
+                ->getPost()
+                ->setOptions('doc_id', $this->getPost('id'))
+                ->setRadix($this->radix)
+                ->getComment();
+
+            $thread = Board::forge($this->getContext())
+                ->getThread($comment->comment->thread_num)
+                ->setRadix($this->radix)
+                ->setOptions(['type' => 'thread'])
+                ->getThreadStatus();
+
+            $comment = new Comment($this->getContext(), $comment);
+            $comment->setLocked((int)!$thread['closed']);
+        } catch (\Foolz\FoolFuuka\Model\CommentUpdateException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+        }
+
+        return $this->response->setData(['success' => _i('The locked status of this post has been updated.')]);
+    }
+
+
+    private function mod_action_delete_all_reports()
+    {
+        $reports = [];
+
+        try {
+            if ($this->getPost('ip')) {
+                $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
+            } else {
+                $reports = $this->report_coll->getAll();
+            }
+
+            foreach ($reports as $report) {
+                $this->report_coll->delete($report->id);
+            }
+        } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+        }
+        return $this->response->setData(['success' => _i('Successfully removed all reports')]);
+    }
+
+    private function mod_action_delete_all_report_posts()
+    {
+        $reports = [];
+
+        try {
+            if ($this->getPost('ip')) {
+                $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
+            } else {
+                $reports = $this->report_coll->getAll();
+            }
+        } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+        }
+
+        foreach ($reports as $report) {
+            try {
+                $this->report_coll->delete($report->id);
+                $radix = $this->radix_coll->getById($report->board_id);
+                $comment = Board::forge($this->getContext())
+                    ->getPost()
+                    ->setOptions('doc_id', $report->doc_id)
+                    ->setRadix($radix)
+                    ->getComment();
+
+                $comment = new Comment($this->getContext(), $comment);
+                $comment->delete();
+            } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                // in this case we can safely continue
+            } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+            }
+        }
+        return $this->response->setData(['success' => _i('Successfully removed all reported posts')]);
+    }
+
+    private function mod_action_delete_all_report_images()
+    {
+        $reports = [];
+
+        try {
+            if ($this->getPost('ip')) {
+                $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
+            } else {
+                $reports = $this->report_coll->getAll();
+            }
+        } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+        }
+
+        foreach ($reports as $report) {
+            try {
+                $radix = $this->radix_coll->getById($report->board_id);
+                $comment = Board::forge($this->getContext())
+                    ->getPost()
+                    ->setOptions('doc_id', $report->doc_id)
+                    ->setRadix($radix)
+                    ->getComment();
+
+                $comment = new Comment($this->getContext(), $comment);
+                if ($comment->media === null) {
+                    continue;
                 }
-            } catch (\Foolz\FoolFuuka\Model\BanException $e) {
+                $media = $this->media_factory->getByMediaId($radix, $comment->media->media_id);
+                $media = new Media($this->getContext(), CommentBulk::forge($radix, null, $media));
+                $media->delete(true, true, true);
+            } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
             } catch (\Exception $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
             }
+        }
+        return $this->response->setData(['success' => _i('Successfully removed all reported images')]);
+    }
 
-            return $this->response->setData(['success' => _i('This user was banned.')]);
+    private function mod_action_ban_all_report_images()
+    {
+        $reports = [];
+
+        try {
+            if ($this->getPost('ip')) {
+                $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
+            } else {
+                $reports = $this->report_coll->getAll();
+            }
+        } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
         }
 
-        if ($this->getPost('action') === 'toggle_sticky') {
+        $global = false;
+        if ((bool)$this->getPost('global') === true) {
+            $global = true;
+        }
+
+        foreach ($reports as $report) {
             try {
                 $comment = Board::forge($this->getContext())
                     ->getPost()
-                    ->setOptions('doc_id', $this->getPost('id'))
-                    ->setRadix($this->radix)
+                    ->setOptions('doc_id', $report->doc_id)
+                    ->setRadix($report->radix)
                     ->getComment();
 
-                $thread = Board::forge($this->getContext())
-                    ->getThread($comment->comment->thread_num)
-                    ->setRadix($this->radix)
-                    ->setOptions(['type' => 'thread'])
-                    ->getThreadStatus();
-
                 $comment = new Comment($this->getContext(), $comment);
-                $comment->setSticky((int) !$thread['sticky']);
-            } catch (\Foolz\FoolFuuka\Model\CommentUpdateException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
-            } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
-
-            return $this->response->setData(['success' => _i('The sticky status of this post has been updated.')]);
-        }
-
-        if ($this->getPost('action') === 'toggle_locked') {
-            try {
-                $comment = Board::forge($this->getContext())
-                    ->getPost()
-                    ->setOptions('doc_id', $this->getPost('id'))
-                    ->setRadix($this->radix)
-                    ->getComment();
-
-                $thread = Board::forge($this->getContext())
-                    ->getThread($comment->comment->thread_num)
-                    ->setRadix($this->radix)
-                    ->setOptions(['type' => 'thread'])
-                    ->getThreadStatus();
-
-                $comment = new Comment($this->getContext(), $comment);
-                $comment->setLocked((int) !$thread['closed']);
-            } catch (\Foolz\FoolFuuka\Model\CommentUpdateException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(422);
-            } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-            }
-
-            return $this->response->setData(['success' => _i('The locked status of this post has been updated.')]);
-        }
-
-        if ($this->getPost('action') === 'delete_all_report' || $this->getPost('action') === 'delete_all_ip_report') {
-            $reports = [];
-
-            try {
-                if ($this->getPost('action') === 'delete_all_ip_report' && $this->getPost('ip') !== "") {
-                    $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
-                } else {
-                    $reports = $this->report_coll->getAll();
+                if ($comment->media === null) {
+                    continue;
                 }
-
-                foreach ($reports as $report) {
-                    $this->report_coll->delete($report->id);
-                }
-            } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+                $media = $this->media_factory->getByMediaId($this->radix, $comment->media->media_id);
+                $media = new Media($this->getContext(), CommentBulk::forge($report->radix, null, $media));
+                $media->ban($global);
+            } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
+                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
+            } catch (\Exception $e) {
                 return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
             }
-            return $this->response->setData(['success' => _i('Successfully removed all reports')]);
         }
+        return $this->response->setData(['success' => _i('Successfully banned all reported images')]);
+    }
 
-        if ($this->getPost('action') === 'delete_all_report_posts' || $this->getPost('action') === 'delete_all_report_posts_ip') {
-            $reports = [];
+    private function mod_action_delete_user()
+    {
+        if (!$this->getPost('ip') || !filter_var($this->getPost('ip'), FILTER_VALIDATE_IP)) {
+            // This function is potentially destructive, so we must be sure we have valid IP
+            return $this->response->setData(['error' => _i('No valid IP address given.')]);
+        }
+        try {
+            $board = Board::forge($this->getContext())
+                ->getPostsByIP()
+                ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
+                ->setRadix($this->radix);
 
-            try {
-                if ($this->getPost('action') === 'delete_all_report_posts_ip' && $this->getPost('ip') !== "") {
-                    $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
-                } else {
-                    $reports = $this->report_coll->getAll();
-                }
-            } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-            }
-
-            foreach($reports as $report) {
+            foreach ($board->getCommentsUnsorted() as $comment) {
                 try {
-                    $radix = $this->radix_coll->getById($report->board_id);
-                    $comment = Board::forge($this->getContext())
-                        ->getPost()
-                        ->setOptions('doc_id', $report->doc_id)
-                        ->setRadix($radix)
-                        ->getComment();
-
                     $comment = new Comment($this->getContext(), $comment);
                     $comment->delete();
                 } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
-                    // in this case we can safely continue
-                } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
-                    return $this->response->setData(['error' => $e->getMessage()]);
-                } catch (\Exception $e) {
-                    return $this->response->setData(['error' => $e->getMessage()]);
-                }
+                } // we don't want any errors here, just continue
             }
-            return $this->response->setData(['success' => _i('Successfully removed all reported posts')]);
-        }
-
-        if ($this->getPost('action') === 'delete_all_report_image' || $this->getPost('action') === 'delete_all_report_image_ip') {
-            $reports = [];
-
-            try {
-                if ($this->getPost('action') === 'delete_all_report_image_ip' && $this->getPost('ip') !== "") {
-                    $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
-                } else {
-                    $reports = $this->report_coll->getAll();
-                }
-            } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-            }
-
-            foreach($reports as $report) {
-                try {
-                    $radix = $this->radix_coll->getById($report->board_id);
-                    $comment = Board::forge($this->getContext())
-                        ->getPost()
-                        ->setOptions('doc_id', $report->doc_id)
-                        ->setRadix($radix)
-                        ->getComment();
-
-                    $comment = new Comment($this->getContext(), $comment);
-                    if($comment->media === null) {
-                        continue;
-                    }
-                    $media = $this->media_factory->getByMediaId($radix, $comment->media->media_id);
-                    $media = new Media($this->getContext(), CommentBulk::forge($radix, null, $media));
-                    $media->delete(true, true, true);
-                } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
-                    return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-                } catch (\Exception $e) {
-                    return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-                }
-            }
-            return $this->response->setData(['success' => _i('Successfully removed all reported images')]);
-        }
-
-        if ($this->getPost('action') === 'ban_all_report_image' || $this->getPost('action') === 'ban_global_all_report_image' || $this->getPost('action') === 'ban_all_report_image_ip' || $this->getPost('action') === 'ban_global_all_report_image_ip') {
-            $reports = [];
-
-            try {
-                if ($this->getPost('ip') !== "") {
-                    $reports = $this->report_coll->getByReporterIp(Inet::ptod($this->getPost('ip')));
-                } else {
-                    $reports = $this->report_coll->getAll();
-                }
-            } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-            }
-
-            $global = false;
-            if($this->getPost('action') === 'ban_global_all_report_image' || $this->getPost('action') === 'ban_global_all_report_image_ip') {
-                $global = true;
-            }
-
-            foreach($reports as $report) {
-                try {
-                    $radix = $this->radix_coll->getById($report->board_id);
-                    $comment = Board::forge($this->getContext())
-                        ->getPost()
-                        ->setOptions('doc_id', $report->doc_id)
-                        ->setRadix($radix)
-                        ->getComment();
-
-                    $comment = new Comment($this->getContext(), $comment);
-                    if($comment->media === null) {
-                        continue;
-                    }
-                    $media = $this->media_factory->getByMediaId($this->radix, $comment->media->media_id);
-                    $media = new Media($this->getContext(), CommentBulk::forge($radix, null, $media));
-                    $media->ban($global);
-                } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
-                    return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(404);
-                } catch (\Exception $e) {
-                    return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-                }
-            }
-            return $this->response->setData(['success' => _i('Successfully banned all reported images')]);
-        }
-
-        if ($this->getPost('action') === 'delete_user') {
-            try {
-                $board = Board::forge($this->getContext())
-                    ->getPostsByIP()
-                    ->setOptions('poster_ip', inet::ptod($this->getPost('ip')))
-                    ->setRadix($this->radix);
-
-                foreach ($board->getCommentsUnsorted() as $comment) {
-                    try {
-                        $comment = new Comment($this->getContext(), $comment);
-                        $comment->delete();
-                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
-                    } // we don't want any errors here, just continue
-                }
-            } catch (\Exception $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
-            } // on first real error we need to discontinue
-            return $this->response->setData(['success' => _i('Successfully removed all posts by IP.')]);
-        }
+        } catch (\Exception $e) {
+            return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+        } // on first real error we need to discontinue
+        return $this->response->setData(['success' => _i('Successfully removed all posts by IP.')]);
     }
+
 
     public function post_edit_post()
     {
