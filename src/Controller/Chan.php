@@ -349,6 +349,7 @@ class Chan extends Common
 
     public function action_opensearch()
     {
+        $this->response->headers->set('Content-Type', 'application/opensearchdescription+xml; charset=utf-8');
         $this->builder->createLayout('open_search');
 
         return $this->response->setContent($this->builder->build());
