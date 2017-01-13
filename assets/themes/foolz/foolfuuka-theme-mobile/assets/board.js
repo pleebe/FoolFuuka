@@ -740,6 +740,17 @@ var bindFunctions = function()
 		toggleExif: function(el, post, event)
 		{
 			jQuery(".exiftable."+post).toggle();
+		},
+
+		searchhilight: function(el, post, event)
+		{
+			if (el.is(':checked')) {
+				setCookie("searchhilight_enabled", true, 7, '/', backend_vars.cookie_domain);
+				jQuery("span[data-markjs='true']").addClass("highlight");
+			} else {
+				setCookie("searchhilight_enabled", false, 7, '/', backend_vars.cookie_domain);
+				jQuery("span[data-markjs='true']").removeClass("highlight");
+			}
 		}
 	};
 
@@ -1082,6 +1093,33 @@ var realtimethread = function(){
 	return false;
 };
 
+var highlightSearchResults = function()
+{
+	jQuery.each(backend_vars.search_args, function(id, val)
+	{
+		var selector;
+		if (id == "text") {
+			selector = "div.text";
+		} else if (id == "filename") {
+			selector = "a.post_file_filename"
+		} else if (id == "username") {
+			selector = "span.post_author"
+		} else if (id == "subject") {
+			selector = "h2.post_title";
+		} else if (id == "tripcode") {
+			selector = "span.post_tripcode";
+		} else if (id == "uid") {
+			selector = "span.poster_hash";
+		}
+		if (selector != "") {
+			jQuery( selector ).mark(val, {
+				"element": "span",
+				"className": "highlight"
+			});
+		}
+	});
+};
+
 var ghost = false;
 var insertPost = function(data, textStatus, jqXHR)
 {
@@ -1277,6 +1315,10 @@ jQuery(document).ready(function() {
 		placement: 'bottom',
 		animation: true
 	});
+
+	if (typeof backend_vars.search_args !== "undefined" && getCookie("searchhilight_enabled") == "true") {
+		highlightSearchResults();
+	}
 });
 
 $.fn.extend({

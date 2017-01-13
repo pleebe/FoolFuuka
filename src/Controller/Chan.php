@@ -977,6 +977,14 @@ class Chan extends Common
             'post_show_view_button' => true
         ]);
 
+        $backend_vars = $this->param_manager->getParam('backend_vars');
+        foreach ($search as $key => $value) {
+            if ($value != null) {
+                $backend_vars['search_args'][$key] = $value;
+            }
+        }
+        $this->param_manager->setParam('backend_vars', $backend_vars);
+
         $this->profiler->logMem('Controller Chan $this', $this);
         $this->profiler->log('Controller Chan::search End');
 

@@ -395,8 +395,8 @@ class Chan extends \Foolz\FoolFuuka\View\View
         <?php endif; ?>
     </script>
     <script src="<?= $this->getAssetManager()->getAssetLink('bootstrap.min.js') ?>"></script>
-    <script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
     <script src="<?= $this->getAssetManager()->getAssetLink('plugins.js') ?>"></script>
+    <script src="<?= $this->getAssetManager()->getAssetLink('board.js') ?>"></script>
 
     <!--[if lt IE 7 ]>
         <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>

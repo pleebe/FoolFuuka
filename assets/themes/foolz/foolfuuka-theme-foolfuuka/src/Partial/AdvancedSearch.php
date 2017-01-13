@@ -107,6 +107,8 @@ class AdvancedSearch extends \Foolz\FoolFuuka\View\View
             }
             ?>
 
+            <label><input data-function="searchhilight" class="searchhilight" <?php if ($this->getCookie('searchhilight_enabled') == 'true') : ?> checked="checked" <?php endif; ?> type="checkbox"> Highlight Results</label>
+
             <?php if (!isset($radix) || $radix->sphinx) : ?>
             <div class="radixes">
                 <?php

@@ -1240,3 +1240,11 @@ code.hljs {
   padding:5px 0 0 5px;
   display:none;
 }
+.theme_default span.highlight {
+  background: #6A836F;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+.theme_default.midnight span.highlight {
+  background: #000000;
+}
