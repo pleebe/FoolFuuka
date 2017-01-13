@@ -89,7 +89,8 @@ textarea#reply_chennodiscursus {
     footer#footer > a {
         width: 100% !important;
     }
-    footer#footer > .btn-group, .pull-right {
+    footer#footer > .pull-right,
+    footer#footer > .pull-right > .btn-group {
         float: none !important;
         margin: 1% !important
     }
