@@ -731,7 +731,7 @@ class Chan extends Common
         $redirect  = $this->uri->create([$this->radix->shortname]).$filename;
 
         if ($this->radix->archive) {
-            $redirect  = ($this->radix->getValue('images_url') ? : '//images.4chan.org/'.$this->radix->shortname.'/src/').$filename;
+            $redirect  = ($this->radix->getValue('images_url') ? : '//i.4cdn.org/'.$this->radix->shortname.'/').$filename;
         }
 
         $this->builder->createLayout('redirect')
