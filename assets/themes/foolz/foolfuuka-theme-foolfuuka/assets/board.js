@@ -745,10 +745,14 @@ var bindFunctions = function()
 		searchhilight: function(el, post, event)
 		{
 			if (el.is(':checked')) {
-				setCookie("searchhilight_enabled", true, 7, '/', backend_vars.cookie_domain);
-				jQuery("span[data-markjs='true']").addClass("highlight");
+				setCookie("searchhilight_enabled", true, 90, '/', backend_vars.cookie_domain);
+				if (jQuery("span[data-markjs='true']").length) {
+					jQuery("span[data-markjs='true']").addClass("highlight");
+				} else if (typeof backend_vars.search_args !== "undefined") {
+					highlightSearchResults();
+				}
 			} else {
-				setCookie("searchhilight_enabled", false, 7, '/', backend_vars.cookie_domain);
+				setCookie("searchhilight_enabled", false, 90, '/', backend_vars.cookie_domain);
 				jQuery("span[data-markjs='true']").removeClass("highlight");
 			}
 		}
