@@ -886,6 +886,14 @@ class Comment extends Model
                 ->setParameter(':doc_id', $this->comment->doc_id)
                 ->execute();
 
+            $this->dc->qb()
+                ->update($this->radix->getTable('_threads'))
+                ->where('thread_num = :thread_num')
+                ->set('time_last_modified', 'GREATEST(time_last_modified, :time_last_modified)')
+                ->setParameter(':thread_num', $this->comment->thread_num)
+                ->setParameter(':time_last_modified', time())
+                ->execute();
+
             $this->clearCache();
 
             $this->audit->log(Audit::AUDIT_EDIT_POST, [
