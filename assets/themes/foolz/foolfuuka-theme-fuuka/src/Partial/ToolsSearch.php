@@ -172,6 +172,7 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
                                     'elements' => [
                                         ['value' => false, 'text' => _i('All')],
                                         ['value' => 'user', 'text' => _i('Only User Posts')],
+                                        ['value' => 'ver', 'text' => _i('Only Verified User Posts')],
                                         ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
                                         ['value' => 'admin', 'text' => _i('Only Admin Posts')],
                                         ['value' => 'dev', 'text' => _i('Only Developer Posts')]

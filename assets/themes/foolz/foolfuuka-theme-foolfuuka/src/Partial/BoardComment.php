@@ -134,6 +134,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                                 <?php if ($p->capcode === 'M') : ?><span class="post_level post_level_moderator">## <?= _i('Mod') ?></span><?php endif ?>
                                 <?php if ($p->capcode === 'A') : ?><span class="post_level post_level_administrator">## <?= _i('Admin') ?></span><?php endif ?>
                                 <?php if ($p->capcode === 'D') : ?><span class="post_level post_level_developer">## <?= _i('Developer') ?></span><?php endif ?>
+                                <?php if ($p->capcode === 'V') : ?><span class="post_level post_level_verified">## <?= _i('Verified') ?></span><?php endif ?>
                             <?php endif; ?>
                         </span>
                         <span class="time_wrap">

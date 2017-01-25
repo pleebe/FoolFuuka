@@ -145,6 +145,7 @@ class Search extends Board
                 'elements' => [
                     ['value' => false, 'text' => _i('All')],
                     ['value' => 'user', 'text' => _i('Only User Posts')],
+                    ['value' => 'ver', 'text' => _i('Only Verified Posts')],
                     ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
                     ['value' => 'admin', 'text' => _i('Only Admin Posts')],
                     ['value' => 'dev', 'text' => _i('Only Developer Posts')]
@@ -370,6 +371,9 @@ class Search extends Board
                     break;
                 case 'admin':
                     $query->where('cap', ord('A'));
+                    break;
+                case 'ver':
+                    $query->where('cap', ord('V'));
                     break;
             }
         }
@@ -631,6 +635,8 @@ class Search extends Board
             array_push($title, _i('that were made by mods'));
         if ($search['capcode'] == 'admin')
             array_push($title, _i('that were made by admins'));
+        if ($search['capcode'] == 'ver')
+            array_push($title, _i('that were made by verified users'));
         if ($search['start'])
             array_push($title, sprintf(_i('posts after %s'), e($search['start'])));
         if ($search['end'])

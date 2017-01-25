@@ -286,6 +286,9 @@ code,
 .developer {
   color: #0000f0 !important;
 }
+.verified {
+  color: #007FFF !important;
+}
 .flag {
   display: inline-block;
   width: 16px;
