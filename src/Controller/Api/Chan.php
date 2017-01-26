@@ -1062,11 +1062,11 @@ class Chan extends Common
         }
 
         if (!$this->getAuth()->hasAccess('comment.mod_capcode')) {
-            return $this->response->setData(['error' => _i('Access Denied.')])->setStatusCode(403);
+            return $this->response->setData(['error' => _i('Access Denied.')]);
         }
 
         if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
+            return $this->response->setData(['error' => _i('No board was selected.')]);
         }
 
         if ($this->getPost('action') === 'edit_post') {
@@ -1076,6 +1076,11 @@ class Chan extends Common
                     ->setOptions('doc_id', $this->getPost('doc_id'))
                     ->setRadix($this->radix)
                     ->getComment();
+
+                if (in_array($comment->comment->capcode, ['A', 'D']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
+                    || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
+                    return $this->response->setData(['error' => _i('You are not allowed to edit posts with that capcode.')]);
+                }
 
                 $new_comment = [
                     'title' => $this->getPost('subject'),
@@ -1104,14 +1109,18 @@ class Chan extends Common
                         ' on ' . date("Y-m-d") . '[/info]';
                 }
 
-                // might want to do some validation here or in model
+                // might want to do some more validation here or in model
+                if (in_array($new_comment['capcode'], ['A', 'D']) && ($this->getAuth()->hasAccess('comment.admin_capcode')
+                    || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
+                    return $this->response->setData(['error' => _i('You are not allowed to add that capcode to posts.')]);
+                }
 
                 $comment = new Comment($this->getContext(), $comment);
                 $comment->commentUpdate($new_comment);
             } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
                 return $this->response->setData(['error' => _i('Post not found.')]);
             } catch (\Exception $e) {
-                return $this->response->setData(['error' => $e->getMessage()])->setStatusCode(500);
+                return $this->response->setData(['error' => _i($e->getMessage())]);
             }
             return $this->response->setData(['success' => _i('Successfully edited comment')]);
         }
