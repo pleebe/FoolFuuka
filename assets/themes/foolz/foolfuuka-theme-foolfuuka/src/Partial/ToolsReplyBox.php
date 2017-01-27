@@ -96,9 +96,11 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         <?php
                         $postas = ['N' => _i('User')];
 
+                        if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['V'] = _i('Verified');
                         if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['M'] = _i('Moderator');
                         if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['A'] = _i('Administrator');
                         if ($this->getAuth()->hasAccess('comment.dev_capcode')) $postas['D'] = _i('Developer');
+                        if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['F'] = _i('Founder');
                         if (count($postas) > 1) :
                             ?>
                             <div class="input-prepend">

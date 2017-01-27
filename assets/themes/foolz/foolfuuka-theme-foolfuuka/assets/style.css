@@ -530,6 +530,9 @@
 .theme_default article.thread .post_level.post_level_verified {
   color: #007FFF;
 }
+.theme_default article.thread .post_level.post_level_founder {
+  color: #145031;
+}
 .theme_default article.thread .backlink_list {
   font-size: 11px;
   color: #888888;

@@ -1077,7 +1077,7 @@ class Chan extends Common
                     ->setRadix($this->radix)
                     ->getComment();
 
-                if (in_array($comment->comment->capcode, ['A', 'D']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
+                if (in_array($comment->comment->capcode, ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
                     || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
                     return $this->response->setData(['error' => _i('You are not allowed to edit posts with that capcode.')]);
                 }
@@ -1110,7 +1110,7 @@ class Chan extends Common
                 }
 
                 // might want to do some more validation here or in model
-                if (in_array($new_comment['capcode'], ['A', 'D']) && ($this->getAuth()->hasAccess('comment.admin_capcode')
+                if (in_array($new_comment['capcode'], ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
                     || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
                     return $this->response->setData(['error' => _i('You are not allowed to add that capcode to posts.')]);
                 }

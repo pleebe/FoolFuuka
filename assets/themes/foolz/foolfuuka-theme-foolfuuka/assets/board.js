@@ -544,9 +544,11 @@ var bindFunctions = function()
 				<div class="input-prepend">\
 				<label class="add-on" for="capcode">Capcode</label><select name="edit-capcode" id="capcode">\
 				<option value="N">Normal</option>\
+				<option value="V">Verified</option>\
 				<option value="M">Moderator</option>\
 				<option value="A">Administrator</option>\
-				<option value="D">Developer</option></select></div>\
+				<option value="D">Developer</option>\
+				<option value="F">Founder</option></select></div>\
 				<textarea name="edit-comment" placeholder="" rows="3" style="height:132px; width:320px;"></textarea>\
 				<label><input type="checkbox" name="transparency"> Include transparency message</label>');
 			modal.find(".submitModal").data("action", 'edit-post');

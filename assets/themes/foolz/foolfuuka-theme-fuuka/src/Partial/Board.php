@@ -83,6 +83,12 @@ class Board extends \Foolz\FoolFuuka\View\View
                     <?php if ($op->capcode == 'D') : ?>
                         <span class="postername admin">## <?= _i('Developer') ?></span>
                     <?php endif; ?>
+                    <?php if ($op->capcode == 'V') : ?>
+                        <span class="postername verified">## <?= _i('Verified') ?></span>
+                    <?php endif ?>
+                    <?php if ($op->capcode == 'F') : ?>
+                        <span class="postername founder">## <?= _i('Founder') ?></span>
+                    <?php endif ?>
                     <?= gmdate('D d M H:i:s Y', $op->getOriginalTimestamp()) ?>
                     <?php if ($op->poster_country !== null) : ?><span class="poster_country"><span title="<?= e($op->poster_country_name) ?>" class="flag flag-<?= strtolower($op->poster_country) ?>"></span></span><?php endif; ?>
                 </label>
