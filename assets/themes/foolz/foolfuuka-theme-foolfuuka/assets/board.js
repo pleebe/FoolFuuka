@@ -1235,6 +1235,7 @@ var highlightSearchResults = function()
 			selector = "span.poster_hash";
 		}
 		if (selector != "") {
+			val = val.replace(/[\.\*\^\|'"!]/g, " ");
 			jQuery( selector ).mark(val, {
 				"element": "span",
 				"className": "highlight"
