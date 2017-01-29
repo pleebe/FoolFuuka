@@ -292,6 +292,9 @@ code,
 .founder {
   color: #145031 !important;
 }
+.manager {
+  color: #FF0080 !important;
+}
 .flag {
   display: inline-block;
   width: 16px;

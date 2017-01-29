@@ -548,7 +548,8 @@ var bindFunctions = function()
 				<option value="M">Moderator</option>\
 				<option value="A">Administrator</option>\
 				<option value="D">Developer</option>\
-				<option value="F">Founder</option></select></div>\
+				<option value="F">Founder</option>\
+				<option value="G">Manager</option></select></div>\
 				<textarea name="edit-comment" placeholder="" rows="3" style="height:132px; width:320px;"></textarea>\
 				<label><input type="checkbox" name="transparency"> Include transparency message</label>');
 			modal.find(".submitModal").data("action", 'edit-post');

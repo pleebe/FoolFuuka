@@ -147,6 +147,7 @@ class Search extends Board
                     ['value' => 'user', 'text' => _i('Only User Posts')],
                     ['value' => 'ver', 'text' => _i('Only Verified Posts')],
                     ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
+                    ['value' => 'manager', 'text' => _i('Only Manager Posts')],
                     ['value' => 'admin', 'text' => _i('Only Admin Posts')],
                     ['value' => 'dev', 'text' => _i('Only Developer Posts')],
                     ['value' => 'founder', 'text' => _i('Only Founder Posts')]
@@ -378,6 +379,9 @@ class Search extends Board
                     break;
                 case 'founder':
                     $query->where('cap', ord('F'));
+                    break;
+                case 'manager':
+                    $query->where('cap', ord('G'));
                     break;
             }
         }
@@ -643,6 +647,8 @@ class Search extends Board
             array_push($title, _i('that were made by verified users'));
         if ($search['capcode'] == 'founder')
             array_push($title, _i('that were made by founders'));
+        if ($search['capcode'] == 'manager')
+            array_push($title, _i('that were made by managers'));
         if ($search['start'])
             array_push($title, sprintf(_i('posts after %s'), e($search['start'])));
         if ($search['end'])

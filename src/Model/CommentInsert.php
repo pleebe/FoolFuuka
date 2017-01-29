@@ -396,7 +396,7 @@ class CommentInsert extends Comment
             }
 
             if ($this->getAuth()->hasAccess('comment.admin_capcode')) {
-                array_push($allowed_capcodes, 'A', 'F');
+                array_push($allowed_capcodes, 'A', 'F', 'G');
             }
 
             if ($this->getAuth()->hasAccess('comment.dev_capcode')) {
