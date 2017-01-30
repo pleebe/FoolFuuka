@@ -33,14 +33,23 @@ class Gallery extends \Foolz\FoolFuuka\View\View
                     <span class="post_author"><?= (($p->email && $p->email !== 'noko') ? '<a href="mailto:' . rawurlencode($p->email) . '">' . $p->getNameProcessed() . '</a>' : $p->getNameProcessed()) ?></span>
                     <span class="post_trip"><?= $p->getTripProcessed() ?></span>
                     <span class="poster_hash"><?= ($p->getPosterHashProcessed()) ? 'ID:' . $p->getPosterHashProcessed() : '' ?></span>
-                    <?php if ($p->capcode == 'M') : ?>
-                    <span class="post_level post_level_moderator">## <?= _i('Mod') ?></span>
+                    <?php if ($p->capcode === 'M') : ?>
+                        <span class="post_level post_level_moderator">## <?= _i('Mod') ?></span>
                     <?php endif ?>
-                    <?php if ($p->capcode == 'A') : ?>
-                    <span class="post_level post_level_administrator">## <?= _i('Admin') ?></span>
+                    <?php if ($p->capcode === 'A') : ?>
+                        <span class="post_level post_level_administrator">## <?= _i('Admin') ?></span>
                     <?php endif ?>
-                    <?php if ($p->capcode == 'D') : ?>
-                    <span class="post_level post_level_developer">## <?= _i('Developer') ?></span>
+                    <?php if ($p->capcode === 'D') : ?>
+                        <span class="post_level post_level_developer">## <?= _i('Developer') ?></span>
+                    <?php endif ?>
+                    <?php if ($p->capcode === 'V') : ?>
+                        <span class="post_level post_level_verified">## <?= _i('Verified') ?></span>
+                    <?php endif ?>
+                    <?php if ($p->capcode === 'F') : ?>
+                        <span class="post_level post_level_founder">## <?= _i('Founder') ?></span>
+                    <?php endif ?>
+                    <?php if ($p->capcode === 'G') : ?>
+                        <span class="post_level post_level_manager">## <?= _i('Manager') ?></span>
                     <?php endif ?><br/>
                     <time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>"><?= gmdate('D M d H:i:s Y', $p->timestamp) ?></time>
                     <span class="post_number"><a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) . '#' . $p->num ?>" data-function="highlight" data-post="<?= $p->num ?>">No.</a><a href="<?= $this->getUri()->create($radix->shortname . '/thread/' . $p->num) . '#q' . $p->num ?>" data-function="quote" data-post="<?= $p->num ?>"><?= $p->num ?></a></span>
