@@ -61,6 +61,12 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
                             </td>
                         </tr>
                         <tr>
+                            <td class="postblock"><?= _i('Thread No.') ?></td>
+                            <td>
+                                <?php echo $form->input(['name' => 'tnum', 'size' => '32', 'id' => 'tnum', 'value' => (isset($search["tnum"])) ? rawurldecode($search["tnum"]) : '']); ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="postblock"><?= _i('Subject') ?></td>
                             <td>
                                 <?php echo $form->input(['name' => 'subject', 'size' => '32', 'id' => 'subject', 'value' => (isset($search["subject"])) ? rawurldecode($search["subject"]) : '']); ?>
@@ -85,12 +91,25 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
                             </td>
                         </tr>
                         <tr>
+                            <td class="postblock"><?= _i('Unique ID') ?> <a class="tooltip" href="#">[?]<span><?= _i('Search for an <b>exact</b> unique id. Leave empty for any unique id.') ?></span></a></td>
+                            <td>
+                                <?php echo $form->input(['name' => 'uid', 'size' => '32', 'id' => 'uid', 'value' => (isset($search["uid"])) ? rawurldecode($search["uid"]) : '']); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="postblock"><?= _i('Country') ?> <a class="tooltip" href="#">[?]<span><?= _i('Search for an <b>exact</b> country code. Leave empty for any country.') ?></span></a></td>
+                            <td>
+                                <?php echo $form->input(['name' => 'country', 'size' => '32', 'id' => 'country', 'value' => (isset($search["country"])) ? rawurldecode($search["country"]) : '']); ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="postblock"><?= _i('From Date') ?> <a class="tooltip" href="#">[?]<span><?= _i('Enter the starting date for your search.') ?><br/><?= _i('Format: YYYY-MM-DD') ?></span></a></td>
                             <td>
                                 <?php
                                 echo $form->input(
                                     ['type' => 'date',
                                         'name' => 'start',
+                                        'size' => '32',
                                         'placeholder' => 'YYYY-MM-DD',
                                         'id' => 'date_start',
                                         'value' => (isset($search["date_start"])) ? rawurldecode($search["date_start"]) : ''
@@ -106,6 +125,7 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
                                 echo $form->input(
                                     [
                                         'type' => 'date',
+                                        'size' => '32',
                                         'name' => 'end',
                                         'id' => 'date_end',
                                         'placeholder' => 'YYYY-MM-DD',
@@ -174,6 +194,7 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
                                         ['value' => 'user', 'text' => _i('Only User Posts')],
                                         ['value' => 'ver', 'text' => _i('Only Verified User Posts')],
                                         ['value' => 'mod', 'text' => _i('Only Moderator Posts')],
+                                        ['value' => 'manager', 'text' => _i('Only Manager Posts')],
                                         ['value' => 'admin', 'text' => _i('Only Admin Posts')],
                                         ['value' => 'dev', 'text' => _i('Only Developer Posts')],
                                         ['value' => 'founder', 'text' => _i('Only Founder Posts')]
