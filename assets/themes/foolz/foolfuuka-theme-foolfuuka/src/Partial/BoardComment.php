@@ -34,7 +34,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 <button class="btn-toggle-post" data-function="showPost" data-board="<?= $p->radix->shortname ?>"  data-doc-id="<?= $p->doc_id ?>" data-thread-num="<?= $p->thread_num ?>"><i class="icon-plus"></i></button>
                 <?php if ($p->email && $p->email !== 'noko') : ?><a href="mailto:<?= rawurlencode($p->email) ?>"><?php endif; ?><span class="post_author"><?= $p->getNameProcessed() ?></span><?= ($p->getNameProcessed() && $p->getTripProcessed()) ? ' ' : '' ?><span class="post_tripcode"><?= $p->getTripProcessed() ?></span><?php if ($p->email && $p->email !== 'noko') : ?></a><?php endif ?>
         </div>
-        <article class="<?php if ($is_full_op) : ?>clearfix thread<?php else: ?>post<?php endif; ?> doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p_media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>" <?php if ($is_full_op) : ?>data-doc-id="<?= $p->doc_id ?>" data-thread-num="<?= $p->thread_num ?>"<?php endif; ?>>
+        <article class="<?php if ($is_full_op) : ?>clearfix thread<?php else: ?>post<?php endif; ?> doc_id_<?= $p->doc_id ?><?php if ($p->subnum > 0) : ?> post_ghost<?php endif; ?><?php if ($p->thread_num === $p->num) : ?> post_is_op<?php endif; ?><?php if ( !is_null($p_media)) : ?> has_image<?php endif; ?>" id="<?= $num ?>" data-board="<?= $p->radix->shortname ?>" data-doc-id="<?= $p->doc_id ?>" <?php if ($is_full_op) : ?>data-thread-num="<?= $p->thread_num ?>"<?php endif; ?>>
             <?php if ($is_full_op) : ?>
                 <?php if ($thread_id === 0) : ?>
                     <div class="stub pull-left">

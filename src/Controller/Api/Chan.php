@@ -1065,11 +1065,11 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('Access Denied.')]);
         }
 
-        if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')]);
-        }
-
         if ($this->getPost('action') === 'edit_post') {
+            if (!$this->check_board()) {
+                return $this->response->setData(['error' => _i('No board was selected.')]);
+            }
+
             try {
                 $comment = Board::forge($this->getContext())
                     ->getPost()
@@ -1122,7 +1122,74 @@ class Chan extends Common
             } catch (\Exception $e) {
                 return $this->response->setData(['error' => _i($e->getMessage())]);
             }
-            return $this->response->setData(['success' => _i('Successfully edited comment')]);
+            return $this->response->setData(['success' => _i('Successfully edited post.')]);
+        } else if ($this->getPost('action') === 'bulk_edit') {
+            try {
+                $count = 0;
+                if (!$this->getPost('posts') || empty($this->getPost('posts'))) {
+                    return $this->response->setData(['error' => _i('No posts selected.')]);
+                }
+                foreach ($this->getPost('posts') as $post) {
+                    try {
+                        $comment = Board::forge($this->getContext())
+                            ->getPost()
+                            ->setOptions('doc_id', $post['doc_id'])
+                            ->setRadix($this->radix_coll->getByShortname($post['radix']))
+                            ->getComment();
+
+                        if (in_array($comment->comment->capcode, ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
+                                || !$this->getAuth()->hasAccess('comment.dev_capcode'))
+                        ) {
+                            // bail silently
+                            continue;
+                        }
+
+                        $new_comment = [
+                            'title' => $this->getPost('subject'),
+                            'name' => $this->getPost('name'),
+                            'trip' => $this->getPost('trip'),
+                            'email' => $this->getPost('email'),
+                            'poster_country' => $this->getPost('poster_country'),
+                            'poster_hash' => $this->getPost('poster_hash'),
+                            'capcode' => $this->getPost('capcode'),
+                            'comment' => $this->getPost('comment'),
+                            'media_filename' => $this->getPost('filename'),
+                            'media_w' => $this->getPost('media_w'),
+                            'media_h' => $this->getPost('media_h'),
+                            'preview_w' => $this->getPost('preview_w'),
+                            'preview_h' => $this->getPost('preview_h'),
+                            'spoiler' => $this->getPost('spoiler')
+                        ];
+
+
+                        if (in_array($new_comment['capcode'], ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
+                                || !$this->getAuth()->hasAccess('comment.dev_capcode'))
+                        ) {
+                            // bail silently
+                            continue;
+                        }
+
+                        foreach ($new_comment as $k => $v) {
+                            if ($v === '' || ($k === 'capcode' && $v === 'N')) {
+                                // we don't want to edit fields that were left blank
+                                unset($new_comment[$k]);
+                            }
+                        }
+
+                        if (empty($new_comment)) {
+                            return $this->response->setData(['error' => _i('All fields blank. Nothing to do.')]);
+                        }
+
+                        $comment = new Comment($this->getContext(), $comment);
+                        $comment->commentUpdate($new_comment);
+                        $count++;
+                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                    } // on to the next
+                }
+                return $this->response->setData(['success' => _i('Successfully edited '.$count.' posts.')]);
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => _i($e->getMessage())]);
+            }
         }
     }
 }

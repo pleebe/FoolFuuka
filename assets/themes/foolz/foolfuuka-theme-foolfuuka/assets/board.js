@@ -526,7 +526,8 @@ var bindFunctions = function()
 			modal.find(".title").html('Edit Post No. ' + el.data("post-id"));
 			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").show();
-			modal.find(".modal-information").html('<fieldset>\
+			modal.find(".modal-information").html('<a class="btn secondary" href="#" data-function="addBulkEdit">Bulk Edit</a>\
+			<fieldset>\
 				<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
 				<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 				<div class="input-prepend">\
@@ -597,13 +598,74 @@ var bindFunctions = function()
 				},
 				error: function() {
 					console.log('post not found');
-					modal.closeModal();
+					el.closest(".modal").modal('hide');
 				},
 				complete: function() {
 					modal.find(".modal-information").append('</fieldset>');
 					modal.find(".modal-loading").hide();
 				}
 			});
+		},
+
+		addBulkEdit: function(el, post, event) {
+			jQuery('article.thread, article.post').each(function () {
+				if (typeof jQuery(this).attr('data-board') != 'undefined') {
+					jQuery('<input class="bulkselect" type="checkbox" data-board="' + jQuery(this).attr('data-board') + '" ' +
+						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
+						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
+						'data-keyboard="true" data-function="bulkEdit">Edit Selected</a>')
+						.prependTo($(this).find('.post_data:first'));
+				}
+			});
+			el.closest(".modal").modal('hide');
+		},
+
+		bulkEdit: function(el, post, event) {
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Edit Posts');
+			modal.find(".modal-error").html('');
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('This will only modify specified fields. Leave blank to not modify that field.<br><br>' +
+				'Selected posts: <br>');
+			jQuery('.bulkselect:checked').each(function () {
+				modal.find(".modal-information").append('>>>/' + $(this).attr('data-board') + '/' + $(this).attr('data-num') + '<br>');
+			});
+			modal.find(".modal-information").append('<br><fieldset>\
+				<div class="input-prepend">\
+				<label class="add-on" for="subject">Subject</label><input name="edit-subject" id="subject" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="name">Name</label><input name="edit-name" id="name" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="trip">Tripcode (final)</label><input name="edit-trip" id="trip" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="email">E-Mail</label><input name="edit-email" id="email" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="country">Country</label><input name="edit-country" id="country" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="poster_hash">Hash</label><input name="edit-poster_hash" id="poster_hash" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="capcode">Capcode</label><select name="edit-capcode" id="capcode">\
+				<option value="N">Normal</option>\
+				<option value="V">Verified</option>\
+				<option value="M">Moderator</option>\
+				<option value="A">Administrator</option>\
+				<option value="D">Developer</option>\
+				<option value="F">Founder</option>\
+				<option value="G">Manager</option></select></div>\
+				<textarea name="edit-comment" placeholder="" rows="3" style="height:132px; width:320px;"></textarea>\
+				<p>Media</p>\
+				<div class="input-prepend">\
+				<label class="add-on" for="filename">Filename</label><input name="edit-filename" id="filename" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="media_w">Media Width</label><input name="edit-media_w" id="media_w" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="media_h">Media Height</label><input name="edit-media_h" id="media_h" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="preview_w">Preview Width</label><input name="edit-preview_w" id="preview_w" type="text"></div>\
+				<div class="input-prepend">\
+				<label class="add-on" for="preview_h">Preview Height</label><input name="edit-preview_h" id="preview_h" type="text"></div>\
+				<label for="spoiler"><input type="checkbox" id="spoiler" value="true" name="edit-spoiler"> Spoiler Image</label>');
+			modal.find(".submitModal").data("action", 'bulk-edit');
 		},
 
 		submitModal: function(el, post, event)
@@ -696,6 +758,40 @@ var bindFunctions = function()
 					}
 				}
 			}
+			else if (action == 'bulk-edit') {
+				_href = backend_vars.api_url + '_/api/chan/edit_post/';
+
+				_data = {
+					action: 'bulk_edit',
+					subject: modal.find("input[name='edit-subject']").val(),
+					name: modal.find("input[name='edit-name']").val(),
+					trip: modal.find("input[name='edit-trip']").val(),
+					email: modal.find("input[name='edit-email']").val(),
+					poster_country: modal.find("input[name='edit-country']").val(),
+					poster_hash: modal.find("input[name='edit-poster_hash']").val(),
+					capcode: modal.find("select[name='edit-capcode']").val(),
+					comment: modal.find("textarea[name='edit-comment']").val(),
+					filename: modal.find("input[name='edit-filename']").val(),
+					media_w: modal.find("input[name='edit-media_w']").val(),
+					media_h: modal.find("input[name='edit-media_h']").val(),
+					preview_w: modal.find("input[name='edit-preview_w']").val(),
+					preview_h: modal.find("input[name='edit-preview_h']").val(),
+					csrf_fool: backend_vars.csrf_hash,
+					posts: []
+				};
+				if ($('input[name=edit-spoiler]').is(':checked')) {
+					_data.spoiler = 1;
+				} else {
+					_data.spoiler = 0;
+				}
+				jQuery('.bulkselect:checked').each(function () {
+					_data.posts.push({
+							radix: $(this).attr('data-board'),
+							doc_id: $(this).attr('data-doc-id')
+						}
+					);
+				});
+			}
 			else {
 				// Stop It! Unable to determine which action to use.
 				return false;
@@ -716,6 +812,12 @@ var bindFunctions = function()
 				}
 				if (action == 'report') {
 					jQuery('.doc_id_' + _doc_id).find('.text:eq(0)').after('<div class="report_reason">' + result.success + '</div>');
+				}
+				if (action == 'edit-post') {
+					jQuery('.doc_id_' + _doc_id).find('.text:eq(0)').after('<div class="report_reason">' + result.success + '</div>');
+				}
+				if (action == 'bulk-edit') {
+					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
 				}
 			}, 'json');
 			return false;
