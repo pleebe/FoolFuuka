@@ -665,9 +665,7 @@ class Chan extends Common
             }
 
             return $this->response->setData(['success' => _i('You have successfully submitted a report for this post.')]);
-        }
-
-        if ($this->getPost('action') === 'delete') {
+        } else if ($this->getPost('action') === 'delete') {
             if (!$this->check_board()) {
                 return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
             }
@@ -689,9 +687,7 @@ class Chan extends Common
             }
 
             return $this->response->setData(['success' => _i('This post was deleted.')]);
-        }
-
-        if ($this->getPost('action') === 'bulk_report') {
+        } else if ($this->getPost('action') === 'bulk_report') {
             try {
                 $count = 0;
                 $messages = '';
@@ -723,6 +719,7 @@ class Chan extends Common
                 return $this->response->setData(['error' => _i($e->getMessage())]);
             }
         }
+        return $this->get_404();
     }
 
     public function post_mod_actions()
