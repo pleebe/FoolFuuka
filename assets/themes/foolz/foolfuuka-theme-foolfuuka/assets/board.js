@@ -480,20 +480,47 @@ var bindFunctions = function()
 			modal.find(".modal-password").val(backend_vars.user_pass);
 		},
 
-
 		report: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
 			modal.find(".title").html('Report &raquo; Post No.' + el.data("post-id"));
 			modal.find(".modal-error").html('');
 			modal.find(".modal-loading").hide();
-			modal.find(".modal-information").html('\
+			modal.find(".modal-information").html('<a class="btn secondary" href="#" data-function="addBulkReport">Report Multiple</a>\
 			<input type="hidden" class="modal-post-id" value="' + el.data("post") + '" />\n\
 			<input type="hidden" class="modal-board" value="' + el.data("board") + '" />\n\
 			<span class="modal-field">Comment</span>\n\
 			<textarea class="modal-comment"></textarea>\n\
 			<span class="model-note">Note: Requests for content removal and take-downs must be sent via email.</span>');
 			modal.find(".submitModal").data("action", 'report');
+		},
+
+		addBulkReport: function(el, post, event) {
+			jQuery('article.thread, article.post').each(function () {
+				if (typeof jQuery(this).attr('data-board') != 'undefined') {
+					jQuery(this).find('a[data-function=report]:eq(0)').replaceWith('<input class="bulkreportselect" type="checkbox" ' +
+						'data-board="' + jQuery(this).attr('data-board') + '" ' +
+						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
+						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
+						'data-keyboard="true" data-function="bulkReport">Report Selected</a>');
+				}
+			});
+			el.closest(".modal").modal('hide');
+		},
+
+		bulkReport: function(el, post, event) {
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Report Posts');
+			modal.find(".modal-error").html('');
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('Selected posts: <br>');
+			jQuery('.bulkreportselect:checked').each(function () {
+				modal.find(".modal-information").append('>>>/' + $(this).attr('data-board') + '/' + $(this).attr('data-num') + '<br>');
+			});
+			modal.find(".modal-information").append('<br><span class="modal-field">Comment</span>\n\
+			<textarea class="modal-comment"></textarea>\n\
+			<span class="model-note">Note: Requests for content removal and take-downs must be sent via email.</span>');
+			modal.find(".submitModal").data("action", 'bulk-report');
 		},
 
 		ban: function(el, post, event)
@@ -792,6 +819,22 @@ var bindFunctions = function()
 					);
 				});
 			}
+			else if (action == 'bulk-report') {
+				_data = {
+					action: 'bulk_report',
+					reason: modal.find(".modal-comment").val(),
+					csrf_fool: backend_vars.csrf_hash,
+					posts: []
+				};
+				jQuery('.bulkreportselect:checked').each(function () {
+					_data.posts.push({
+							radix: $(this).attr('data-board'),
+							doc_id: $(this).attr('data-doc-id'),
+							num: $(this).attr('data-num')
+						}
+					);
+				});
+			}
 			else {
 				// Stop It! Unable to determine which action to use.
 				return false;
@@ -817,6 +860,9 @@ var bindFunctions = function()
 					jQuery('.doc_id_' + _doc_id).find('.text:eq(0)').after('<div class="report_reason">' + result.success + '</div>');
 				}
 				if (action == 'bulk-edit') {
+					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
+				}
+				if (action == 'bulk-report') {
 					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
 				}
 			}, 'json');

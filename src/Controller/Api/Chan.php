@@ -648,11 +648,11 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
         }
 
-        if (!$this->check_board()) {
-            return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
-        }
-
         if ($this->getPost('action') === 'report') {
+            if (!$this->check_board()) {
+                return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
+            }
+
             try {
                 $this->report_coll->add(
                     $this->radix,
@@ -668,6 +668,10 @@ class Chan extends Common
         }
 
         if ($this->getPost('action') === 'delete') {
+            if (!$this->check_board()) {
+                return $this->response->setData(['error' => _i('No board was selected.')])->setStatusCode(422);
+            }
+
             try {
                 $comment = Board::forge($this->getContext())
                     ->getPost()
@@ -685,6 +689,39 @@ class Chan extends Common
             }
 
             return $this->response->setData(['success' => _i('This post was deleted.')]);
+        }
+
+        if ($this->getPost('action') === 'bulk_report') {
+            try {
+                $count = 0;
+                $messages = '';
+                if (!$this->getPost('posts') || empty($this->getPost('posts'))) {
+                    return $this->response->setData(['error' => _i('No posts selected.')]);
+                }
+                foreach ($this->getPost('posts') as $post) {
+                    try {
+                        $this->report_coll->add(
+                            $this->radix_coll->getByShortname($post['radix']),
+                            $post['doc_id'],
+                            $this->getPost('reason'),
+                            Inet::ptod($this->getRequest()->getClientIp())
+                        );
+                        $count++;
+                    } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                        // on to the next
+                    } catch (\Foolz\FoolFuuka\Model\ReportException $e) {
+                        $messages .= " >>>/".$post['radix']."/".$post['num']." : ".$e->getMessage();
+                        // on to the next
+                    }
+                }
+                if ($messages !== '') {
+                    return $this->response->setData(['error' => _i('Successfully reported ' . $count . ' posts.' . $messages)]);
+                } else {
+                    return $this->response->setData(['success' => _i('Successfully reported ' . $count . ' posts.')]);
+                }
+            } catch (\Exception $e) {
+                return $this->response->setData(['error' => _i($e->getMessage())]);
+            }
         }
     }
 
