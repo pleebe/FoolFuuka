@@ -224,6 +224,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 </div>
                 <div class="btn-group post_mod_controls">
                     <button class="btn btn-mini" data-post="<?= $p->doc_id ?>" data-post-id="<?= $num ?>" data-board="<?= htmlspecialchars($p->radix->shortname) ?>" data-controls-modal="post_tools_modal" data-backdrop="true" data-keyboard="true" data-function="editPost"><?= _i('Edit Post') ?></button>
+                    <button class="btn btn-mini" data-function="addBulkMod"><?= _i('Bulk Mod') ?></button>
                     <?php if ($p->op) : ?>
                     <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-action="toggle_sticky"><?= _i('Toggle Sticky') ?></button>
                     <button class="btn btn-mini" data-function="mod" data-board="<?= $p->radix->shortname ?>" data-id="<?= $p->doc_id ?>" data-action="toggle_locked"><?= _i('Toggle Locked') ?></button>
