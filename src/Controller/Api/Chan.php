@@ -1088,6 +1088,86 @@ class Chan extends Common
         return $this->response->setData(['success' => _i('Successfully removed all posts by IP.')]);
     }
 
+    public function post_bulk_mod()
+    {
+        if (!$this->checkCsrfToken()) {
+            return $this->response->setData(['error' => _i('The security token was not found. Please try again.')]);
+        }
+
+        if (!$this->getAuth()->hasAccess('comment.mod_capcode')) {
+            return $this->response->setData(['error' => _i('Access Denied.')])->setStatusCode(403);
+        }
+
+        try {
+            $count = 0;
+            $messages = '';
+            $text = '';
+            if (!$this->getPost('posts') || empty($this->getPost('posts'))) {
+                return $this->response->setData(['error' => _i('No posts selected.')]);
+            }
+            foreach ($this->getPost('posts') as $post) {
+                try {
+                    $comment = Board::forge($this->getContext())
+                        ->getPost()
+                        ->setOptions('doc_id', $post['doc_id'])
+                        ->setRadix($this->radix_coll->getByShortname($post['radix']))
+                        ->getComment();
+
+                    $comment = new Comment($this->getContext(), $comment);
+                    switch ($this->getPost('mod_function')) {
+                        case 'delete':
+                            $comment->delete();
+                            $text = 'Successfully deleted %d posts. ';
+                            $count++;
+                            break;
+                        case 'delete_image':
+                            if ($comment->media !== null) {
+                                $media = $this->media_factory->getByMediaId($comment->radix, $comment->media->media_id);
+                                $media = new Media($this->getContext(), CommentBulk::forge($comment->radix, null, $media));
+                                $media->delete(true, true, true);
+                                $count++;
+                            }
+                            $text = 'Successfully deleted %d images. ';
+                            break;
+                        case 'ban_image':
+                            if ($comment->media !== null) {
+                                $media = $this->media_factory->getByMediaId($comment->radix, $comment->media->media_id);
+                                $media = new Media($this->getContext(), CommentBulk::forge($comment->radix, null, $media));
+                                $media->ban(false);
+                                $count++;
+                            }
+                            $text = 'Successfully banned %d images. ';
+                            break;
+                        case 'ban_global':
+                            if ($comment->media !== null) {
+                                $media = $this->media_factory->getByMediaId($comment->radix, $comment->media->media_id);
+                                $media = new Media($this->getContext(), CommentBulk::forge($comment->radix, null, $media));
+                                $media->ban(true);
+                                $count++;
+                            }
+                            $text = 'Successfully banned %d images globally. ';
+                            break;
+                        default:
+                            return $this->response->setData(['error' => _i('Invalid mod action.')]);
+                    }
+                } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
+                    $messages .= " >>>/" . $post['radix'] . "/" . $post['num'] . " : " . $e->getMessage();
+                    // on to the next
+                } catch (\Foolz\FoolFuuka\Model\MediaNotFoundException $e) {
+                    $messages .= " >>>/" . $post['radix'] . "/" . $post['num'] . " : " . $e->getMessage();
+                    // on to the next
+                }
+            }
+            if ($messages !== '') {
+                return $this->response->setData(['error' => _i(sprintf($text, $count) . $messages)]);
+            } else {
+                return $this->response->setData(['success' => _i(sprintf($text, $count))]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setData(['error' => _i($e->getMessage())]);
+        }
+    }
+
 
     public function post_edit_post()
     {

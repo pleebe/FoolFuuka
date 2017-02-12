@@ -695,6 +695,37 @@ var bindFunctions = function()
 			modal.find(".submitModal").data("action", 'bulk-edit');
 		},
 
+		addBulkMod: function(el, post, event) {
+			jQuery('article.thread, article.post').each(function () {
+				if (typeof jQuery(this).attr('data-board') != 'undefined') {
+					jQuery(this).find('a[data-function=delete]:eq(0)').replaceWith('<input class="bulkmodselect" type="checkbox" ' +
+						'data-board="' + jQuery(this).attr('data-board') + '" ' +
+						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
+						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
+						'data-keyboard="true" data-function="bulkMod">Mod Selected</a>');
+				}
+			});
+		},
+
+		bulkMod: function(el, post, event) {
+			var modal = jQuery("#post_tools_modal");
+			modal.find(".title").html('Mod Posts');
+			modal.find(".modal-error").html('');
+			modal.find(".modal-loading").hide();
+			modal.find(".modal-information").html('Selected posts: <br>');
+			jQuery('.bulkmodselect:checked').each(function () {
+				modal.find(".modal-information").append('>>>/' + $(this).attr('data-board') + '/' + $(this).attr('data-num') + '<br>');
+			});
+			modal.find(".modal-information").append('<br>Select action<br>' +
+				'<form>\
+					<label class="radio"><input type="radio" name="modaction" value="delete"> Delete Posts</label>\
+					<label class="radio"><input type="radio" name="modaction" value="delete_image"> Delete Images</label>\
+					<label class="radio"><input type="radio" name="modaction" value="ban_image"> Ban Images</label>\
+					<label class="radio"><input type="radio" name="modaction" value="ban_global"> Ban Images Globally</label>\
+				</form>');
+			modal.find(".submitModal").data("action", 'bulk-mod');
+		},
+
 		submitModal: function(el, post, event)
 		{
 			var modal = jQuery("#post_tools_modal");
@@ -835,6 +866,23 @@ var bindFunctions = function()
 					);
 				});
 			}
+			else if (action == 'bulk-mod') {
+				_href = backend_vars.api_url+'_/api/chan/bulk_mod/';
+				_data = {
+					action: 'bulk_mod',
+					mod_function: $('input[name=modaction]:checked').val(),
+					csrf_fool: backend_vars.csrf_hash,
+					posts: []
+				};
+				jQuery('.bulkmodselect:checked').each(function () {
+					_data.posts.push({
+							radix: $(this).attr('data-board'),
+							doc_id: $(this).attr('data-doc-id'),
+							num: $(this).attr('data-num')
+						}
+					);
+				});
+			}
 			else {
 				// Stop It! Unable to determine which action to use.
 				return false;
@@ -863,6 +911,9 @@ var bindFunctions = function()
 					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
 				}
 				if (action == 'bulk-report') {
+					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
+				}
+				if (action == 'bulk-mod') {
 					jQuery('div.container').after('<div style="text-align:center;" class="alert alert-success">' + result.success + '</div>');
 				}
 			}, 'json');
