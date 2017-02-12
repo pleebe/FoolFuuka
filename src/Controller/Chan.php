@@ -1090,12 +1090,12 @@ class Chan extends Common
 
         if (isset($post['reply_bokunonome'])) {
             $data['name'] = $post['reply_bokunonome'];
-            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_name', $data['name'], 60*60*24*30));
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_name', $data['name'], 60 * 60 * 24 * 30));
         }
 
         if (isset($post['reply_elitterae'])) {
             $data['email'] = $post['reply_elitterae'];
-            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_email', $data['email'], 60*60*24*30));
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_email', $data['email'], 60 * 60 * 24 * 30));
         }
 
         if (isset($post['reply_talkingde'])) {
@@ -1113,7 +1113,7 @@ class Chan extends Common
             }
 
             $data['delpass'] = $post['reply_nymphassword'];
-            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_password', $data['delpass'], 60*60*24*30));
+            $this->response->headers->setCookie(new Cookie($this->getContext(), 'reply_password', $data['delpass'], 60 * 60 * 24 * 30));
         }
 
         if (isset($post['reply_gattai_spoilered']) || isset($post['reply_spoiler'])) {
@@ -1152,6 +1152,8 @@ class Chan extends Common
                 } else {
                     return $this->error($e->getMessage());
                 }
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadWorkaroundException $e) {
+                $media = null;
             } catch (\Foolz\FoolFuuka\Model\MediaUploadException $e) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     return $this->response->setData(['error' => $e->getMessage()]);

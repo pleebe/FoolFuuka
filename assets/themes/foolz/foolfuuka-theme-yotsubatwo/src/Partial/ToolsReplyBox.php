@@ -106,9 +106,10 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         'pubkey': '<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>'
                     };
                 </script>
-                <div class="recaptcha_widget" style="display:none"></div>
+                <tr class="recaptcha_widget" style="display:none">
                 <noscript>
-                    <div>
+                    <td><?= _i('Verification') ?></td>
+                    <td><div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
                         <div style="width: 302px; height: 422px; position: relative;">
                             <div style="width: 302px; height: 422px; position: absolute;">
                                 <iframe src="https://www.google.com/recaptcha/api/fallback?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>" frameborder="0" scrolling="no" style="width: 302px; height:422px; border-style: none;"></iframe>
@@ -117,8 +118,9 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         <div style="width: 300px; height: 60px; border-style: none;bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
                             <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;margin: 10px 25px; padding: 0px; resize: none;"></textarea>
                         </div>
-                    </div>
+                    </td>
                 </noscript>
+                </tr>
             <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                 <script>
                     var recaptcha2 = {

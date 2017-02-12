@@ -24,6 +24,7 @@ class MediaUploadException extends \Exception {}
 class MediaUploadNoFileException extends MediaUploadException {}
 class MediaUploadMultipleNotAllowedException extends MediaUploadException {}
 class MediaUploadInvalidException extends MediaUploadException {}
+class MediaUploadWorkaroundException extends MediaUploadException {}
 
 class MediaInsertException extends \Exception {}
 class MediaInsertInvalidFormatException extends MediaInsertException {}

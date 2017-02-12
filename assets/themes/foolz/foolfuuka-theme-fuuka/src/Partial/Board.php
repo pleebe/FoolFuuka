@@ -18,7 +18,7 @@ class Board extends \Foolz\FoolFuuka\View\View
         $form = $this->getForm();
 
         if ($thread_id > 0) {
-            echo $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $radix->shortname . '/submit', 'id' => 'postform']);
+            echo $form->open(['enctype' => 'multipart/form-data', 'onsubmit' => 'fuel_set_csrf_token(this);', 'action' => $this->getUri()->create([$radix->shortname , 'submit']), 'id' => 'postform']);
             echo $form->hidden('csrf_token', $this->getSecurity()->getCsrfToken());
             echo $form->hidden('id', 'postform');
             echo isset($backend_vars['last_limit']) ? $form->hidden('reply_last_limit', $backend_vars['last_limit'])  : '';

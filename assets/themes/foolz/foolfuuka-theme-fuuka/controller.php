@@ -151,6 +151,8 @@ class Chan extends \Foolz\FoolFuuka\Controller\Chan
                 $media->spoiler = isset($data['spoiler']) && $data['spoiler'];
             } catch (\Foolz\FoolFuuka\Model\MediaUploadNoFileException $e) {
                 $media = null;
+            } catch (\Foolz\FoolFuuka\Model\MediaUploadWorkaroundException $e) {
+                $media = null;
             } catch (\Foolz\FoolFuuka\Model\MediaUploadException $e) {
                 return $this->error($e->getMessage());
             }

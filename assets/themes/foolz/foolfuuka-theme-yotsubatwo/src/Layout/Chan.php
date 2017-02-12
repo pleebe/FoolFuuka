@@ -190,7 +190,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
                             }
 
                             if ($this->getAuth()->hasAccess('comment.reports')) {
-                                $top_nav[] = ['href' => $this->getUri()->create(['admin', 'moderation', 'reports']), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : '')];
+                                $top_nav[] = ['href' => $this->getUri()->create(array('_', 'reports')), 'text' => _i('Reports').($this->getReportColl()->count() ? ' <span style="font-family:Verdana;text-shadow:none; font-size:11px; color:#ddd;" class="label label-inverse">'.$this->getReportColl()->count().'</span>' : '')];
                             }
 
                             $top_nav = \Foolz\Plugin\Hook::forge('foolframe.themes.generic_top_nav_buttons')->setObject($this)->setParam('nav', $top_nav)->execute()->get($top_nav);

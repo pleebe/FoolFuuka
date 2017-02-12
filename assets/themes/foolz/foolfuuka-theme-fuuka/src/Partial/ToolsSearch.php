@@ -251,7 +251,7 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
 
         <?php if ($this->getRadix()) : ?>
             <!--- Post Input -->
-            <?php echo $form->open(['action' => $this->getRadix()->shortname . '/post']); ?>
+            <?php echo $form->open(['action' => $this->getUri()->create([$this->getRadix()->shortname, 'post'])]); ?>
             <div class="postspan" style="float:left">
                 <?= _i('View Post') ?>
 
@@ -274,7 +274,7 @@ class ToolsSearch extends \Foolz\FoolFuuka\View\View
             <?php echo $form->close(); ?>
 
             <!--- Page Input -->
-            <?php echo $form->open(['action' => $this->getRadix()->shortname . '/page']); ?>
+            <?php echo $form->open(['action' => $this->getUri()->create([$this->getRadix()->shortname, 'page'])]); ?>
             <div class="postspan" style="float:left">
                 <?= _i('View Page') ?>
 

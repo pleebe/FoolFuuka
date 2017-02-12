@@ -7,7 +7,7 @@ class OpenSearch extends \Foolz\FoolFuuka\View\View
     public function toString()
     {
         ?>
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1"
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
                        xmlns:moz="http://www.mozilla.org/2006/browser/search/">
     <LongName><?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> Search</LongName>
     <ShortName><?= $this->getPreferences()->get('foolframe.gen.website_title'); ?> Search</ShortName>

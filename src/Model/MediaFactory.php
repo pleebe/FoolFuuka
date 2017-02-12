@@ -155,6 +155,12 @@ class MediaFactory extends Model
         $max_size = $radix->getValue('max_image_size_kilobytes') * 1024;
 
         foreach ($files as $file) {
+            if (!is_object($file)) {
+                // This happens sometimes with non form-data POST with no file.
+                // I have no idea why $request->files->all() gives NULL file in this case.
+                throw new MediaUploadWorkaroundException();
+            }
+
             if (!$file->isValid()) {
 
                 if ($file->getError() === UPLOAD_ERR_INI_SIZE) {

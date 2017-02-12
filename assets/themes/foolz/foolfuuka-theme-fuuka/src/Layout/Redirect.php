@@ -20,7 +20,7 @@ class Redirect extends \Foolz\FoolFuuka\View\View
     <style type="text/css">
         .outer { text-align: center }
         .inner { margin: auto; display: table; display: inline-block; text-decoration: none; text-align: left; padding: 1em; border: thin dotted }
-        .text { font-family: Mono, 'MS PGothic' !important }
+        .text { font-family: Mona, 'MS PGothic' !important; }
         h1 { font-family: Georgia, serif; margin: 0 0 0.4em 0; font-size: 4em; text-align: center }
         p { margin-top: 2em; text-align: center; font-size: small }
         a { color: #34345C }
@@ -35,7 +35,7 @@ class Redirect extends \Foolz\FoolFuuka\View\View
     <h1><?= htmlspecialchars($this->getBuilder()->getProps()->getTitle()); ?></h1>
     <div class="outer">
         <div class="inner">
-            <span class="text"><?= nl2br(fuuka_message()) ?></span>
+            <pre class="text"><?= fuuka_message() ?></pre>
         </div>
     </div>
     <p><a href="<?= $url ?>" rel="noreferrer"><?= $url ?></a><br/>All characters <acronym title="DO NOT STEAL MY ART">&#169;</acronym> Darkpa's party</p>
