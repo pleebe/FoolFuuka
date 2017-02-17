@@ -496,6 +496,8 @@ class Search extends Board
         } catch(\Foolz\SphinxQL\Exception\DatabaseException $e) {
             $this->logger->error('Search Error: '.$e->getMessage());
             throw new SearchInvalidException(_i('The search backend returned an error.'));
+        } catch(\Exception $e) {
+            throw new SearchSphinxOfflineException($this->preferences->get('foolfuuka.sphinx.custom_message', _i('The search backend is currently unavailable.')));
         }
 
         // no results found
