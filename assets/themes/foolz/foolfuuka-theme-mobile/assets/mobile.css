@@ -63,11 +63,22 @@ textarea#reply_chennodiscursus {
     .btn-group {
         white-space: normal !important;
     }
-    .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input {
+    .thread_form input[type="file"] {
         width: 50% !important;
+        height: 26px !important;
+        padding-right: 12px !important;
+        -ms-box-sizing: content-box !important;
+        -moz-box-sizing: content-box !important;
+        -webkit-box-sizing: content-box !important;
+        box-sizing: content-box !important;
     }
-    .thread_form input[type="file"], .thread_form select {
-        width: 53% !important;
+    .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input, .thread_form select {
+        width: 50% !important;
+        height: 18px !important;
+        -ms-box-sizing: content-box !important;
+        -moz-box-sizing: content-box !important;
+        -webkit-box-sizing: content-box !important;
+        box-sizing: content-box !important;
     }
 }
 @media only screen and (max-width: 600px) {
@@ -133,6 +144,11 @@ textarea#reply_chennodiscursus {
         overflow: visible !important;
         display: block !important;
     }
+    article.thread > div.pull-right {
+        text-align: center !important;
+        float: none !important;
+        padding-bottom: 2%;
+    }
     .post header {
         overflow: visible !important;
         display: block !important;
@@ -173,12 +189,6 @@ textarea#reply_chennodiscursus {
     }
     .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
         margin-right: 0 !important;
-    }
-    .thread_form input[type="file"], .thread_form select {
-        width: 53% !important;
-    }
-    .thread_form input[type="text"], .thread_form input[type="password"], .thread_form.uneditable-input {
-        width: 50% !important;
     }
     .thread_form label {
         min-width: 20% !important;
