@@ -106,9 +106,10 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         'pubkey': '<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>'
                     };
                 </script>
-                <tr class="recaptcha_widget" style="display:none">
+                <tr><td><?= _i('Verification') ?></td>
+                <td class="recaptcha_widget" style="display:none"></td></tr>
                 <noscript>
-                    <td><?= _i('Verification') ?></td>
+                    <tr><td><?= _i('Verification') ?></td>
                     <td><div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
                         <div style="width: 302px; height: 422px; position: relative;">
                             <div style="width: 302px; height: 422px; position: absolute;">
@@ -116,11 +117,12 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             </div>
                         </div>
                         <div style="width: 300px; height: 60px; border-style: none;bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
-                            <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;margin: 10px 25px; padding: 0px; resize: none;"></textarea>
+                                        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                                            margin: 10px 25px; padding: 0px; resize: none;"></textarea>
                         </div>
                     </td>
+                    </tr>
                 </noscript>
-                </tr>
             <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                 <script>
                     var recaptcha2 = {

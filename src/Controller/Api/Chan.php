@@ -1179,6 +1179,32 @@ class Chan extends Common
             return $this->response->setData(['error' => _i('Access Denied.')]);
         }
 
+        $allowed_capcodes = ['N'];
+
+        if ($this->getAuth()->hasAccess('comment.mod_capcode')) {
+            $allowed_capcodes[] = 'D';
+        }
+
+        if ($this->getAuth()->hasAccess('comment.verified_capcode')) {
+            $allowed_capcodes[] = 'V';
+        }
+
+        if ($this->getAuth()->hasAccess('comment.admin_capcode')) {
+            $allowed_capcodes[] = 'A';
+        }
+
+        if ($this->getAuth()->hasAccess('comment.dev_capcode')) {
+            $allowed_capcodes[] = 'D';
+        }
+
+        if ($this->getAuth()->hasAccess('comment.manager_capcode')) {
+            $allowed_capcodes[] = 'G';
+        }
+
+        if ($this->getAuth()->hasAccess('comment.founder_capcode')) {
+            $allowed_capcodes[] = 'F';
+        }
+
         if ($this->getPost('action') === 'edit_post') {
             if (!$this->check_board()) {
                 return $this->response->setData(['error' => _i('No board was selected.')]);
@@ -1191,8 +1217,7 @@ class Chan extends Common
                     ->setRadix($this->radix)
                     ->getComment();
 
-                if (in_array($comment->comment->capcode, ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
-                    || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
+                if (!in_array($comment->comment->capcode, $allowed_capcodes)) {
                     return $this->response->setData(['error' => _i('You are not allowed to edit posts with that capcode.')]);
                 }
 
@@ -1224,8 +1249,7 @@ class Chan extends Common
                 }
 
                 // might want to do some more validation here or in model
-                if (in_array($new_comment['capcode'], ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
-                    || !$this->getAuth()->hasAccess('comment.dev_capcode'))) {
+                if (!in_array($comment->comment->capcode, $allowed_capcodes)) {
                     return $this->response->setData(['error' => _i('You are not allowed to add that capcode to posts.')]);
                 }
 
@@ -1240,6 +1264,7 @@ class Chan extends Common
         } else if ($this->getPost('action') === 'bulk_edit') {
             try {
                 $count = 0;
+                $messages = '';
                 if (!$this->getPost('posts') || empty($this->getPost('posts'))) {
                     return $this->response->setData(['error' => _i('No posts selected.')]);
                 }
@@ -1251,10 +1276,8 @@ class Chan extends Common
                             ->setRadix($this->radix_coll->getByShortname($post['radix']))
                             ->getComment();
 
-                        if (in_array($comment->comment->capcode, ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
-                                || !$this->getAuth()->hasAccess('comment.dev_capcode'))
-                        ) {
-                            // bail silently
+                        if (!in_array($comment->comment->capcode, $allowed_capcodes)) {
+                            $messages .= " >>>/" . $post['radix'] . "/" . $post['num'] . " : " . _i('You are not allowed to edit posts with that capcode.');
                             continue;
                         }
 
@@ -1276,10 +1299,8 @@ class Chan extends Common
                         ];
 
 
-                        if (in_array($new_comment['capcode'], ['A', 'D', 'F']) && (!$this->getAuth()->hasAccess('comment.admin_capcode')
-                                || !$this->getAuth()->hasAccess('comment.dev_capcode'))
-                        ) {
-                            // bail silently
+                        if (!in_array($comment->comment->capcode, $allowed_capcodes)) {
+                            $messages .= " >>>/" . $post['radix'] . "/" . $post['num'] . " : " . _i('You are not allowed to add that capcode to posts.');
                             continue;
                         }
 
@@ -1300,7 +1321,11 @@ class Chan extends Common
                     } catch (\Foolz\FoolFuuka\Model\BoardPostNotFoundException $e) {
                     } // on to the next
                 }
-                return $this->response->setData(['success' => _i('Successfully edited '.$count.' posts.')]);
+                if ($messages !== '') {
+                    return $this->response->setData(['error' => _i('Successfully edited ' . $count . ' posts.' . $messages)]);
+                } else {
+                    return $this->response->setData(['success' => _i('Successfully edited ' . $count . ' posts.')]);
+                }
             } catch (\Exception $e) {
                 return $this->response->setData(['error' => _i($e->getMessage())]);
             }

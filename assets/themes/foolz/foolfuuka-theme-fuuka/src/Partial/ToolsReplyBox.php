@@ -59,7 +59,23 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             <td class="postblock"><?= _i('Password') ?> <a class="tooltip" href="#">[?] <span><?= _i('This is used for file and post deletion.') ?></span></a></td>
                             <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]) ?></td>
                         </tr>
-                            <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
+                        <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
+                <tr id="recaptcha_widget">
+                    <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
+                    <td>
+                        <div>
+                            <div style="width: 302px; height: 422px; position: relative;">
+                                <div style="width: 302px; height: 422px; position: absolute;">
+                                    <iframe src="https://www.google.com/recaptcha/api/fallback?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey') ?>" frameborder="0" scrolling="no" style="width: 302px; height:422px; border-style: none;"></iframe>
+                                </div>
+                            </div>
+                            <div style="width: 300px; height: 60px; border-style: none;bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                                <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;margin: 10px 25px; padding: 0px; resize: none;"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                            <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                         <tr id="recaptcha_widget">
                             <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
                             <td>
@@ -75,12 +91,12 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                             <?php
                             $postas = ['N' => _i('User')];
 
-                            if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['V'] = _i('Verified');
+                            if ($this->getAuth()->hasAccess('comment.verified_capcode')) $postas['V'] = _i('Verified');
                             if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['M'] = _i('Moderator');
                             if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['A'] = _i('Administrator');
                             if ($this->getAuth()->hasAccess('comment.dev_capcode')) $postas['D'] = _i('Developer');
-                            if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['F'] = _i('Founder');
-                            if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['G'] = _i('Manager');
+                            if ($this->getAuth()->hasAccess('comment.founder_capcode')) $postas['F'] = _i('Founder');
+                            if ($this->getAuth()->hasAccess('comment.manager_capcode')) $postas['G'] = _i('Manager');
                             if (count($postas) > 1) :
                                 ?>
                             <tr>
@@ -163,8 +179,9 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         <td><?php echo $form->password(['name' => 'delpass', 'size' => 24, 'value' => $user_pass]); ?></td>
                     </tr>
                     <?php if ($this->getPreferences()->get('foolframe.auth.recaptcha2_sitekey', false)) : ?>
-                        <div class="recaptcha_widget" style="display:none"></div>
-                        <noscript>
+                        <tr id="recaptcha_widget">
+                        <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
+                            <td>
                             <div>
                                 <div style="width: 302px; height: 422px; position: relative;">
                                     <div style="width: 302px; height: 422px; position: absolute;">
@@ -175,7 +192,8 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                                     <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1;margin: 10px 25px; padding: 0px; resize: none;"></textarea>
                                 </div>
                             </div>
-                        </noscript>
+                            </td>
+                        </tr>
                     <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
                     <tr id="recaptcha_widget">
                         <td class="postblock"><?= _i('Verification') ?><br/>(<?= _i('Optional') ?>)</td>
@@ -192,12 +210,12 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                         <?php
                         $postas = ['N' => _i('User')];
 
-                        if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['V'] = _i('Verified');
+                        if ($this->getAuth()->hasAccess('comment.verified_capcode')) $postas['V'] = _i('Verified');
                         if ($this->getAuth()->hasAccess('comment.mod_capcode')) $postas['M'] = _i('Moderator');
                         if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['A'] = _i('Administrator');
                         if ($this->getAuth()->hasAccess('comment.dev_capcode')) $postas['D'] = _i('Developer');
-                        if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['F'] = _i('Founder');
-                        if ($this->getAuth()->hasAccess('comment.admin_capcode')) $postas['G'] = _i('Manager');
+                        if ($this->getAuth()->hasAccess('comment.founder_capcode')) $postas['F'] = _i('Founder');
+                        if ($this->getAuth()->hasAccess('comment.manager_capcode')) $postas['G'] = _i('Manager');
                         if (count($postas) > 1) :
                             ?>
                         <tr>

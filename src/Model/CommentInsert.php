@@ -392,15 +392,27 @@ class CommentInsert extends Comment
             $allowed_capcodes = ['N'];
 
             if ($this->getAuth()->hasAccess('comment.mod_capcode')) {
-                array_push($allowed_capcodes, 'M', 'V');
+                $allowed_capcodes[] = 'D';
+            }
+
+            if ($this->getAuth()->hasAccess('comment.verified_capcode')) {
+                $allowed_capcodes[] = 'V';
             }
 
             if ($this->getAuth()->hasAccess('comment.admin_capcode')) {
-                array_push($allowed_capcodes, 'A', 'F', 'G');
+                $allowed_capcodes[] = 'A';
             }
 
             if ($this->getAuth()->hasAccess('comment.dev_capcode')) {
                 $allowed_capcodes[] = 'D';
+            }
+
+            if ($this->getAuth()->hasAccess('comment.manager_capcode')) {
+                $allowed_capcodes[] = 'G';
+            }
+
+            if ($this->getAuth()->hasAccess('comment.founder_capcode')) {
+                $allowed_capcodes[] = 'F';
             }
 
             if (!in_array($this->comment->capcode, $allowed_capcodes)) {
