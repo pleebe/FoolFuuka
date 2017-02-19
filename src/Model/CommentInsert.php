@@ -392,7 +392,7 @@ class CommentInsert extends Comment
             $allowed_capcodes = ['N'];
 
             if ($this->getAuth()->hasAccess('comment.mod_capcode')) {
-                $allowed_capcodes[] = 'D';
+                $allowed_capcodes[] = 'M';
             }
 
             if ($this->getAuth()->hasAccess('comment.verified_capcode')) {
