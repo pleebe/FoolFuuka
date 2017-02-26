@@ -55,10 +55,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
 
         <?php $this->getStyles(); ?>
 
-        <?php if ($radix) : ?>
-            <?php if ($radix->getValue('is_nsfw', false)) : ?><meta name="RATING" content="RTA-5042-1996-1400-1577-RTA"><?php endif; ?>
-        <?php endif; ?>
-
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -68,7 +64,10 @@ class Chan extends \Foolz\FoolFuuka\View\View
         <?php endif; ?>
 
         <script src="<?= $this->getUri()->create('foolfuuka/components/highlightjs') ?>highlight.pack.js"></script>
-        <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
+        <?php if ($radix) : ?>
+            <?php if ($radix->getValue('is_nsfw', false)) : ?><meta name="RATING" content="RTA-5042-1996-1400-1577-RTA"><?php endif; ?>
+            <?php if ($radix->getValue('enable_math', false)) : ?><script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script><?php endif; ?>
+        <?php endif; ?>
         <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
     </head>

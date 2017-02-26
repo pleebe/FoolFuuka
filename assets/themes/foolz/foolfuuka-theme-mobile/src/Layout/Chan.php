@@ -51,10 +51,6 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="<?= ($this->getBuilder()->getStyle() == 'midnight' ? '#000000' : '#6A836F') ?>">
 
-    <?php if ($radix) : ?>
-        <?php if ($radix->getValue('is_nsfw', false)) : ?><meta name="RATING" content="RTA-5042-1996-1400-1577-RTA"><?php endif; ?>
-    <?php endif; ?>
-
     <!--[if lt IE 8]>
         <link rel="stylesheet" type="text/css" href="<?= $this->getAssetManager()->getAssetLink('font-awesome/css/font-awesome-ie7.css') ?>">
     <![endif]-->
@@ -69,7 +65,10 @@ class Chan extends \Foolz\FoolFuuka\View\View
     <?php endif; ?>
 
     <script src="<?= $this->getUri()->create('foolfuuka/components/highlightjs') ?>highlight.pack.js"></script>
-    <script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script>
+    <?php if ($radix) : ?>
+        <?php if ($radix->getValue('is_nsfw', false)) : ?><meta name="RATING" content="RTA-5042-1996-1400-1577-RTA"><?php endif; ?>
+        <?php if ($radix->getValue('enable_math', false)) : ?><script src="<?= $this->getUri()->create('foolfuuka/mathjax/mathjax') ?>MathJax.js?config=default"></script><?php endif; ?>
+    <?php endif; ?>
     <?= $this->getPreferences()->get('foolframe.theme.header_code'); ?>
 
  </head>

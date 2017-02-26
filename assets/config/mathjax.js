@@ -308,7 +308,7 @@ MathJax.Hub.Config({
     //  as listed below).  You can add to (or remove from) this list to prevent
     //  MathJax from processing mathematics in specific contexts.
     //
-    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
+    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml","body"],
 
     //
     //  This is the class name used to mark elements whose contents should
@@ -395,7 +395,7 @@ MathJax.Hub.Config({
     //  as listed below).  You can add to (or remove from) this list to prevent
     //  MathJax from processing mathematics in specific contexts.
     //
-    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
+    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml","body"],
 
     //
     //  This is the class name used to mark elements whose contents should

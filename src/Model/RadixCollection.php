@@ -421,6 +421,12 @@ class RadixCollection extends Model
                 'type' => 'checkbox',
                 'help' => _i('Board is Not Safe For Work.')
             ],
+            'enable_math' => [
+                'database' => true,
+                'boards_preferences' => true,
+                'type' => 'checkbox',
+                'help' => _i('Enable math equations.')
+            ],
             'hide_thumbnails' => [
                 'database' => true,
                 'type' => 'checkbox',
