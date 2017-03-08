@@ -498,11 +498,16 @@ var bindFunctions = function()
 		addBulkReport: function(el, post, event) {
 			jQuery('article.thread, article.post').each(function () {
 				if (typeof jQuery(this).attr('data-board') != 'undefined') {
-					jQuery(this).find('a[data-function=report]:eq(0)').replaceWith('<input class="bulkreportselect" type="checkbox" ' +
+					var breport = '<input class="bulkreportselect" type="checkbox" ' +
 						'data-board="' + jQuery(this).attr('data-board') + '" ' +
 						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
 						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
-						'data-keyboard="true" data-function="bulkReport">Report Selected</a>');
+						'data-keyboard="true" data-function="bulkReport">Report Selected</a>';
+					if(jQuery(window).width()<=600) {
+						jQuery(this).find('span.mobile_bulk:eq(0)').replaceWith(breport);
+					} else {
+						jQuery(this).find('a.btnr[data-function=report]:eq(0)').replaceWith(breport);
+					}
 				}
 			});
 			el.closest(".modal").modal('hide');
@@ -637,11 +642,15 @@ var bindFunctions = function()
 		addBulkEdit: function(el, post, event) {
 			jQuery('article.thread, article.post').each(function () {
 				if (typeof jQuery(this).attr('data-board') != 'undefined') {
-					jQuery('<input class="bulkselect" type="checkbox" data-board="' + jQuery(this).attr('data-board') + '" ' +
+					var bulk = '<input class="bulkselect" type="checkbox" data-board="' + jQuery(this).attr('data-board') + '" ' +
 						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
 						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
-						'data-keyboard="true" data-function="bulkEdit">Edit Selected</a>')
-						.prependTo($(this).find('.post_data:first'));
+						'data-keyboard="true" data-function="bulkEdit">Edit Selected</a>';
+					if(jQuery(window).width()<=600) {
+						jQuery(this).find('span.mobile_bulk:eq(0)').replaceWith(bulk);
+					} else {
+						jQuery(bulk).prependTo($(this).find('.post_data:first'));
+					}
 				}
 			});
 			el.closest(".modal").modal('hide');
@@ -698,11 +707,17 @@ var bindFunctions = function()
 		addBulkMod: function(el, post, event) {
 			jQuery('article.thread, article.post').each(function () {
 				if (typeof jQuery(this).attr('data-board') != 'undefined') {
-					jQuery(this).find('a[data-function=delete]:eq(0)').replaceWith('<input class="bulkmodselect" type="checkbox" ' +
+					var bulk = '<input class="bulkmodselect" type="checkbox" ' +
 						'data-board="' + jQuery(this).attr('data-board') + '" ' +
 						'data-num="' + jQuery(this).attr('id') + '" data-doc-id="' + jQuery(this).attr('data-doc-id') + '">' +
 						'<a href="#" class="btnr parent" data-controls-modal="post_tools_modal" data-backdrop="true" ' +
-						'data-keyboard="true" data-function="bulkMod">Mod Selected</a>');
+						'data-keyboard="true" data-function="bulkMod">Mod Selected</a>';
+					jQuery(this).find('a[data-function=delete]:eq(0)').replaceWith();
+					if(jQuery(window).width()<=600) {
+						jQuery(this).find('span.mobile_bulk:eq(0)').replaceWith(bulk);
+					} else {
+						jQuery(this).find('a.btnr[data-function=delete]:eq(0)').replaceWith(bulk);
+					}
 				}
 			});
 		},
