@@ -1526,6 +1526,10 @@ jQuery(document).ready(function() {
 	if (typeof backend_vars.search_args !== "undefined" && getCookie("searchhilight_enabled") == "true") {
 		highlightSearchResults();
 	}
+
+	jQuery('a[data-toggle="dropdown"], button[data-toggle="dropdown"]').on('touchstart', function(event) {
+		event.stopPropagation();
+	})
 });
 
 $.fn.extend({
