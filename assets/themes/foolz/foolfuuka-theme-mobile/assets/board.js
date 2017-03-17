@@ -1504,6 +1504,7 @@ jQuery(document).ready(function() {
 		}
 
 		toggleHighlight(post[1]);
+		jQuery('#'+post[1].replace('q', ''))[0].scrollIntoView( true );
 	}
 
 	if (typeof backend_vars.thread_id !== "undefined" && (Math.round(new Date().getTime() / 1000) - backend_vars.latest_timestamp < 6 * 60 * 60))

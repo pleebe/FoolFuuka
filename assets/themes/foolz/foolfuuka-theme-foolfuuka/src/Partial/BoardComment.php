@@ -142,7 +142,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <span class="time_wrap">
                             <time datetime="<?= gmdate(DATE_W3C, $p->timestamp) ?>" <?php if ($p->radix->archive) : ?> title="<?= _i('4chan Time') . ': ' . $p->getFourchanDate() ?>"<?php endif; ?>><?= gmdate('D d M Y H:i:s', $p->timestamp) ?></time>
                         </span>
-                        <a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight">No.</a><a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote"><?= str_replace('_', ',', $num) ?></a>
+                        <a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight" title="Link to this post">No.</a><a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote" title="Reply to this post"><?= str_replace('_', ',', $num) ?></a>
 
                         <span class="post_type">
                             <?php if ($p->poster_country !== null) : ?><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span><?php endif; ?>
