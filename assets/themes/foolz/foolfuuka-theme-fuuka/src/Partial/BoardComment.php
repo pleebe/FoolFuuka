@@ -107,7 +107,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <blockquote><p><?= $p->getCommentProcessed() ?></p></blockquote>
                         <?php if ($p_media !== null && $p_media->getMediaStatus($this->getRequest()) === 'normal' && $p->radix->getValue('display_exif') && $p_media->exif !== NULL) : ?>
                             <table class="exiftable"><tbody>
-                                <?php foreach (json_decode($p_media->exif) as $a => $b) : ?>
+                                <?php foreach ($p_media->getExifData() as $a => $b) : ?>
                                     <?php if(is_object($b)) : ?>
                                         <?php foreach ($b as $c => $d) : ?>
                                             <tr><td><?= htmlentities($a)," ",htmlentities($c) ?></td><td><?= htmlentities($d) ?></td></tr>

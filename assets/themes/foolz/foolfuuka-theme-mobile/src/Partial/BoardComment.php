@@ -202,7 +202,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                 <?php if ($p_media !== null && $p_media->getMediaStatus($this->getRequest()) === 'normal' && $p->radix->getValue('display_exif') && $p_media->exif !== NULL) : ?>
                     <div class="exif">[Exif data available. <a data-function="toggleExif" data-post="<?= $p->doc_id ?>">Click here to show/hide</a>.]</div>
                     <table class="exiftable <?= $p->doc_id ?>" style="display:none;"><tbody>
-                        <?php foreach (json_decode($p_media->exif) as $a => $b) : ?>
+                        <?php foreach ($p_media->getExifData() as $a => $b) : ?>
                             <?php if(is_object($b)) : ?>
                                 <?php foreach ($b as $c => $d) : ?>
                                     <tr><td><?= htmlentities($a)," ",htmlentities($c) ?></td><td><?= htmlentities($d) ?></td></tr>

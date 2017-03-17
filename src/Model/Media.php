@@ -523,6 +523,31 @@ class Media extends Model
     }
 
     /**
+     * Decodes Exif data
+     *
+     * @return  object|array  Exif data
+     */
+    public function getExifData()
+    {
+        return json_decode($this->media->exif, false);
+    }
+
+    /**
+     * Gets custom data from Exif
+     *
+     * @param  string  $field  Custom field name
+     *
+     * @return  array|string|null  Null if not found
+     */
+    public function getCustomData($field)
+    {
+        if (isset(json_decode($this->media->exif, true)[$field])) {
+            return json_decode($this->media->exif, true)[$field];
+        }
+        return null;
+    }
+
+    /**
      * Deletes the media file if there's no other occurencies for the same file
      *
      * @param  boolean  $full   True if the full media should be deleted
