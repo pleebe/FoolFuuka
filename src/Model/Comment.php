@@ -453,10 +453,10 @@ class Comment extends Model
     {
         // if protocol is not set, use http by default
         if (!isset($matches[2])) {
-            return '<a href="http://'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
+            return '<a href="http://'.$matches[1].'" target="_blank" rel="nofollow">'.$matches[1].'</a>';
         }
 
-        return '<a href="'.$matches[1].'" target="_blank">'.$matches[1].'</a>';
+        return '<a href="'.$matches[1].'" target="_blank" rel="nofollow">'.$matches[1].'</a>';
     }
 
     /**
