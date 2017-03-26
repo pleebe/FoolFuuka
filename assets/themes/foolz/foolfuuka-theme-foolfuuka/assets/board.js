@@ -1435,6 +1435,8 @@ var highlightSearchResults = function()
 			selector = "span.post_tripcode";
 		} else if (id == "uid") {
 			selector = "span.poster_hash";
+		} else {
+			return true;
 		}
 		if (selector != "") {
 			val = val.replace(/[\.\*\^\|'"!]/g, " ");
