@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "foolz/foolframe": "dev-master",
+        "pleebe/foolframe": "dev-master",
         "foolz/inet": "dev-master",
         "foolz/package": "dev-master",
         "foolz/plugin": "dev-master",
