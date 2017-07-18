@@ -173,6 +173,9 @@ class Report extends Model
     public function p_getComment()
     {
         if ($this->media_id !== null) {
+            if ($this->radix_coll->getById($this->board_id) !== null && $this->radix->getValue('external_database')) {
+                $this->dc = new BoardConnection($this->getContext(), $this->getContext(), $this->radix_coll->getById($this->board_id));
+            }
             // custom "get the first doc_id with the media"
             $doc_id_res = $this->dc->qb()
                 ->select('doc_id')

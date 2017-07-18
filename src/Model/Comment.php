@@ -146,6 +146,9 @@ class Comment extends Model
     public function setBulk(CommentBulk $bulk)
     {
         $this->radix = $bulk->getRadix();
+        if ($this->radix !== null && $this->radix->getValue('external_database')) {
+            $this->dc = new BoardConnection($this->getContext(), $this->radix);
+        }
         $this->bulk = $bulk;
         $this->comment = $bulk->comment;
         $this->media = $bulk->media;

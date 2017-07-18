@@ -64,9 +64,25 @@ source template
   sql_query_post_index =
 }
 
+    <?php foreach ($boards as $key => $board) : ?>
+        <?php if ($board->getValue('external_database')) : ?>
+            # /<?= $board->shortname ?>/ source
+            source <?= $board->shortname ?>_external : main
+            {
+            type     = mysql
+            sql_host = <?= $board->getValue('db_hostname').PHP_EOL ?>
+            sql_user =
+            sql_pass =
+            sql_db   = <?= $board->getValue('db_name').PHP_EOL ?>
+            sql_port = <?= $board->getValue('db_port').PHP_EOL ?>
+            mysql_connect_flags = <?= $mysql['flag'].PHP_EOL ?>
+            }
+        <?php endif; ?>
+    <?php endforeach; ?>
+
 <?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
-source <?= $board->shortname.'_ancient0' ?> : template
+source <?= $board->shortname.'_ancient0' ?> : <?= ($board->getValue('external_database') ? $board->shortname . '_external' : 'template').PHP_EOL ?>
 {
   sql_query      = \
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
@@ -81,7 +97,7 @@ source <?= $board->shortname.'_ancient0' ?> : template
 }
 
 <?php for ($i = 1, $n = $sphinx['distributed']; $i < $n; $i++) : ?>
-source <?= $board->shortname.'_ancient'.$i ?> : template
+source <?= $board->shortname.'_ancient'.$i ?> : <?= ($board->getValue('external_database') ? $board->shortname . '_external' : 'template').PHP_EOL ?>
 {
   sql_query      = \
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
@@ -108,7 +124,7 @@ source <?= $board->shortname.'_main'.$i ?> : <?= $board->shortname.'_ancient'.$i
 }
 
 <?php endfor; ?>
-source <?= $board->shortname.'_delta' ?> : template
+source <?= $board->shortname.'_delta' ?> : <?= ($board->getValue('external_database') ? $board->shortname . '_external' : 'template').PHP_EOL ?>
 {
   sql_query      = \
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \

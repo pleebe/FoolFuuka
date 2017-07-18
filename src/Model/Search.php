@@ -515,9 +515,15 @@ class Search extends Board
 
         // populate sql array for full records
         $sql = [];
+        $result = [];
 
         foreach ($search as $doc => $result) {
             $board = $this->radix_coll->getById($result['board']);
+            if ($board->getValue('external_database')) {
+                $newdc = new BoardConnection($this->getContext(), $board);
+            } else {
+                $newdc = $this->dc;
+            }
 
             if ($input['results'] !== null && $input['results'] == 'thread') {
                 $post = 'num = '.$this->dc->getConnection()->quote($result['tnum']).' AND subnum = 0';
@@ -525,31 +531,27 @@ class Search extends Board
                 $post = 'doc_id = '.$this->dc->getConnection()->quote($result['id']);
             }
 
-            $sql[] = $this->dc->qb()
+            $sql = $newdc->qb()
                 ->select('*, '.$result['board'].' AS board_id')
                 ->from($board->getTable(), 'r')
                 ->leftJoin('r', $board->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
                 ->where($post)
                 ->getSQL();
-        }
 
-        $result = $this->dc->getConnection()
-            ->executeQuery(implode(' UNION ', $sql))
-            ->fetchAll();
+            $result = $newdc->getConnection()
+                ->executeQuery($sql)
+                ->fetchAll();
+
+            $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($result[0]['board_id']));
+            $bulk = new CommentBulk();
+            $bulk->import($result[0], $board);
+            $this->comments_unsorted[] = $bulk;
+        }
 
         // no results found IN DATABASE, but we might still get a search count from Sphinx
         if (!count($result)) {
             $this->comments_unsorted = [];
             $this->comments = [];
-        } else {
-            // process results
-            foreach ($result as $key => $row) {
-                $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($row['board_id']));
-                $bulk = new CommentBulk();
-                $bulk->import($row, $board);
-                $this->comments_unsorted[] = $bulk;
-                unset($result[$key]);
-            }
         }
 
         $this->comments[0]['posts'] = $this->comments_unsorted;

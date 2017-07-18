@@ -65,8 +65,24 @@ source main
 }
 
 <?php foreach ($boards as $key => $board) : ?>
+<?php if ($board->getValue('external_database')) : ?>
+# /<?= $board->shortname ?>/ source
+source <?= $board->shortname ?>_external : main
+{
+  type     = mysql
+  sql_host = <?= $board->getValue('db_hostname').PHP_EOL ?>
+  sql_user =
+  sql_pass =
+  sql_db   = <?= $board->getValue('db_name').PHP_EOL ?>
+  sql_port = <?= $board->getValue('db_port').PHP_EOL ?>
+  mysql_connect_flags = <?= $mysql['flag'].PHP_EOL ?>
+}
+<?php endif; ?>
+<?php endforeach; ?>
+
+<?php foreach ($boards as $key => $board) : ?>
 # /<?= $board->shortname ?>/
-source <?= $board->shortname.'_main' ?> : main
+source <?= $board->shortname.'_main' ?> : <?= ($board->getValue('external_database') ? $board->shortname . '_external' : 'main').PHP_EOL ?>
 {
   sql_query      = \
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \

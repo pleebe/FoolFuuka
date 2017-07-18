@@ -303,6 +303,10 @@ class Board extends Model
     {
         $this->radix = $radix;
 
+        if ($this->radix !== null && $this->radix->getValue('external_database')) {
+            $this->dc = new BoardConnection($this->getContext(), $this->radix);
+        }
+
         return $this;
     }
 

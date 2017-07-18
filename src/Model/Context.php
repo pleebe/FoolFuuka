@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\DependencyInjection\Reference;
 
 class Context implements ContextInterface
 {
@@ -60,6 +61,11 @@ class Context implements ContextInterface
         $context->getContainer()
             ->register('foolfuuka.report_collection', 'Foolz\FoolFuuka\Model\ReportCollection')
             ->addArgument($context);
+
+        $context->getContainer()
+            ->register('foolfuuka.board_connection', 'Foolz\FoolFuuka\Model\BoardConnection')
+            ->addArgument($context)
+            ->addArgument(new Reference('radix'));
     }
 
     public function handleWeb(Request $request)

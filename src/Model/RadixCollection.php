@@ -339,6 +339,111 @@ class RadixCollection extends Model
                     ],
                 ]
             ],
+            'external_database' => [
+                'database' => true,
+                'boards_preferences' => true,
+                'type' => 'checkbox',
+                'help' => _i('Use external database server for this board?'),
+                'sub' => [
+                    'paragraph' => [
+                        'type' => 'paragraph',
+                        'help' => _i('You can set connection details of your other database server here')
+                    ],
+                    'db_hostname' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Hostname or IP-address'),
+                        'type' => 'input',
+                        'class' => 'span2',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                        'validation_func' => function($input, $form) {
+                            try {
+                                switch ($input['db_driver']) {
+                                    case 'pdo_mysql':
+                                        new \PDO(
+                                            'mysql:dbname='.$input['db_name'].';host='.$input['db_hostname'].';port='.$input['db_port'],
+                                            $input['db_username'],
+                                            $input['db_password']
+                                        );
+                                        break;
+                                    case 'pdo_pgsql':
+                                        new \PDO(
+                                            'pgsql:dbname='.$input['db_name'].';host='.$input['db_hostname'].';port='.$input['db_port'],
+                                            $input['db_username'],
+                                            $input['db_password']
+                                        );
+                                        break;
+                                    default:
+                                        // Unhandled driver. Just let it go...
+                                        return ['success' => true];
+                                }
+                            } catch (\PDOException $e) {
+                                return [
+                                    'error_code' => 'CONNECTION_NOT_ESTABLISHED',
+                                    'error' => _i('Couldn\'t connect to external database server. Check details.')
+                                ];
+                            }
+                            return ['success' => true];
+                        }
+                    ],
+                    'db_port' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Port number. Usually 3306.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
+                    ],
+                    'db_username' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Username'),
+                        'type' => 'input',
+                        'class' => 'span2',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                    ],
+                    'db_password' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Password'),
+                        'type' => 'input',
+                        'class' => 'span2',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                    ],
+                    'db_name' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Database name'),
+                        'type' => 'input',
+                        'class' => 'span2',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                    ],
+                    'db_prefix' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Prefix. Leave blank for Asagi.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\Length(['max' => 256])],
+                    ],
+                    'db_driver' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Driver. Possible choices pdo_mysql, pdo_sqlite, pdo_pgsql, pdo_oci, oci8, ibm_db2, pdo_sqlsrv, mysqli, drizzle_pdo_mysql, sqlanywhere and sqlsrv. Usually pdo_mysql.'),
+                        'type' => 'input',
+                        'class' => 'span2',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                    ],
+                    'db_charset' => [
+                        'database' => true,
+                        'boards_preferences' => true,
+                        'label' => _i('Charset. Usually utf8mb4.'),
+                        'type' => 'input',
+                        'class' => 'span1',
+                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
+                    ]
+                ]
+            ],
             'anonymous_default_name' => [
                 'database' => true,
                 'boards_preferences' => true,
