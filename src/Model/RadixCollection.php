@@ -355,7 +355,6 @@ class RadixCollection extends Model
                         'label' => _i('Hostname or IP-address'),
                         'type' => 'input',
                         'class' => 'span2',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                         'validation_func' => function($input, $form) {
                             try {
                                 switch ($input['db_driver']) {
@@ -392,7 +391,6 @@ class RadixCollection extends Model
                         'label' => _i('Port number. Usually 3306.'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => [new Assert\NotBlank(), new Assert\Type('digit')],
                     ],
                     'db_username' => [
                         'database' => true,
@@ -400,7 +398,6 @@ class RadixCollection extends Model
                         'label' => _i('Username'),
                         'type' => 'input',
                         'class' => 'span2',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                     ],
                     'db_password' => [
                         'database' => true,
@@ -408,7 +405,6 @@ class RadixCollection extends Model
                         'label' => _i('Password'),
                         'type' => 'input',
                         'class' => 'span2',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                     ],
                     'db_name' => [
                         'database' => true,
@@ -416,7 +412,6 @@ class RadixCollection extends Model
                         'label' => _i('Database name'),
                         'type' => 'input',
                         'class' => 'span2',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                     ],
                     'db_prefix' => [
                         'database' => true,
@@ -424,7 +419,6 @@ class RadixCollection extends Model
                         'label' => _i('Prefix. Leave blank for Asagi.'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => [new Assert\Length(['max' => 256])],
                     ],
                     'db_driver' => [
                         'database' => true,
@@ -432,7 +426,6 @@ class RadixCollection extends Model
                         'label' => _i('Driver. Possible choices pdo_mysql, pdo_sqlite, pdo_pgsql, pdo_oci, oci8, ibm_db2, pdo_sqlsrv, mysqli, drizzle_pdo_mysql, sqlanywhere and sqlsrv. Usually pdo_mysql.'),
                         'type' => 'input',
                         'class' => 'span2',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                     ],
                     'db_charset' => [
                         'database' => true,
@@ -440,7 +433,6 @@ class RadixCollection extends Model
                         'label' => _i('Charset. Usually utf8mb4.'),
                         'type' => 'input',
                         'class' => 'span1',
-                        'validation' => [new Assert\NotBlank(), new Assert\Length(['max' => 256])],
                     ]
                 ]
             ],
