@@ -42,7 +42,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <button class="btn-toggle-post" data-function="hideThread" data-board="<?= $p->radix->shortname ?>" data-doc-id="<?= $p->doc_id ?>"><i class="icon-minus"></i></button>
                     </div>
                 <?php else : ?>
-                    <div class="pull-right" title="Post Count / File Count">[<?= $nreplies ?> / <?= $nimages ?>]</div>
+                <div class="pull-right" title="<?= _i('Post Count') ?> / <?= _i('File Count') ?> / <?= _i('Posters') ?>">[<?= $nreplies ?> / <?= $nimages ?> / <?= $p->getExtraData('uniqueIps') ? $p->getExtraData('uniqueIps') : '?' ?>]</div>
                 <?php endif; ?>
                 <?php \Foolz\Plugin\Hook::forge('foolfuuka.themes.default_after_op_open')->setObject($this)->setParam('board', $p->radix)->execute(); ?>
             <?php else: ?>
@@ -173,6 +173,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#'  . $num ?>" data-post="<?= $num ?>" data-function="highlight" title="Link to this post">No.</a><a href="<?= $this->getUri()->create([$p->radix->shortname, $controller_method, $p->thread_num]) . '#q' . $num ?>" data-post="<?= str_replace('_', ',', $num) ?>" data-function="quote" title="Reply to this post"><?= str_replace('_', ',', $num) ?></a>
 
                         <span class="post_type">
+                            <?php if ($p->getExtraData('since4pass') !== null) : ?><i class="icon-tag" title="<?= htmlspecialchars(sprintf(_i('Pass user since %s.'), $p->getExtraData('since4pass'))) ?>"></i><?php endif ?>
                             <?php if ($p->poster_country !== null) : ?><span title="<?= e($p->poster_country_name) ?>" class="flag flag-<?= strtolower($p->poster_country) ?>"></span><?php endif; ?>
                             <?php if ($p->subnum) : ?><i class="icon-comment-alt" title="<?= htmlspecialchars(_i('This post was submitted as a "ghost" reply.')) ?>"></i><?php endif ?>
                             <?php if (isset($p_media) && $p_media->spoiler) : ?><i class="icon-eye-close" title="<?= htmlspecialchars(_i('The image in this post has been marked spoiler.')) ?>"></i><?php endif ?>

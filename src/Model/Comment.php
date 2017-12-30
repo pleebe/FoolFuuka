@@ -174,6 +174,8 @@ class Comment extends Model
             $this->comment->poster_country_name = $this->config->get('foolz/foolfuuka', 'geoip_codes', 'codes.'.strtoupper($this->comment->poster_country));
         }
 
+        $this->comment->extra_data = [];
+
         $num = $this->comment->getPostNum(',');
         $this->comment_factory->posts[$this->comment->thread_num][] = $num;
     }
@@ -309,13 +311,33 @@ class Comment extends Model
     {
         if ($this->comment->poster_country_name_processed === false) {
             if (!isset($this->comment->poster_country_name)) {
-                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcesed', null);
+                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcessed', null);
             } else {
-                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcesed', $this->comment->poster_country_name);
+                $this->comment->poster_country_name_processed = $this->process('getPosterCountryNameProcessed', $this->comment->poster_country_name);
             }
         }
 
         return $this->comment->poster_country_name_processed;
+    }
+
+    /**
+     * Gets extra data from Exif
+     *
+     * @param  string  $field  Custom field name
+     *
+     * @return  array|string|null  Null if not found
+     */
+    public function getExtraData($field)
+    {
+        if (!isset($this->comment->extra_data[$field])) {
+            if (isset(json_decode($this->comment->exif, true)[$field])) {
+                $this->comment->extra_data[$field] = json_decode($this->comment->exif, true)[$field];
+            } else {
+                $this->comment->extra_data[$field] = null;
+            }
+        }
+
+        return $this->comment->extra_data[$field];
     }
 
     /**

@@ -40,6 +40,8 @@ class CommentData extends Data
     public $poster_hash_processed = false;
     public $poster_country_name = false;
     public $poster_country_name_processed = false;
+    public $extra_data = false;
+    public $exif = false;
 
     private $archive_timezone = false;
 
@@ -108,5 +110,6 @@ class CommentData extends Data
         $this->poster_hash_processed = false;
         $this->poster_country_name = false;
         $this->poster_country_name_processed = false;
+        $this->extra_data = false;
     }
 }
