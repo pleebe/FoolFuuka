@@ -43,7 +43,7 @@ source main
       SELECT doc_id, <?= $example->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
         media_id AS mid, media_filename, media_hash, poster_ip AS pip, poster_hash AS pid, poster_country AS country, ASCII(capcode) AS cap, \
         (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
-        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image, exif, media_w, media_h, media_orig \
       FROM `<?= $example->shortname ?>` LIMIT 1
 
   sql_attr_uint = num
@@ -60,6 +60,7 @@ source main
   sql_attr_bool = is_sticky
   sql_attr_bool = is_op
   sql_attr_timestamp = timestamp
+  sql_attr_json = exif
 
   sql_query_post_index =
 }
@@ -88,7 +89,7 @@ source <?= $board->shortname.'_main' ?> : <?= ($board->getValue('external_databa
       SELECT doc_id, <?= $board->id ?> AS board, timestamp, thread_num AS tnum, num, subnum, name, trip, email, title, comment, \
         media_id AS mid, media_filename, media_hash, poster_ip AS pip, poster_hash AS pid, poster_country AS country, ASCII(capcode) AS cap, \
         (subnum != 0) AS is_internal, spoiler AS is_spoiler, deleted AS is_deleted, sticky AS is_sticky, op AS is_op, \
-        (media_filename != '' AND media_filename IS NOT NULL) AS has_image \
+        (media_filename != '' AND media_filename IS NOT NULL) AS has_image, exif, media_w, media_h, media_orig \
       FROM <?= $board->getTable() ?> WHERE doc_id >= $start AND doc_id <= $end
   sql_query_info = SELECT * FROM <?= $board->getTable() ?> WHERE doc_id = $id
 

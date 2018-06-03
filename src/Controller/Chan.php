@@ -785,7 +785,8 @@ class Chan extends Common
         // Check all allowed search modifiers and apply only these
         $modifiers = [
             'boards', 'tnum', 'subject', 'text', 'username', 'tripcode', 'email', 'filename', 'capcode', 'uid', 'country',
-            'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page'
+            'image', 'deleted', 'ghost', 'type', 'filter', 'start', 'end', 'results', 'order', 'page',
+            'since4pass', 'width', 'height'
         ];
 
         if ($this->getAuth()->hasAccess('comment.see_ip')) {
@@ -911,6 +912,18 @@ class Chan extends Common
 
         if ($search['tnum'] !== null && !is_numeric($search['tnum'])) {
             return $this->error(_i('Thread number you inserted is not a valid number.'));
+        }
+
+        if ($search['height'] !== null && !is_numeric($search['height'])) {
+            return $this->error(_i('Image height you inserted is not a valid number.'));
+        }
+
+        if ($search['width'] !== null && !is_numeric($search['width'])) {
+            return $this->error(_i('Image width you inserted is not a valid number.'));
+        }
+
+        if ($search['since4pass'] !== null && !is_numeric($search['since4pass'])) {
+            return $this->error(_i('Since4pass you inserted is not a valid year.'));
         }
 
         try {

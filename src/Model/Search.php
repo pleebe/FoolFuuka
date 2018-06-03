@@ -106,6 +106,12 @@ class Search extends Board
             ],
             [
                 'type' => 'input',
+                'label' => _i('Since4pass'),
+                'placeholder' => '',
+                'name' => 'since4pass',
+            ],
+            [
+                'type' => 'input',
                 'label' => _i('Country'),
                 'name' => 'country'
             ],
@@ -125,6 +131,18 @@ class Search extends Board
                 'label' => _i('Image Hash'),
                 'placeholder' => _i('Drop your image here'),
                 'name' => 'image'
+            ],
+            [
+                'type' => 'input',
+                'label' => _i('Image Width'),
+                'placeholder' => '',
+                'name' => 'width'
+            ],
+            [
+                'type' => 'input',
+                'label' => _i('Image Height'),
+                'placeholder' => '',
+                'name' => 'height'
             ],
             [
                 'type' => 'date',
@@ -245,7 +263,7 @@ class Search extends Board
 
         $search_inputs = [
             'boards', 'subject', 'text', 'tnum', 'username', 'tripcode', 'email', 'capcode', 'uid', 'poster_ip', 'country',
-            'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order'
+            'filename', 'image', 'deleted', 'ghost', 'filter', 'type', 'start', 'end', 'results', 'order', 'since4pass', 'width', 'height'
         ];
 
         foreach ($search_inputs as $field) {
@@ -360,6 +378,10 @@ class Search extends Board
             $query->match('email', $input['email']);
         }
 
+        if ($input['since4pass'] !== null) {
+            $query->where('exif.since4pass', $input['since4pass']);
+        }
+
         if ($input['capcode'] !== null) {
             switch ($input['capcode']) {
                 case 'user':
@@ -404,6 +426,14 @@ class Search extends Board
 
         if ($input['image'] !== null) {
             $query->match('media_hash', '"'.$input['image'].'"');
+        }
+
+        if ($input['width'] !== null) {
+            $query->where('media_w', (int)$input['width']);
+        }
+
+        if ($input['height'] !== null) {
+            $query->where('media_h', (int)$input['height']);
         }
 
         if ($input['deleted'] !== null) {
@@ -615,6 +645,21 @@ class Search extends Board
             array_push($title,
                 sprintf(_i('with the image hash &lsquo;%s&rsquo;'),
                     e($search['image'])));
+        }
+        if ($search['width']) {
+            array_push($title,
+                sprintf(_i('with the image width &lsquo;%s&rsquo;'),
+                    e($search['width'])));
+        }
+        if ($search['height']) {
+            array_push($title,
+                sprintf(_i('with the image height &lsquo;%s&rsquo;'),
+                    e($search['height'])));
+        }
+        if ($search['since4pass']) {
+            array_push($title,
+                sprintf(_i('with since4pass &lsquo;%s&rsquo;'),
+                    e($search['since4pass'])));
         }
         if ($search['country'])
             array_push($title,
