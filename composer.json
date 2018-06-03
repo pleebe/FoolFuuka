@@ -11,6 +11,26 @@
         {
             "type": "vcs",
             "url": "https://github.com/mathjax/MathJax"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/pleebe/foolframe"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/pleebe/Plugin"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/pleebe/Cache"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/pleebe/Package"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/pleebe/Theme"
         }
     ],
     "require": {
@@ -20,7 +40,7 @@
         "foolz/plugin": "dev-master",
         "foolz/theme": "dev-master",
         "foolz/cache": "dev-master",
-        "foolz/sphinxql-query-builder": "dev-master",
+        "foolz/sphinxql-query-builder": "1.2.0",
         "foolz/profiler": "dev-master",
 
         "symfony/class-loader": "2.6.*",
