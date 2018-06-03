@@ -501,7 +501,7 @@ class Chan extends Common
         }
 
         if ($search['since4pass'] !== null && !is_numeric($search['since4pass'])) {
-            return $this->response->setData(['error' => _i('Since4pass width you inserted is not a valid number.')]);
+            return $this->response->setData(['error' => _i('Since4pass you inserted is not a valid number.')]);
         }
 
         try {
