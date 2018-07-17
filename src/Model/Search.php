@@ -7,7 +7,7 @@ use Foolz\FoolFrame\Model\Preferences;
 use Foolz\Inet\Inet;
 use Foolz\SphinxQL\Helper;
 use Foolz\SphinxQL\SphinxQL;
-use Foolz\SphinxQL\Connection as SphinxConnnection;
+use Foolz\SphinxQL\Drivers\Mysqli\Connection as SphinxConnnection;
 
 class SearchException extends \Exception {}
 class SearchRequiresSphinxException extends SearchException {}
@@ -342,7 +342,7 @@ class Search extends Board
 
         // establish connection
         try {
-            $query = SphinxQL::create($conn)->select('id', 'board', 'tnum')->from($indices)
+            $query = (new SphinxQL($conn))->select('id', 'board', 'tnum')->from($indices)
                 ->setFullEscapeChars(['\\', '(', ')', '|', '-', '!', '@', '%', '~', '"', '&', '/', '^', '$', '='])
                 ->setHalfEscapeChars(['\\', '(', ')', '!', '@', '%', '~', '&', '/', '^', '$', '=']);
         } catch (\Foolz\SphinxQL\Exception\ConnectionException $e) {
@@ -539,7 +539,7 @@ class Search extends Board
             throw new SearchEmptyResultException(_i('No results found.'));
         }
 
-        $sphinx_meta = Helper::pairsToAssoc(Helper::create($conn)->showMeta()->execute());
+        $sphinx_meta = Helper::pairsToAssoc((new Helper($conn))->showMeta()->execute());
         $this->total_count = $sphinx_meta['total'];
         $this->total_found = $sphinx_meta['total_found'];
 

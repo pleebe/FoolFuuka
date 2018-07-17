@@ -40,7 +40,7 @@
         "foolz/plugin": "dev-master",
         "foolz/theme": "dev-master",
         "foolz/cache": "dev-master",
-        "foolz/sphinxql-query-builder": "1.2.0",
+        "foolz/sphinxql-query-builder": "2.0.0",
         "foolz/profiler": "dev-master",
 
         "symfony/class-loader": "2.6.*",
