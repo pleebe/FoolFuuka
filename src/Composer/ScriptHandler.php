@@ -2,7 +2,7 @@
 
 namespace Foolz\FoolFuuka\Composer;
 
-use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Foolz\FoolFrame\Model\Util;
 
 class ScriptHandler
@@ -13,13 +13,13 @@ class ScriptHandler
         'assets' => []
     ];
 
-    protected static function getOptions(CommandEvent $event)
+    protected static function getOptions(Event $event)
     {
         return array_merge(self::$options, $event->getComposer()->getPackage()->getExtra());
 
     }
 
-    public static function installAssets(CommandEvent $event)
+    public static function installAssets(Event $event)
     {
         $options = self::getOptions($event);
         $rootDir = realpath(__DIR__.'/../../');
