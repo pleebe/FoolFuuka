@@ -7,7 +7,6 @@ use Foolz\Inet\Inet;
 use Foolz\Plugin\Hook;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
-use Neutron\ReCaptcha\ReCaptcha;
 
 class CommentSendingException extends \Exception {}
 class CommentSendingDuplicateException extends CommentSendingException {}
@@ -29,7 +28,6 @@ class CommentSendingDatabaseException extends CommentSendingException {}
 
 class CommentInsert extends Comment
 {
-    public $recaptcha_challenge = null;
     public $recaptcha_response = null;
     public $recaptcha2_response = null;
     public $ghost = false;
@@ -201,11 +199,6 @@ class CommentInsert extends Comment
      */
     public function p_insert(Media $media = null, $data = [])
     {
-        if (isset($data['recaptcha_response'])) {
-            $this->recaptcha_response = $data['recaptcha_response'];
-            $this->recaptcha_challenge = $data['recaptcha_challenge'];
-        }
-
         if (isset($data['recaptcha2_response'])) {
             $this->recaptcha2_response = $data['recaptcha2_response'];
         }
@@ -315,17 +308,7 @@ class CommentInsert extends Comment
                 if (!$recaptcha_result->isSuccess()) {
                     throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution. '));
                 }
-            } elseif ($this->recaptcha_response && $this->preferences->get('foolframe.auth.recaptcha_public', false)) {
-                $recaptcha = ReCaptcha::create($this->preferences->get('foolframe.auth.recaptcha_public'), $this->preferences->get('foolframe.auth.recaptcha_private'));
-                $recaptcha_result = $recaptcha->checkAnswer(
-                    Inet::dtop($this->comment->poster_ip),
-                    $this->recaptcha_challenge,
-                    $this->recaptcha_response);
-
-                if (!$recaptcha_result->isValid()) {
-                    throw new CommentSendingWrongCaptchaException(_i('Incorrect CAPTCHA solution.'));
-                }
-            } elseif ($this->preferences->get('foolframe.auth.recaptcha_public') || $this->preferences->get('foolframe.auth.recaptcha2_sitekey')) { // if there wasn't a recaptcha input, let's go with heavier checks
+            } elseif ($this->preferences->get('foolframe.auth.recaptcha2_sitekey')) { // if there wasn't a recaptcha input, let's go with heavier checks
                 Hook::forge('Foolz\FoolFuuka\Model\CommentInsert::insert#obj.captcha')
                     ->setObject($this)
                     ->execute();

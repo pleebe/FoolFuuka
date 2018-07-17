@@ -184,37 +184,6 @@ class ToolsReplyBox extends \Foolz\FoolFuuka\View\View
                                     </div>
                                 </div>
                             </noscript>
-                        <?php elseif ($this->getPreferences()->get('foolframe.auth.recaptcha_public', false)) : ?>
-                            <script>
-                                var recaptcha2 = {
-                                    'enabled': false
-                                };
-                                var RecaptchaOptions = {
-                                    theme: 'custom',
-                                    custom_theme_widget: 'recaptcha_widget'
-                                };
-                            </script>
-                        <div class="recaptcha_widget" style="display:none">
-                            <div><p><?= e(_i('You might be a bot! Enter a reCAPTCHA to continue.')) ?></p></div>
-                            <div id="recaptcha_image" style="background: #fff; border: 1px solid #ccc; padding: 3px 6px; margin: 4px 0;"></div>
-                            <div class="input-prepend">
-                                <label class="add-on" for="recaptcha_response_field"><?= e(_i('Solution')) ?></label>
-                                <input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
-                                <div class="btn-group">
-                                    <a class="btn btn-mini" href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
-                                    <a class="recaptcha_only_if_image btn btn-mini" href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a>
-                                    <a class="recaptcha_only_if_audio btn btn-mini" href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a>
-                                    <a class="btn btn-mini" href="javascript:Recaptcha.showhelp()">Help</a>
-                                </div>
-                            </div>
-                            <script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>"></script>
-                        </div>
-                            <noscript>
-                                <iframe src="//www.google.com/recaptcha/api/noscript?k=<?= $this->getPreferences()->get('foolframe.auth.recaptcha_public') ?>" height="300" width="500" frameborder="0"></iframe><br>
-                                <textarea name="recaptcha_challenge_field" rows="3" cols="40">
-                            </textarea>
-                                <input type="hidden" name="recaptcha_response_field"  value="manual_challenge">
-                            </noscript>
                         <?php endif; ?>
                     </div>
 

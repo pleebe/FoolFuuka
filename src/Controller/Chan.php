@@ -1141,10 +1141,6 @@ class Chan extends Common
             $data['last_limit'] = $post['reply_last_limit'];
         }
 
-        if (isset($post['recaptcha_challenge_field']) && isset($post['recaptcha_response_field'])) {
-            $data['recaptcha_challenge'] = $post['recaptcha_challenge_field'];
-            $data['recaptcha_response'] = $post['recaptcha_response_field'];
-        }
         // recaptcha2 & noscript recaptcha2
         if (isset($post['recaptcha2_response_field'])) {
             $data['recaptcha2_response'] = $post['recaptcha2_response_field'];

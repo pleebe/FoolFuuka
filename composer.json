@@ -61,7 +61,6 @@
         "michelf/php-markdown": "1.8.*",
         "monolog/monolog": "1.23.*",
         "google/recaptcha": "~1.1",
-        "neutron/recaptcha": "~0.1",
         "predis/predis": "1.1.*",
         "swiftmailer/swiftmailer": "5.3.*",
         "rych/bytesize": "1.0.*",
