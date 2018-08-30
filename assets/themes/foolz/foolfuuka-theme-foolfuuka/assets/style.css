@@ -29,9 +29,6 @@
 .theme_default p {
   margin: 2px 0 7px;
 }
-.theme_default .shift-jis {
-  font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, sans-serif !important;
-  font-size: 16px !important;
 }
 .theme_default ::-moz-selection {
   background: #fe57a1;
@@ -1259,4 +1256,8 @@ code.hljs {
 }
 .theme_default.midnight span.highlight {
   background: #000000;
+}
+.shift-jis {
+    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace !important;
+    font-size: 16px !important;
 }

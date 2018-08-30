@@ -441,6 +441,9 @@ class Comment extends Model
             $builder->setUseOption(true);
             array_push($definitions, $builder->build());
 
+            $builder = new \JBBCode\CodeDefinitionBuilder('shiftjis', '<span class="shift-jis">{param}</span>');
+            array_push($definitions, $builder->build());
+
             $definitions = Hook::forge('Foolz\FoolFuuka\Model\Comment::processCommentBBCode#var.definitions')
                 ->setObject($this)
                 ->setParam('definitions', $definitions)
