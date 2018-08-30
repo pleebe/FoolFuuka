@@ -280,6 +280,7 @@ code,
 .shift-jis {
     font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace !important;
     font-size: 16px !important;
+    white-space: pre;
 }
 .qst-color.red {
     color: #c41e3a;
