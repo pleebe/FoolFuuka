@@ -281,6 +281,15 @@ code,
     font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace !important;
     font-size: 16px !important;
 }
+.qst-color.red {
+    color: #c41e3a;
+}
+.qst-color.green {
+    color: #00a550;
+}
+.qst-color.blue {
+    color: #1d8dc4;
+}
 .mod {
   color: #800080 !important;
 }
