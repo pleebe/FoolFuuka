@@ -228,9 +228,11 @@ body.theme_default.yotsuba_b {
   top: -1px;
 }
 .theme_default .shift-jis {
-    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace !important;
-    font-size: 16px !important;
+    font-size: 16px;
+    line-height: 17px;
     white-space: pre;
+    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace;
+    overflow: auto;
 }
 .theme_default .qst-color.red {
     color: #c41e3a;

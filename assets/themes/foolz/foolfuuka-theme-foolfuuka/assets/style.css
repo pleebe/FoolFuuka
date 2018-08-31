@@ -1258,9 +1258,11 @@ code.hljs {
   background: #000000;
 }
 .shift-jis {
-    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace !important;
-    font-size: 16px !important;
+    font-size: 16px;
+    line-height: 17px;
     white-space: pre;
+    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace;
+    overflow: auto;
 }
 .qst-color.red {
     color: #c41e3a;
