@@ -29,9 +29,6 @@
 .theme_default p {
   margin: 2px 0 7px;
 }
-.theme_default .shift-jis {
-  font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, sans-serif !important;
-  font-size: 16px !important;
 }
 .theme_default ::-moz-selection {
   background: #fe57a1;
@@ -1259,4 +1256,22 @@ code.hljs {
 }
 .theme_default.midnight span.highlight {
   background: #000000;
+}
+.shift-jis {
+    font-size: 16px;
+    line-height: 17px;
+    font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace;
+}
+span.shift-jis {
+    white-space: pre;
+    overflow: auto;
+}
+.qst-color.red {
+    color: #c41e3a;
+}
+.qst-color.green {
+    color: #00a550;
+}
+.qst-color.blue {
+    color: #1d8dc4;
 }
