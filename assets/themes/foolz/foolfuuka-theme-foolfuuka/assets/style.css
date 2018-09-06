@@ -1260,8 +1260,10 @@ code.hljs {
 .shift-jis {
     font-size: 16px;
     line-height: 17px;
-    white-space: pre;
     font-family: 'IPAMonaPGothic', 'IPA モナー Pゴシック', Mona, 'MS PGothic', 'ＭＳ Ｐゴシック', Osaka, YOzFontAA97, monospace;
+}
+span.shift-jis {
+    white-space: pre;
     overflow: auto;
 }
 .qst-color.red {
