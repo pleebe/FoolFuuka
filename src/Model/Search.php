@@ -572,6 +572,10 @@ class Search extends Board
                 ->executeQuery($sql)
                 ->fetchAll();
 
+            if (!count($result)) {
+                continue;
+            }
+
             $board = ($this->radix !== null ? $this->radix : $this->radix_coll->getById($result[0]['board_id']));
             $bulk = new CommentBulk();
             $bulk->import($result[0], $board);
@@ -579,7 +583,7 @@ class Search extends Board
         }
 
         // no results found IN DATABASE, but we might still get a search count from Sphinx
-        if (!count($result)) {
+        if (!$this->comments_unsorted) {
             $this->comments_unsorted = [];
             $this->comments = [];
         }
