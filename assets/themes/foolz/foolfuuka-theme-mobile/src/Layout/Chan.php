@@ -21,7 +21,7 @@ class Chan extends \Foolz\FoolFuuka\View\View
 
     public function getSelectedThemeClass()
     {
-        return 'theme_default'.($this->getBuilder()->getStyle() == 'midnight' ? ' midnight' : '');
+        return 'theme_default' . ($this->getBuilder()->getStyle() !== 'default' ? ' ' . $this->getBuilder()->getStyle() : '');
     }
 
     public function getStyles()
@@ -31,6 +31,9 @@ class Chan extends \Foolz\FoolFuuka\View\View
         <link href="<?= $this->getAssetManager()->getAssetLink('flags.css') ?>" rel="stylesheet" type="text/css">
         <link href="<?= $this->getAssetManager()->getAssetLink('mobile.css') ?>" rel="stylesheet" type="text/css">
         <?php
+        if ($this->getBuilder()->getStyle() !== 'default' && $this->getBuilder()->getStyle() !== 'midnight') : ?>
+            <link href="<?= $this->getAssetManager()->getAssetLink($this->getBuilder()->getStyle() . '.css') ?>" rel="stylesheet" type="text/css">
+        <?php endif;
     }
 
     public function getHeader()

@@ -34,7 +34,10 @@
     "extends": "foolz/foolfuuka-theme-foolfuuka",
     "styles": {
       "default": "Default",
-      "midnight": "Midnight"
+      "midnight": "Midnight",
+      "kurimasu": "Christmas",
+      "barentain": "Valentine's Day",
+      "halloween": "Halloween"
     }
   }
 }
