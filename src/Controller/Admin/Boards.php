@@ -249,6 +249,23 @@ class Boards extends \Foolz\FoolFrame\Controller\Admin
             'class' => 'span4'
         );
 
+        $form['foolfuuka.boards.enable_archive_cache'] = [
+            'type' => 'checkbox',
+            'label' => _i('Enable archive page caching'),
+            'placeholder' => '',
+            'preferences' => true,
+            'help' => _i('Enable archive page caching'),
+            'sub' => [
+                'foolfuuka.boards.page_cache_timeout' => [
+                    'preferences' => true,
+                    'type' => 'input',
+                    'label' => _i('Cache timeout (in seconds).'),
+                    'placeholder' => '',
+                    'validation' => [new Assert\Length(['max' => 256])]
+                ],
+            ]
+        ];
+
         $form['separator-3'] = [
             'type' => 'separator'
         ];
@@ -430,6 +447,23 @@ class Boards extends \Foolz\FoolFrame\Controller\Admin
             'preferences' => true,
             'help' => _i('Set a custom error message.'),
             'class' => 'span6'
+        ];
+
+        $form['foolfuuka.sphinx.enable_cache'] = [
+            'type' => 'checkbox',
+            'label' => _i('Enable search result caching'),
+            'placeholder' => '',
+            'preferences' => true,
+            'help' => _i('Enable search result caching'),
+            'sub' => [
+                'foolfuuka.sphinx.cache_timeout' => [
+                    'preferences' => true,
+                    'type' => 'input',
+                    'label' => _i('Cache timeout (in seconds). This shouldn\'t be larger than delta index interval'),
+                    'placeholder' => '',
+                    'validation' => [new Assert\Length(['max' => 256])]
+                ],
+            ]
         ];
 
         $form['separator'] = [

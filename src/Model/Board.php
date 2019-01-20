@@ -5,6 +5,7 @@ namespace Foolz\FoolFuuka\Model;
 use Foolz\FoolFrame\Model\DoctrineConnection;
 use Foolz\Cache\Cache;
 use Foolz\FoolFrame\Model\Model;
+use Foolz\FoolFrame\Model\Preferences;
 use Foolz\Plugin\PlugSuit;
 use Foolz\Profiler\Profiler;
 
@@ -100,6 +101,11 @@ class Board extends Model
      */
     protected $comment_factory;
 
+    /**
+     * @var Preferences
+     */
+    protected $preferences;
+
     public function __construct(\Foolz\FoolFrame\Model\Context $context)
     {
         parent::__construct($context);
@@ -107,6 +113,7 @@ class Board extends Model
         $this->dc = $context->getService('doctrine');
         $this->profiler = $context->getService('profiler');
         $this->comment_factory = $context->getService('foolfuuka.comment_factory');
+        $this->preferences = $context->getService('preferences');
     }
 
     /**
@@ -418,8 +425,8 @@ class Board extends Model
         extract($this->options);
 
         try {
-            // not archives, not ghosts, under 10 pages, 10 per page
-            if (!$this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10) {
+            // not archives unless enabled, not ghosts, under 10 pages, 10 per page
+            if (($this->preferences->get('foolfuuka.boards.enable_archive_cache') || !$this->radix->archive) && $order !== 'ghost' && $page <= 10 && $per_page == 10) {
                 list($results, $query_posts) = Cache::item('foolfuuka.model.board.getLatestComments.query.'
                     .$this->radix->shortname.'.'.$order.'.'.$page)->get();
             } else {
@@ -501,10 +508,10 @@ class Board extends Model
                 ->executeQuery(implode(' UNION ', $sql_arr))
                 ->fetchAll();
 
-            // not archives, not ghosts, under 10 pages, 10 per page
-            if (!$this->radix->archive && $order !== 'ghost' && $page <= 10 && $per_page == 10) {
+            // not archives unless enabled, not ghosts, under 10 pages, 10 per page
+            if (($this->preferences->get('foolfuuka.boards.enable_archive_cache') || !$this->radix->archive) && $order !== 'ghost' && $page <= 10 && $per_page == 10) {
                 Cache::item('foolfuuka.model.board.getLatestComments.query.'
-                    .$this->radix->shortname.'.'.$order.'.'.$page)->set([$results, $query_posts], 300);
+                    .$this->radix->shortname.'.'.$order.'.'.$page)->set([$results, $query_posts], $this->preferences->get('foolfuuka.boards.page_cache_timeout'));
             }
         }
 
@@ -624,8 +631,8 @@ class Board extends Model
         extract($this->options);
 
         try {
-            // not archives, not ghosts, under 10 pages, 10 per page
-            if (!$this->radix->archive && $page <= 10 && $per_page == 100) {
+            // not archives unless enabled, not ghosts, under 10 pages, 10 per page
+            if (($this->preferences->get('foolfuuka.boards.enable_archive_cache') || !$this->radix->archive) && $page <= 10 && $per_page == 100) {
                 $result = Cache::item('foolfuuka.model.board.getThreadsComments.query.'
                     .$this->radix->shortname.'.'.$page)->get();
             } else {
@@ -649,10 +656,10 @@ class Board extends Model
                 ->execute()
                 ->fetchAll();
 
-            // not archives, not ghosts, under 10 pages, 10 per page
-            if (!$this->radix->archive && $page <= 10 && $per_page == 100) {
+            // not archives unless enabled, not ghosts, under 10 pages, 10 per page
+            if (($this->preferences->get('foolfuuka.boards.enable_archive_cache') || !$this->radix->archive) && $page <= 10 && $per_page == 100) {
                 Cache::item('foolfuuka.model.board.getThreadsComments.query.'
-                    .$this->radix->shortname.'.'.$page)->set($result, 300);
+                    .$this->radix->shortname.'.'.$page)->set($result, $this->preferences->get('foolfuuka.boards.page_cache_timeout'));
             }
         }
 

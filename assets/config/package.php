@@ -66,7 +66,9 @@ return [
             'listen_mysql' => '127.0.0.1:3306',
             'dir' => '/usr/local/sphinx/var',
             'min_word' => 3,
-            'memory' => 2047
+            'memory' => 2047,
+            'enable_cache' => false,
+            'cache_timeout' => 180
         ],
 
         'themes' => [],
@@ -95,7 +97,9 @@ return [
 
         'boards' => [
             'directory' => DOCROOT.'foolfuuka/boards/',
-            'url' => '/foolfuuka/boards'
+            'url' => '/foolfuuka/boards',
+            'enable_archive_cache' => false,
+            'page_cache_timeout' => 60
         ],
 
         'audit' => [
