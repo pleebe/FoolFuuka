@@ -983,17 +983,17 @@ var bindFunctions = function()
 		return clickCallbacks[el.data("function")](el, post, event);
 	});
 
-	jQuery(document.body).on("click", ".search_box, .search-query", function(event) {
+	jQuery(document.body).on("mousedown touchstart", ".search_box, .search-query", function(event) {
 		event.stopPropagation();
 	});
 
-	jQuery(document.body).click(function(event) {
+	jQuery(document.body).on("mousedown touchstart", function(event) {
 		var search_input = jQuery('#search_form_comment');
 		jQuery('.search-query').val(search_input.val());
 		jQuery('.search_box').hide();
 	});
 
-	jQuery('.search-query').focus(function() {
+	jQuery(document.body).on("mousedown touchstart", ".search-query", function() {
 		var el = jQuery(this);
 		var offset = el.offset();
 		var width = el.outerWidth();
