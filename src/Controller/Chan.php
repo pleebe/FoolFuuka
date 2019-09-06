@@ -479,6 +479,11 @@ class Chan extends Common
         return $this->thread($num, ['type' => 'last_x', 'last_limit' => $limit]);
     }
 
+    public function radix_deleted($num = 0)
+    {
+        return $this->thread($num, ['type' => 'deleted', 'is_api' => false]);
+    }
+
     protected function thread($num = 0, $options = [])
     {
         $this->profiler->log('Controller Chan::thread Start');
@@ -541,6 +546,10 @@ class Chan extends Common
 
                 if (!$thread_status['closed']) {
                     $this->builder->createPartial('tools_reply_box', 'tools_reply_box');
+                }
+
+                if (isset($options['type']) && $options['type'] == 'deleted') {
+                    $this->param_manager->setParam('section_title', _i('Showing only replies that have been deleted'));
                 }
 
                 $this->profiler->logMem('Controller Chan $this', $this);

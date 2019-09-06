@@ -618,6 +618,94 @@ class Chan extends Common
         return $this->response;
     }
 
+    /**
+     * Returns deleted posts of a thread
+     *
+     * Available filters: num (required)
+     *
+     * @author Woxxy
+     */
+    public function get_deleted()
+    {
+        if (!$this->check_board()) {
+            return $this->response->setData(['error' => _i('No board selected.')])->setStatusCode(422);
+        }
+
+        $num = $this->getQuery('num', null);
+        $latest_doc_id = $this->getQuery('latest_doc_id', null);
+
+        if ($num === null) {
+            return $this->response->setData(['error' => _i('The "num" parameter is missing.')])->setStatusCode(422);
+        }
+
+        if (!ctype_digit((string) $num)) {
+            return $this->response->setData(['error' => _i('The value for "num" is invalid.')])->setStatusCode(422);
+        }
+
+        $num = intval($num);
+
+        try {
+            // build an array if we have more specifications
+            if ($latest_doc_id !== null && $latest_doc_id > 0) {
+                if (!ctype_digit((string) $latest_doc_id)) {
+                    return $this->response->setData(['error' => _i('The value for "latest_doc_id" is malformed.')])->setStatusCode(422);
+                }
+
+                $board = Board::forge($this->getContext())
+                    ->getThread($num)
+                    ->setRadix($this->radix)
+                    ->setOptions([
+                        'type' => 'deleted_from_doc_id',
+                        'is_api' => true,
+                        'latest_doc_id' => $latest_doc_id
+                    ]);
+
+                foreach ($board->getCommentsUnsorted() as $comment) {
+                    $this->apify($comment, ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread');
+                }
+
+                $comments = $board->getComments();
+
+                if (!count($comments)) {
+                    $this->response->setData([])->setStatusCode(204);
+                } else {
+                    $this->response->setData($comments);
+                }
+
+            } else {
+                $options = [
+                    'type' => 'deleted',
+                    'is_api' => true,
+                ];
+
+                $board = Board::forge($this->getContext())
+                    ->getThread($num)
+                    ->setRadix($this->radix)
+                    ->setOptions($options);
+
+                $thread_status = $board->getThreadStatus();
+                $last_modified = $thread_status['last_modified'];
+
+                $this->setLastModified($last_modified);
+
+                if (!$this->response->isNotModified($this->request)) {
+                    $bulks = $board->getCommentsUnsorted();
+                    foreach ($bulks as $bulk) {
+                        $this->apify($bulk, ctype_digit((string) $this->getQuery('last_limit')) ? 'last/'.$this->getQuery('last_limit') : 'thread');
+                    }
+
+                    $this->response->setData($board->getComments());
+                }
+            }
+        } catch (\Foolz\FoolFuuka\Model\BoardThreadNotFoundException $e) {
+            return $this->response->setData(['error' => _i('Thread not found.')]);
+        } catch (\Foolz\FoolFuuka\Model\BoardException $e) {
+            return $this->response->setData(['error' => _i('Encountered an unknown error.')])->setStatusCode(500);
+        }
+
+        return $this->response;
+    }
+
     public function get_post()
     {
         if (!$this->check_board()) {

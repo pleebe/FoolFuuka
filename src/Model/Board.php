@@ -884,6 +884,89 @@ class Board extends Model
                 }
 
                 break;
+
+            case 'deleted_from_doc_id':
+                $query_result = $this->dc->qb()
+                    ->select('*')
+                    ->from($this->radix->getTable(), 'r')
+                    ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+                    ->where('thread_num = :thread_num')
+                    ->andWhere('deleted = 1')
+                    ->andWhere('doc_id > :latest_doc_id')
+                    ->orderBy('num', 'ASC')
+                    ->addOrderBy('subnum', 'ASC')
+                    ->setParameter(':thread_num', $num)
+                    ->setParameter(':latest_doc_id', $latest_doc_id)
+                    ->execute()
+                    ->fetchAll();
+
+                break;
+
+            case 'deleted':
+
+                try {
+                    $query_result = Cache::item('foolfuuka.model.board.getThreadComments.deleted.'
+                        .md5(serialize([$this->radix->shortname, $num])))->get();
+                } catch (\OutOfBoundsException $e) {
+                    if (isset($is_api) && !$is_api) {
+                        $subquery_first = $this->dc->qb()
+                            ->select('*')
+                            ->from($this->radix->getTable(), 'xr')
+                            ->where('num = '.$this->dc->getConnection()->quote($num))
+                            ->setMaxResults(1)
+                            ->getSQL();
+                        $subquery_last = $this->dc->qb()
+                            ->select('*')
+                            ->from($this->radix->getTable(), 'xrr')
+                            ->where('thread_num = :thread_num')
+                            ->andWhere('deleted = 1')
+                            ->orderBy('num', 'ASC')
+                            ->addOrderBy('subnum', 'ASC')
+                            ->getSQL();
+                        $query_result = $this->dc->qb()
+                            ->select('*')
+                            ->from('(('.$subquery_first.') UNION ('.$subquery_last.'))', 'r')
+                            ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+                            ->orderBy('num', 'ASC')
+                            ->addOrderBy('subnum', 'ASC')
+                            ->setParameter(':thread_num', $num)
+                            ->execute()
+                            ->fetchAll();
+                    } else {
+                        $query_result = $this->dc->qb()
+                            ->select('*')
+                            ->from($this->radix->getTable(), 'r')
+                            ->leftJoin('r', $this->radix->getTable('_images'), 'mg', 'mg.media_id = r.media_id')
+                            ->where('thread_num = :thread_num')
+                            ->andWhere('deleted = 1')
+                            ->orderBy('num', 'ASC')
+                            ->addOrderBy('subnum', 'ASC')
+                            ->setParameter(':thread_num', $num)
+                            ->execute()
+                            ->fetchAll();
+                    }
+
+                    $cache_time = 300;
+                    if ($this->radix->archive) {
+                        $cache_time = 30;
+
+                        // over 7 days is old
+                        $old = time() - 604800;
+
+                        // set a very long cache time for archive threads older than a week, in case a ghost post will bump it
+                        foreach ($query_result as $k => $r) {
+                            if ($r['timestamp'] < $old) {
+                                $cache_time = 300;
+                                break;
+                            }
+                        }
+                    }
+
+                    Cache::item('foolfuuka.model.board.getThreadComments.deleted.'
+                        .md5(serialize([$this->radix->shortname, $num])))->set($query_result, $cache_time);
+                }
+
+                break;
         }
 
         if (!count($query_result) && isset($latest_doc_id)) {
