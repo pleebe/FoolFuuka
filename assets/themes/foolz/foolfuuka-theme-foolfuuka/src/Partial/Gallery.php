@@ -59,7 +59,7 @@ class Gallery extends \Foolz\FoolFuuka\View\View
                 </div>
             </header>
             <?php if ($p_media !== null) : ?>
-            <div class="thread_image_box" title="<?= $p->getCommentProcessed() ? htmlspecialchars(strip_tags($p->getCommentProcessed())) : '' ?>">
+            <div class="thread_image_box" title="<?= $p->getCommentSanitized() ? htmlspecialchars(strip_tags($p->getCommentSanitized())) : '' ?>">
                 <?php if ($p_media->getMediaStatus($this->getRequest()) === 'banned') : ?>
                 <img src="<?= $this->getAssetManager()->getAssetLink('images/banned-image.png') ?>" width="150" height="150" />
                 <?php elseif ($p_media->getMediaStatus($this->getRequest()) !== 'normal') : ?>
