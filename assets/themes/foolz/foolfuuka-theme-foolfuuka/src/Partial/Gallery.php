@@ -76,7 +76,7 @@ class Gallery extends \Foolz\FoolFuuka\View\View
                 </a>
                 <?php endif; ?>
                 <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned'  || $this->getAuth()->hasAccess('media.see_banned')) : ?>
-                <div class="post_file" style="padding-left: 2px"><?= \Rych\ByteSize\ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h . ', ' . $p_media->media_filename ?></div>
+                <div class="post_file" style="padding-left: 2px"><?= \Rych\ByteSize\ByteSize::formatBinary($p_media->media_size, 0) . ', ' . $p_media->media_w . 'x' . $p_media->media_h . ', ' . $p_media->getMediaFilenameProcessed() ?></div>
                 <div class="post_file_controls">
                     <a href="<?= ($p_media->getMediaLink($this->getRequest())) ? $p_media->getMediaLink($this->getRequest()) : $p_media->getRemoteMediaLink($this->getRequest()) ?>" class="btnr" target="_blank">Full</a><a
                         href="<?= $this->getUri()->create($radix->shortname . '/search/image/' . $p_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
