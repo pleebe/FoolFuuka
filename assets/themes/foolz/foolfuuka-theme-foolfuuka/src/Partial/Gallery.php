@@ -83,7 +83,7 @@ class Gallery extends \Foolz\FoolFuuka\View\View
                         target="_blank" href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">ImgOps</a><a
                         target="_blank" href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">iqdb</a><a
                         target="_blank" href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">SauceNAO</a><a
-                        target="_blank" href="http://www.google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a><?php if (!$p->radix->archive || $p->radix->getValue('archive_full_images')) : ?><a
+                        target="_blank" href="http://www.google.com/searchbyimage?sbisrc=foolfuuka&image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" class="btnr parent">Google</a><?php if (!$p->radix->archive || $p->radix->getValue('archive_full_images')) : ?><a
                         href="<?= $p_media->getMediaDownloadLink($this->getRequest()) ?>" download="<?= $p_media->getMediaFilenameProcessed() ?>" class="btnr parent"><i class="icon-download-alt"></i></a><?php endif; ?>
                 </div>
                 <?php endif; ?>

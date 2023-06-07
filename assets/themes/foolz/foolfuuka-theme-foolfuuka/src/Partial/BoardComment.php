@@ -57,7 +57,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                     <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
                         <?php if ( !$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('media.see_hidden')) : ?>
                         <a href="<?= $this->getUri()->create(((isset($modifiers['post_show_board_name']) && $modifiers['post_show_board_name']) ? '_' : $p->radix->shortname) . '/search/image/' . $p_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
-                            href="http://www.google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
+                            href="http://www.google.com/searchbyimage?sbisrc=foolfuuka&image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">Google</a><a
                             href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">ImgOps</a><a
                             href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">iqdb</a><a
                             href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank" class="btnr parent">SauceNAO</a><?php if (!$p->radix->archive || $p->radix->getValue('archive_full_images')) : ?><a
@@ -103,7 +103,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
                         <?php if ($p_media->getMediaStatus($this->getRequest()) !== 'banned' || $this->getAuth()->hasAccess('media.see_banned')) : ?>
                             <?php if ( !$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                                 <a href="<?= $this->getUri()->create($p->radix->shortname . '/search/image/' . $p_media->getSafeMediaHash()) ?>" class="btnr parent"><?= _i('View Same') ?></a><a
-                                    href="http://www.google.com/searchbyimage?image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
+                                    href="http://www.google.com/searchbyimage?sbisrc=foolfuuka&image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                     class="btnr parent">Google</a><a
                                     href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>" target="_blank"
                                     class="btnr parent">ImgOps</a><a
