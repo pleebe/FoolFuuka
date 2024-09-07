@@ -78,7 +78,7 @@ class BoardComment extends \Foolz\FoolFuuka\View\View
 
                 <?php if (!$p->radix->hide_thumbnails || $this->getAuth()->hasAccess('maccess.mod')) : ?>
                     [<a href="<?= $this->getUri()->create($p->radix->shortname . '/search/image/' . $p_media->getSafeMediaHash()) ?>"><?= _i('View Same') ?></a>]
-                    [<a href="http://www.google.com/searchbyimage?sbisrc=foolfuuka&image_url=<?= $p_media->getThumbLink($this->getRequest()) ?>">Google</a>]
+                    [<a href="https://lens.google.com/uploadbyurl?url=<?= $p_media->getThumbLink($this->getRequest()) ?>">Google</a>]
                     [<a href="http://imgops.com/<?= $p_media->getThumbLink($this->getRequest()) ?>">ImgOps</a>]
                     [<a href="http://iqdb.org/?url=<?= $p_media->getThumbLink($this->getRequest()) ?>">iqdb</a>]
                     [<a href="http://saucenao.com/search.php?url=<?= $p_media->getThumbLink($this->getRequest()) ?>">SauceNAO</a>]
