@@ -438,7 +438,7 @@ class Comment extends Model
             array_push($definitions, $builder->build());
 
             $builder = new \JBBCode\CodeDefinitionBuilder('fortune', '<strong><span class="fortune" style="color: {color}">{param}</span></strong>');
-            $builder->setUseOption(true);
+            $builder->setUseOption(true)->setOptionValidator(new \JBBCode\validators\CssColorValidator(), 'color');
             array_push($definitions, $builder->build());
 
             $builder = new \JBBCode\CodeDefinitionBuilder('shiftjis', '<span class="shift-jis">{param}</span>');
