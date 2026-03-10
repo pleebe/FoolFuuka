@@ -445,7 +445,7 @@ class Comment extends Model
             array_push($definitions, $builder->build());
 
             $builder = new \JBBCode\CodeDefinitionBuilder('qstcolor', '<span class="qst-color {option}">{param}</span>');
-            $builder->setUseOption(true);
+            $builder->setUseOption(true)->setOptionValidator(new \JBBCode\validators\CssColorValidator(), 'option');
             array_push($definitions, $builder->build());
 
             $definitions = Hook::forge('Foolz\FoolFuuka\Model\Comment::processCommentBBCode#var.definitions')
